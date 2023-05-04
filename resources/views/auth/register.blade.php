@@ -38,7 +38,7 @@
                                 @enderror
                             </div>
                         </div>
-
+wwasa
                         <div class="row mb-3">
                             <label for="apellidoM" class="col-md-4 col-form-label text-md-end">{{ __('Apellido Materno') }}</label>
 
