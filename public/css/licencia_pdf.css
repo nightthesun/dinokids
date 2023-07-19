@@ -1,0 +1,302 @@
+@page{
+    margin: 0;
+    font-size: 0.65em;
+    font-family: Arial;
+    color: black;
+    text-transform: uppercase;
+}
+
+.input {
+    color: rgb(12, 11, 11);
+    width: 500px;
+    border:none;
+    border-bottom:1px solid rgb(5, 4, 4);
+} 
+
+body{
+    margin: 1cm;
+}
+
+.containerA{
+    border: 0.4mm solid black;
+    padding: 0.4cm;
+    display: block;
+}
+
+.container_header{
+    position: relative;
+    border: 0.5mm solid black;
+    display: table;
+    width: 100%;
+}
+
+.container_header .header{
+    position: relative;
+    display: table-cell;
+    text-align: center;
+}
+
+.header1{
+    width: 25%;
+    border-right: 0.5mm solid black;
+}
+
+.header1 img{
+    margin-top: 0.3cm;
+    width: 90%;
+}
+
+.header2{
+    width: 55%;
+    border-right: 0.5mm solid black;
+}
+
+.header3{
+    width: 20%;
+    font-size: 0.8rem;
+    position: relative;
+}
+
+.formRegistro{
+    width: 100%;
+    position: relative;
+    margin-top: 0.5cm;
+}
+
+.form-group1{
+    position: relative;
+    width: 90%;
+    display: table;
+}
+
+.form-group1 .item{
+    display: table-cell;
+}
+
+.form-group1 .item1{
+    width: 12%;
+    text-indent: 30px;
+    padding-top: 0.15cm;
+}
+
+.form-group1 .item2{
+    width: 18%;
+    margin-right: 20em;
+}
+
+.form-group1 .item3{
+    width: 8%;
+    text-indent: 50px;
+    text-align: left;
+    padding-top: 0.15cm;
+}
+
+.form-group1 .item4{
+  width: 10%;
+}
+
+.form-group1 .item input,.form-group1 .item label{
+    width: 110%;
+}
+
+.form-group1 .item5{
+    width: 10%;
+    padding-top: 0.1cm;
+    padding-left: 1cm;
+}
+
+.form-group1 .item6{
+    width: 40%;
+    padding-right: 0.2cm;
+}
+
+.item_input input{
+  width: 100%;
+}
+
+.form-group1A{
+    position: relative;
+    width: 90%;
+    display: table;
+    
+    left: -0.8cm;
+}
+
+.form-group1A .item{
+    display: table-cell;
+}
+
+.form-group1A .item1A{
+    width: 180%;
+    padding-top: 0.1cm;
+    text-indent: 30px;
+    text-align: left;
+}
+
+.form-group1A .item2A{
+    width: 140%;
+    margin-right: 20em;
+}
+
+.form-group1A .item3A{
+    width: 80%;
+    padding-top: 0.1cm;
+    text-indent: 30px;
+    text-align: left;
+}
+
+.form-group1A .item4A{
+    width: 130%;
+    position: relative;
+    float:left;
+}
+.form-group1A .item5A{
+    width: 90%;
+    padding-top: 0.2cm;
+    padding-left: 1cm;
+}
+
+.form-group1A .item input,.form-group1 .item label{
+    width: 110%;
+}
+
+.form-group2{
+    margin: 0.5cm 0 0.5cm 0;
+    position: relative;
+    display: table;
+    width: 100%;
+}
+
+.form-group2 .item{
+    display: table-cell;
+}
+
+.form-group2 .item1{
+    width: 8%;
+    padding-top: 0.1cm;
+}
+
+.form-group2 .item2{
+    width: 92%;
+}
+
+.form-group3{
+    width: 100%;
+    display: table;
+    text-align: center;
+}
+
+.form-group3 .item{
+    display: table-cell;
+}
+
+.form-group3 .item label{
+    width: 100%;
+}
+
+.form-group3 .item_label{
+    width: 3cm;
+    padding-top: 0.1cm;
+    text-align: left;
+}
+
+.form-group4{
+    width: 100%;
+    display: table;
+    margin-top: 0.3cm;
+  position: relative;
+  margin-bottom: 0.3cm;
+}
+
+.form-group4 .item {
+    display: table-cell;
+}
+
+.form-group4 .item_label{
+    width: 20%;
+    padding-top: 0.1cm;
+}
+
+.form-group4 .item .form-group .fechas input{
+    height: 0.4cm;
+}
+
+.inputV2{
+    width: 18%;
+    text-align: right;
+}
+
+.form-group5{
+    width: 100%;
+    display: table;
+    margin-top: 0.5cm;
+}
+
+.form-group5 .item{
+    display: table-cell;
+    text-align: center;
+}
+
+.form-group5 .item div label{
+    font-weight: bold;
+}
+
+.form-group5 .item div .firma{
+    margin-top: 1.2cm;
+}
+
+#sello1{
+    position: absolute;
+    z-index: 500;
+    color: rgba(0, 128, 0, 0.397);
+    left: 0.4cm;
+    top: 7.1cm;
+    
+    font-size: 3em;   
+  
+  }
+  
+  #sello2{
+    position: absolute;
+    z-index: 500;
+    color: rgba(128, 0, 0, 0.397);
+    left: 0.4cm;
+    top: 7.1cm;
+    
+    font-size: 3em;   
+  
+  }
+#sello3{
+    position: absolute;
+    z-index: 500;
+    color: rgba(228, 231, 12, 0.753);
+    right: 14cm;
+    top: 4.5cm;
+    
+    font-size: 3em;
+    -webkit-transform: rotate(40deg); 
+    -moz-transform: rotate(30deg);    
+  }
+/**
+#sello1{
+  position: absolute;
+  z-index: 500;
+  color: rgba(0, 128, 0, 0.397);
+  right: -0.3cm;
+  top: 1.5cm;
+  font-size: 4em;
+  -webkit-transform: rotate(30deg); 
+  -moz-transform: rotate(30deg);    
+}
+
+#sello2{
+  position: absolute;
+  z-index: 500;
+  color: rgba(128, 0, 0, 0.397);
+  right: -0.3cm;
+  top: 1.5cm;
+  font-size: 4em;
+  -webkit-transform: rotate(30deg); 
+  -moz-transform: rotate(30deg);    
+}
+*/

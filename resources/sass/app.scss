@@ -1,0 +1,117 @@
+@font-face {font-family: "FuturaLuz";
+    src: url("../fonts/Futura Std Book.ttf") format("truetype");
+}
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+//FONTAWESOME
+@import '~@fortawesome/fontawesome-free/scss/regular.scss';
+@import '~@fortawesome/fontawesome-free/scss/solid.scss';
+@import '~@fortawesome/fontawesome-free/scss/brands.scss';
+@import '~@fortawesome/fontawesome-free/scss/fontawesome.scss';
+
+//DATATABLES
+
+@import "~datatables.net-dt/css/jquery.dataTables";
+//@import "~datatables.net-fixedcolumns-dt/css/fixedColumns.dataTables";
+@import "~datatables.net-buttons-dt/css/buttons.dataTables.css";
+
+@import "~awesome-notifications/dist/style.css";
+//ANIMACIONES
+@keyframes swing {
+    0% {
+      transform: rotate(0deg);
+    }
+    10% {
+      transform: rotate(10deg);
+    }
+    30% {
+      transform: rotate(0deg);
+    }
+    40% {
+      transform: rotate(-10deg);
+    }
+    50% {
+      transform: rotate(0deg);
+    }
+    60% {
+      transform: rotate(5deg);
+    }
+    70% {
+      transform: rotate(0deg);
+    }
+    80% {
+      transform: rotate(-5deg);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+  
+  @keyframes sonar {
+    0% {
+      transform: scale(0.9);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+ 
+/*****************************SIDE BAR**************************/
+.page-wrapper .sidebar-wrapper,
+.sidebar-wrapper .sidebar-brand > .logo,
+.sidebar-wrapper .sidebar-dropdown > a:after,
+.sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu li a:before,
+.sidebar-wrapper ul li a i,
+.page-wrapper .page-content,
+.sidebar-wrapper .sidebar-menu ul li a,
+#show-sidebar, #control,#close-sidebar
+ {
+  transition: all 0.3s ease;
+}
+
+/*------scroll bar---------------------*/
+
+::-webkit-scrollbar{
+  width: 5px;
+  height: 7px;
+}
+::-webkit-scrollbar-button{
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: #525965;
+  border: 0px none #ffffff;
+  border-radius: 0px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #525965;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #525965;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-track:hover {
+  background: transparent;
+}
+::-webkit-scrollbar-track:active {
+  background: transparent;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+/*.dataTables_scrollBody
+{
+  z-index:100;
+}*/

@@ -1,0 +1,295 @@
+@page{
+    margin: 0;
+    font-size: 0.65em;
+    font-family: Arial;
+    color: black;
+    text-transform: uppercase;
+}
+.input {
+    color: rgb(12, 11, 11);
+    width: 500px;
+    border:none;
+    border-bottom:1px solid rgb(5, 4, 4);
+} 
+body{
+    margin: 1cm;
+}
+
+.containerA{
+    border: 0.4mm solid black;
+    padding: 0.4cm;
+    display: block;
+}
+.itemA{
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+.container_header{
+    position: relative;
+    border: 0.5mm solid black;
+    display: table;
+    width: 100%;
+}
+
+.container_header .header{
+    position: relative;
+    display: table-cell;
+    text-align: center;
+}
+
+.header1{
+    width: 25%;
+    border-right: 0.5mm solid black;
+}
+
+.header1 img{
+    margin-top: 0.3cm;
+    width: 90%;
+}
+
+.header2{
+    width: 55%;
+    border-right: 0.5mm solid black;
+}
+
+.header3{
+    width: 20%;
+    font-size: 0.8rem;
+}
+
+.formRegistro{
+    width: 100%;
+    position: relative;
+    margin-top: 0.5cm;
+}
+
+.form-group1{
+    position: relative;
+    width: 90%;
+    display: table;
+}
+
+.form-group1 .item{
+    display: table-cell;
+}
+
+.form-group1 .item1{
+    width: 30%;
+    padding-top: 0.1cm;
+    text-indent: 30px;
+}
+
+.form-group1 .item2{
+    width: 40%;
+    margin-right: 20em;
+}
+
+.form-group1 .item3{
+    width: 20%;
+    padding-top: 0.1cm;
+    text-indent: 50px;
+    text-align: left;
+}
+
+.form-group1 .item4{
+    width: 25%;
+    margin-right: 20em;
+}
+
+.form-group1 .item input,.form-group1 .item label{
+    width: 110%;
+}
+
+.form-group1A{
+    position: relative;
+    width: 90%;
+    display: table;
+    top: -20px;
+    left: -20px;
+}
+
+.form-group1A .item{
+    display: table-cell;
+}
+
+.form-group1A .item1A{
+    width: 4.8cm;
+    padding-top: 0.1cm;
+    text-indent: 30px;
+    text-align: left;
+}
+
+.form-group1A .item2A{
+    width: 4.5cm;
+    margin-right: 20em;
+}
+
+.form-group1A .item3A{
+    width: 2cm;
+    padding-top: 0.1cm;
+    text-indent: 30px;
+    text-align: left;
+}
+
+.form-group1A .item4A{
+    width: 3.5cm;
+    position: relative;
+    float:left;
+}
+.form-group1A .item5A{
+  width: 20cm;
+    padding-top: 0.2cm;
+    padding-left: 1cm;
+}
+
+.form-group1A .item input,.form-group1 .item label{
+    width: 110%;
+}
+
+.form-group2{
+    text-indent: 5em;
+    position: relative;
+    display: table;
+    width: 90%;
+}
+
+.form-group2 .item{
+    display: table-cell;
+}
+
+.form-group2 .item1{
+    padding-left: 0.2cm;
+    width: 4%;
+    padding-top: 0.1cm;
+}
+
+.form-group2 .item2{
+    
+    width: 10%;
+    
+}
+
+.form-group2 .item3{
+    width: 20%;
+    padding-top: 0.1cm;
+    text-indent: 5px;
+    text-align: left;
+}
+
+.form-group2 .item4{
+    width: 20%;
+}
+.fg3{
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+.form-group4{
+    display: table;
+    width: 5%;
+    position: relative;
+    margin: auto;
+    margin-bottom: 1cm;
+    padding: 1px;
+}
+
+.form-group4 .item{
+    display: table-cell;
+    text-align: center;
+    width: 10%;
+    margin: 2px; width: 50px; height: 10px;
+}
+#divAc{
+    position: relative;
+    left: 50px;
+}
+#divAb{
+    position: relative;
+    left: 55px;
+}
+.form-group4 .item .form-group{
+    display: table;
+    margin-top: 0.1cm;
+    padding-bottom: -1cm;
+}
+
+.form-group4 .item .form-group div{
+    display: table-cell;
+}
+
+.form-group4 .item .form-group .fecha_label{
+    width: 3cm;
+    padding-top: 0.15cm;
+    text-align: left;
+}
+
+.form-group4 .item .form-group .fechas input{
+    height: 0.4cm;
+}
+
+.inputV2{
+    width: 18%;
+    text-align: right;
+}
+
+.form-group5{
+    position: relative;
+    left: 235px;
+    width: 65%;
+    margin: auto;
+    display: table;
+    top: -25px;
+    margin-top: 0.2cm;
+}
+
+.form-group5 div{
+    display: table-cell;
+}
+
+.form-group5 .dias_label{
+    width: 40%;
+    margin-top: 0.2cm;
+}
+
+#dias_v{
+  margin-top: -0.1cm;
+}
+
+.form-group6{
+    width: 100%;
+    display: table;
+}
+
+.form-group6 .item{
+    display: table-cell;
+    text-align: center;
+}
+
+.form-group6 .item div label{
+    font-weight: bold;
+}
+
+.form-group6 .item div .firma{
+    margin-top: 1.2cm;
+}
+.divRe{
+    display: flex;
+    justify-content: center;
+}
+
+#sello1{
+  position: absolute;
+  z-index: 500;
+  color: rgba(0, 128, 0, 0.397);
+  left: 1cm;
+  top: 8.8cm;
+  font-size: 4em;  
+}
+
+#sello2{
+  position: absolute;
+  z-index: 500;
+  color: rgba(128, 0, 0, 0.397);
+  left: 1cm;
+  top: 8.8cm;
+  font-size: 4em;    
+}

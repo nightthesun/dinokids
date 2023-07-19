@@ -1,0 +1,51 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "npm run development",
+        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "watch": "npm run development -- --watch",
+        "watch-poll": "npm run watch -- --watch-poll",
+        "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --disable-host-check --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "prod": "npm run production",
+        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+    },
+    "devDependencies": {
+        "axios": "^0.19",
+        "bootstrap": "^5.0.2",
+        "cross-env": "^7.0",
+        "jquery": "^3.6.0",
+        "jquery-sortablejs": "^1.0.1",
+        "laravel-mix": "^5.0.5",
+        "lodash": "^4.17.20",
+        "popper.js": "^1.16.1",
+        "resolve-url-loader": "^2.3.1",
+        "sass": "^1.20.1",
+        "sass-loader": "^8.0.0",
+        "vue": "^2.6.12",
+        "vue-template-compiler": "^2.6.12"
+    },
+    "dependencies": {
+        "@algolia/autocomplete-js": "^1.5.0",
+        "@fortawesome/fontawesome-free": "^5.14.0",
+        "@popperjs/core": "^2.9.2",
+        "awesome-notifications": "^3.1.2",
+        "datatables.net": "^1.10.24",
+        "datatables.net-bs4": "^3.2.2",
+        "datatables.net-bs5": "^1.11.3",
+        "datatables.net-buttons-bs4": "^1.7.1",
+        "datatables.net-buttons-bs5": "^2.0.1",
+        "datatables.net-buttons-dt": "^2.0.1",
+        "datatables.net-dt": "^1.10.24",
+        "datatables.net-fixedcolumns-dt": "^3.3.3",
+        "datatables.net-scroller-dt": "^2.0.5",
+        "echarts": "^5.2.0",
+        "jszip": "^3.7.1",
+        "laravel-echo": "^1.8.1",
+        "laravel-echo-server": "^1.6.2",
+        "pdfmake": "^0.2.2",
+        "redis": "^3.0.2",
+        "socket.io-client": "^2.3.0",
+        "sortablejs": "^1.14.0",
+        "sweetalert2": "^11.2.1"
+    }
+}
