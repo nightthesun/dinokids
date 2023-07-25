@@ -179,7 +179,8 @@ return [
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Barryvdh\Snappy\ServiceProvider::class,
-        Yajra\DataTables\DataTablesServiceProvider::class,     
+        Yajra\DataTables\DataTablesServiceProvider::class,  
+         
     ],
 
     /*

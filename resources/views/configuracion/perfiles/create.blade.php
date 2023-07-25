@@ -1,14 +1,357 @@
 @extends('layouts.app')
-
 @section('estilo')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<style>
+.borde1 {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #6c757d;
+  border-radius: 10px;
+  
+}
+.titulo1{
+  color: #B40F7F;
+  font-weight: bold;
+}
+
+
+#botonSubir {
+   
+    background-color: #74AB36;
+    color: white;
+   
+    border: 2px solid #74AB36;
+    border-radius: 25px;
+    cursor: pointer;
+    width:200px;
+  height:50px;
+  font-size: 20px;
+}
+#botonSubir:hover {
+  background-color: #B40F7F;
+    color: white;
+    border: 2px solid #B40F7F;  
+}
+
+
+
+/************ALERTAS*************/
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  outline: 0;
+  direction: ltr;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+body {
+  background-color: #ffffff;
+  color: #000000;
+  padding: 20px;
+}
+
+.nova-modal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 999999999999;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nova-modal .nova-alert {
+  position: relative;
+  width: 70%;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 0px;
+  border-radius: 3px;
+  text-align: center;
+  animation: 0.6s 1 novaAnimate;
+  -webkit-animation: 0.6s 1 novaAnimate;
+}
+
+@media (min-width: 768px) {
+  .nova-modal .nova-alert {
+    width: 350px;
+  }
+}
+
+@keyframes novaAnimate {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.nova-modal .nova-alert div.nova-icon {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nova-modal .nova-alert div.nova-icon div {
+  transform: scale(1.2);
+}
+
+.nova-modal .nova-alert .nova-title {
+  color: black;
+  font-size: large;
+}
+
+.nova-modal .nova-alert .nova-text {
+  color: #888888;
+  font-size: 15px;
+  margin: 10px 0px;
+}
+
+.nova-modal .nova-alert .nova-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.nova-modal .nova-alert .nova-btns a {
+  text-decoration: none;
+  padding: 7px 10px;
+  flex: 100%;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.nova-modal .nova-alert .nova-btns a.accept {
+  background: #74AB36;
+  color: #ffffff;
+}
+
+.nova-modal .nova-alert .nova-btns a.reject {
+  background: #B40F7F;
+  color: #ffffff;
+}
+
+.nova-modal .nova-alert .dismissButton {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  cursor: pointer;
+  font-size: large;
+  border: 1px solid rgba(126, 126, 126, 0.5);
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  color: rgba(126, 126, 126, 0.5) !important;
+}
+
+.nova-modal .nova-alert .dismissButton.hidden {
+  display: none;
+}
+
+.nova-modal .nova-alert input.nova-input-alert {
+  width: 100%;
+  padding: 5px 5px;
+  margin: 10px 0px;
+  border-radius: 3px;
+  border: 1px solid rgba(126, 126, 126, 0.5);
+  background-color: transparent;
+}
+
+.nova-dark-mode {
+  background-color: #2b2b2b !important;
+}
+
+.nova-dark-mode * {
+  color: white !important;
+}
+
+/*    animation svg icon    */
+.svg-box {
+  display: inline-block;
+  position: relative;
+  width: 150px;
+}
+
+.green-stroke {
+  stroke: #7CB342;
+}
+
+.red-stroke {
+  stroke: #FF6245;
+}
+
+.yellow-stroke {
+  stroke: #FFC107;
+}
+
+.circular circle.path {
+  stroke-dasharray: 330;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  opacity: 0.4;
+  animation: 0.7s draw-circle ease-out;
+}
+
+/*------- Checkmark ---------*/
+.checkmark {
+  stroke-width: 6.25;
+  stroke-linecap: round;
+  position: absolute;
+  top: 56px;
+  left: 49px;
+  width: 52px;
+  height: 40px;
+}
+
+.checkmark path {
+  animation: 1s draw-check ease-out;
+}
+
+@keyframes draw-circle {
+  0% {
+    stroke-dasharray: 0,330;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  80% {
+    stroke-dasharray: 330,330;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes draw-check {
+  0% {
+    stroke-dasharray: 49,80;
+    stroke-dashoffset: 48;
+    opacity: 0;
+  }
+  50% {
+    stroke-dasharray: 49,80;
+    stroke-dashoffset: 48;
+    opacity: 1;
+  }
+  100% {
+    stroke-dasharray: 130,80;
+    stroke-dashoffset: 48;
+  }
+}
+
+/*---------- Cross ----------*/
+.cross {
+  stroke-width: 6.25;
+  stroke-linecap: round;
+  position: absolute;
+  top: 54px;
+  left: 54px;
+  width: 40px;
+  height: 40px;
+}
+
+.cross .first-line {
+  animation: 0.7s draw-first-line ease-out;
+}
+
+.cross .second-line {
+  animation: 0.7s draw-second-line ease-out;
+}
+
+@keyframes draw-first-line {
+  0% {
+    stroke-dasharray: 0,56;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 0,56;
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dasharray: 56,330;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes draw-second-line {
+  0% {
+    stroke-dasharray: 0,55;
+    stroke-dashoffset: 1;
+  }
+  50% {
+    stroke-dasharray: 0,55;
+    stroke-dashoffset: 1;
+  }
+  100% {
+    stroke-dasharray: 55,0;
+    stroke-dashoffset: 70;
+  }
+}
+
+.alert-sign {
+  stroke-width: 6.25;
+  stroke-linecap: round;
+  position: absolute;
+  top: 40px;
+  left: 68px;
+  width: 15px;
+  height: 70px;
+  animation: 0.5s alert-sign-bounce cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.alert-sign .dot {
+  stroke: none;
+  fill: #FFC107;
+}
+
+@keyframes alert-sign-bounce {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+
+
+/********************************/
+
+</style> 
 
 @endsection
 
 @section('content')
+<!-- Mostrar mensaje de éxito -->
+
+<!-- Mostrar mensaje de éxito -->
+<div id="miDiv"></div>
+
+
 <div style="padding: 6rem; padding-top:2rem;">
   <div class="row d-flex justify-content-center mb-3">
     <div class="col-lg-6 col-sm-12 d-flex align-items-center justify-content-center">
-      <h3 class="text-center text-primary">Registro de Perfil de Funcionario</h3>
+      <h3 class="text-center titulo1">Registro de usuario</h3>
     </div>
   </div>
   <form method="POST" enctype="multipart/form-data" action="{{ route('perfil.store') }}">
@@ -18,12 +361,13 @@
         <div class="form-group row d-flex">
           <div class="col">
             <a id="elim_image" style="position: absolute; right:43px;cursor:pointer; font-size: 1.3rem; display: none;" class="text-danger"><i class="fas fa-times-circle"></i></a>
-            <img alt="foto" id="output" class="img-fluid border border-primary rounded" src="{{asset('imagenes/log.png')}}" />
+            <img alt="foto" id="output" class="img-fluid borde1 " src="{{asset('imagenes/log.png')}}" />
           </div>
         </div>
-        <div class="file-input row">
+        
+        <div class="file-input row" style="padding-top: 5px">
           <div class="col">
-            <input type="file" accept="image/*" name="foto" id="foto" onchange="loadFile(event)" class="file-input__input" />
+            <input type="file" accept="image/*" name="foto" id="foto" onchange="loadFile(event)" class="file-input__input " />
             <label class="file-input__label w-100 text-center mb-0" for="foto">
               <span>Subir Imagen</span>
             </label>
@@ -36,263 +380,215 @@
         </div>
       </div>
 
-      <div class="col-10 border border-primary rounded">
+      <div class="col-10 borde1">
         <h3 class="mt-3">Datos Personales</h3>
         <div class="form-group row d-flex">
+
+
+<div class="row">
+  <div class="col">
           <label for="nombre" class="col-md-2 col-form-label">
-            {{ __('Nombres') }}
+            {{ __('Nombres:') }}
           </label>
-          <div class="col-md-4">
-            <input id="nombre" type="text" class="form-control @error('nombre') is-invalid @enderror" name="nombre" value="{{ old('nombre') }}" required autocomplete="nombre" autofocus>
-            @error('nombre')
+          <input id="first_name" type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name') }}" required autocomplete="first_name" autofocus>
+            @error('first_name')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>
             </span>
             @enderror
-          </div>
-          <label for="paterno" class="col-md-2 col-form-label">
-            {{ __('Apellido Paterno') }}
+    </div>
+  <div class="col">
+          <label for="last_name1" class="col col-form-label" style="padding-top: 5px">
+            {{ __('Apellido Paterno:') }}
           </label>
-          <div class="col-md-4">
-            <input id="paterno" type="text" class="form-control @error('paterno') is-invalid @enderror" name="paterno" value="{{ old('paterno') }}" required autocomplete="paterno">
-            @error('paterno')
+           <input id="last_name1" type="text" class="form-control @error('last_name1') is-invalid @enderror" name="last_name1" value="{{ old('last_name') }}" required autocomplete="last_name1">
+            @error('last_name1')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>
             </span>
             @enderror
-          </div>
-        </div>
-        <div class="form-group row d-flex">
-          <label for="materno" class="col-md-2 col-form-label">
-            {{ __('Apellido Materno') }}
+
+  </div>
+  <div class="col">
+          <label for="last_name2" class="col col-form-label">
+            {{ __('Apellido Materno:') }}
           </label>
-          <div class="col-md-4">
-            <input id="materno" type="text" class="form-control @error('materno') is-invalid @enderror" name="materno" value="{{ old('materno') }}" autocomplete="materno">
-            @error('materno')
+          <input id="last_name2" type="text" class="form-control @error('last_name1') is-invalid @enderror" name="last_name2" value="{{ old('last_name2') }}" autocomplete="last_name2">
+            @error('last_name2')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>
             </span>
             @enderror
-          </div>
-          <label for="ci" class="col-md-2 col-form-label">{{ __('Carnet de identidad') }}</label>
-          <div class="col-md-2">
-            <input id="ci" type="ci" class="form-control @error('ci') is-invalid @enderror" name="ci" value="{{ old('ci') }}" autocomplete="ci">
+  </div>
+  <div class="col">
+          <label for="ci" class="col col-form-label">
+            {{ __('Documento de identidad:') }}
+          </label>
+          <input id="ci" type="text" class="form-control @error('ci') is-invalid @enderror" name="ci" value="{{ old('ci') }}" autocomplete="ci">
             @error('ci')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>
             </span>
             @enderror
-          </div>
-          <div class="col-md-2 pl-0">
-            <select name="ci_e" id="ci_e" class="form-control">
-              <option disabled selected>Extención CI</option>
-              <option value="LP">LP</option>
-              <option value="OR">OR</option>
-              <option value="CB">CB</option>
-              <option value="CH">CH</option>
-              <option value="PT">PT</option>
-              <option value="TJ">TJ</option>
-              <option value="SC">SC</option>
-              <option value="BE">BE</option>
-              <option value="PD">PD</option>
-              <option value="Otro">Otro</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group row d-flex">
-          <label for="fecha_nac" class="col-2 col-form-label">
-            {{ __('Fecha de Nacimiento') }}
-          </label>
-          <div class="col-md-4">
-            <input id="fecha_nac" type="date" class="form-control @error('fecha_nac') is-invalid @enderror" name="fecha_nac" value="{{ old('fecha_nac') }}" autocomplete="fecha_nac" autofocus>
+  </div>
+</div>
+
+<div class="row" style="padding-top: 1.5%;">
+  <div class="col">
+    <label for="fecha_nac" class="col col-form-label">
+            {{ __('Fecha de Nacimiento:') }}
+    </label>
+            <input id="fecha_nac" type="date" class="form-control @error('fecha_nac') is-invalid @enderror" name="fecha_nac" onchange="calcularEdad()" value="{{ old('fecha_nac') }}" autocomplete="fecha_nac" autofocus>
             @error('fecha_nac')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>
             </span>
             @enderror
-          </div>
-        </div>
-        <h3>Datos de Coorporativos</h3>
-        <div class="form-group row d-flex">
-          <label for="rol" class="col-2 col-form-label">{{ __('Unidad') }}</label>
-          <div class="col-md-4">
-            <select name="unidad_id" id=unidad_id class="form-control" required>
-              <option value="" disabled selected>Seleccione Unidad</option>
-              @foreach(App\Unidad::orderBy('nombre')->get() as $u)
-              <option value="{{$u->id}}">{{$u->nombre}}</option>
-              @endforeach
-            </select>
-          </div>
-          <label for="area" class="col-2 col-form-label">{{ __('Area') }}</label>
-          <div class="col-md-4">
-            <select name="area_id" id="area_id" class="form-control">
-              <option value="" disabled selected>Seleccione Area</option>
-              @foreach(App\Area::orderBy('nombre')->get() as $u)
-              <option value="{{$u->id}}">{{$u->nombre}}</option>
-              @endforeach
-            </select>
-          </div>
-        </div>
-        <div class="form-group row d-flex">
-          <label for="cargo" class="col-2 col-form-label">{{ __('Cargo') }}</label>
-          <div class="col-md-4">
-            <select name="cargo" id="cargo" class="form-control">
-
-              <option value="" disabled selected>Seleccione Cargo</option>
-              @foreach($cargos as $c)
-              
-              <option value="{{ $c->NombreCargo}}" >{{ $c->NombreCargo}}</option>
-            
-            @endforeach
-              <!--
-              
-                <option value="Auxiliar Contable">Auxiliar Contable</option>
-              <option value="Jefe">Jefe</option>
-              <option value="Personal">Personal</option>
-              <option value="Vendedor">Vendedor</option>
-              <option value="Preventista">Preventista</option>
-              <option value="Jefe de tienda">Jefe de tienda</option>
-              <option value="Jefe de ventas">Jefe de ventas</option>
-              <option value="Jefe de sistemas">Jefe de sistemas</option>
-              <option value="Gerente administrativo">Gerente administrativo</option>
-              <option value="Gerente comercial">Gerente comercial</option>
-              <option value="Encargado de logistica">Encargado de logistica</option>
-              <option value="Encargado de sistemas">Encargado de sistemas</option>
-              <option value="Vendedor institucional">Vendedor institucional</option>
-              <option value="Vendedor mayorista">Vendedor mayorista</option>
-              <option value="Distribuidor">Distribuidor</option>
-              -->
-            
-            </select>
-          </div>
-          <label for="corp_email" class="col-2 col-form-label">
-            {{ __('Correo Coporativo') }}
+  </div>
+  <div class="col" >
+    <label for="age" class="col col-form-label">
+            {{ __('Edad:') }}
+    </label>
+  <input id="age" name="age" type="text" value="" class="form-control ">
+  </div>
+  
+  
+  <div class="col">
+    <label for="corp_celu" class="col col-form-label">{{ __('Numero Celular:') }}</label>
+   
+      <input id="corp_celu" type="text" class="form-control @error('corp_celu') is-invalid @enderror" name="corp_celu" value="{{ old('corp_celu') }}" autocomplete="corp_celu" autofocus>
+      @error('corp_celu')
+      <span class="invalid-feedback" role="alert">
+        <strong>{{ $message }}</strong>
+      </span>
+      @enderror
+  </div>
+  <div class="col">
+    <label for="gender" class="col col-form-label">
+             {{ __('Genero:') }}
+    </label>
+    <div class="row">
+      <div class="col">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" value="Hombre" name="gender" id="gender1"checked>
+            <label class="form-check-label" for="age1">
+              {{ __('Hombre') }}
+  </label>
+</div>
+      </div>
+      <div class="col" style="">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" value="Mujer" name="gender" id="gender2" >
+          <label class="form-check-label" for="gender2">
+                        {{ __('Mujer') }}
           </label>
-          <div class="col-md-4">
-            <input id="corp_email" type="email" class="form-control @error('corp_email') is-invalid @enderror" name="corp_email" value="{{ old('corp_email') }}" autocomplete="corp_email" autofocus>
-            @error('corp_email')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-          </div>
         </div>
-        <div class="form-group row d-flex">
-          <label for="corp_telf" class="col-2 col-form-label">{{ __('Telefono') }}</label>
-          <div class="col-md-2">
-            <input id="corp_telf" type="text" class="form-control @error('corp_telf') is-invalid @enderror" name="corp_telf" value="{{ old('corp_telf') }}" autocomplete="corp_telf" autofocus>
-            @error('corp_telf')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-          </div>
-          <label for="corp_int" class="col col-form-label" style="flex: 0 0 3.3333333333%; max-width: 3.3333333333%;">{{ __('Int.') }}</label>
-          <div class="col" style="flex: 0 0 13.3333333333%; max-width: 13.3333333333%;">
-            <input id="corp_int" type="text" class="form-control @error('corp_int') is-invalid @enderror" name="corp_int" value="{{ old('corp_int') }}" autocomplete="corp_int" autofocus>
-            @error('corp_int')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-          </div>
-          <label for="corp_celu" class="col-2 col-form-label">{{ __('Numero Celular') }}</label>
-          <div class="col-md-4">
-            <input id="corp_celu" type="text" class="form-control @error('corp_celu') is-invalid @enderror" name="corp_celu" value="{{ old('corp_celu') }}" autocomplete="corp_celu" autofocus>
-            @error('corp_celu')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-          </div>
-        </div>
-        <div class="form-group row d-flex">
-          <label for="fecha_ingreso" class="col-2 col-form-label">{{ __('Fecha de Ingreso') }}</label>
-          <div class="col-md-4">
-            <input id="fecha_ingreso" type="date" class="form-control @error('fecha_ingreso') is-invalid @enderror" name="fecha_ingreso" value="{{ old('fecha_ingreso') }}" autocomplete="fecha_ingreso" autofocus>
-            @error('fecha_ingreso')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-          </div>
-          <label for="dias_vacacion" class="col-3 col-form-label">{{ __('Dias de Vacacion a la fecha') }}</label>
-          <div class="col-md-3">
-            <input id="dias_vacacion_a" type="" class="form-control @error('dias_vacacion') is-invalid @enderror" value="{{ old('dias_vacacion') }}" autocomplete="dias_vacacion" disabled>
-            <input id="dias_vacacion" type="" class="form-control @error('dias_vacacion') is-invalid @enderror d-none" name="dias_vacacion" value="{{ old('dias_vacacion') }}" autocomplete="dias_vacacion" autofocus>
-            @error('dias_vacacion')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-          </div>
-        </div>
+      </div>
+    </div>
+          
 
-        <h3>Datos de Contacto</h3>
+  </div>
 
-        <div class="row">
-          <div class="col-6">
-            <div class="form-group row d-flex">
-              <label for="telf" class="col-4 col-form-label">
-                {{ __('Telefono') }}
+  <div class="col" style="padding-left: 10px;padding-right: 10px;">
+    <label for="nationality" class="col col-form-label">
+      {{ __('Nacionalidad') }}
+    </label>
+    <select class="form-select" id="nationality" name="nationality" aria-label="Default select example"required>
+      <option value="xxx">Seleccione un pais</option>
+      <option value="bol" selected>Boliva</option>
+      <option value="per">Peru</option>
+      <option value="ecu">Ecuador</option>
+      <option value="chi">Chile</option>
+      <option value="ven">Venezuela</option>
+      <option value="fra">Frencia</option>
+    </select>
+  </div>
+
+</div>
+<h3>Datos de domicilio</h3>
+      
+
+<div class="table-responsive">
+  <table class="table table-striped table-hover"  id="table">
+    <thead class="thead">
+      <tr>
+        <th>Zona</th>
+        <th>Calle</th>
+        <th>Numero</th>
+      </tr>
+    </thead>  
+      <tbody >
+        <tr>
+          <td>
+            <input class="form-control"  type="text" name="zone[]" placeholder="Tipo" required>
+          </td>
+          <td>
+            <input class="form-control" type="text" name="street[]" placeholder="Tipo" required>
+          </td>
+          <td>
+            <input class="form-control" type="text" name="number[]" placeholder="Tipo" required>
+          </td>
+        </tr>
+      </tbody>
+  </table>
+  <div class="form-group">
+    <button type="button" class="btn btn-primary mb-2" onclick="agregarFila()" style="height: 35px;width: 35px;">+</button>
+    <button type="button" class="btn btn-primary mb-2" onclick="eliminarFila(this)" style="height: 35px;width: 35px;">-</button>
+  </div>
+</div>
+        
+        <div class="row" style="padding-top: 20px">
+            <div class="col">
+              <h3 >Datos de telefono/celular</h3>
+              <label for="number" class="col col-form-label" >
+                {{ __('Numero:') }}
               </label>
-              <div class="col-md-8">
-                <input id="telf" type="tel" class="form-control @error('telf') is-invalid @enderror" name="telf" value="{{ old('telf') }}" autocomplete="telf" autofocus>
-                @error('telf')
+               <input id="number" type="text" style="width: 30%" class="form-control @error('number') is-invalid @enderror" name="number" value="{{ old('number') }}" required autocomplete="number">
+                @error('number')
                 <span class="invalid-feedback" role="alert">
                   <strong>{{ $message }}</strong>
                 </span>
                 @enderror
-              </div>
             </div>
-            <div class="form-group row d-flex">
-              <label for="direc" class="col-4 col-form-label">
-                {{ __('Domicilio') }}
-              </label>
-              <div class="col-md-8">
-                <input id="direc" type="text" class="form-control @error('direc') is-invalid @enderror" name="direc" value="{{ old('direc') }}" autocomplete="direc" autofocus>
-                @error('direc')
-                <span class="invalid-feedback" role="alert">
-                  <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-              </div>
+            <div class="col">
+              <h3>Datos de Coorporativos</h3>
+              <div class="col-4 .col-md-4" style="align-content: center">
+             
+                <label for="type" class="col col-form-label">
+                  {{ __('Tipo') }}
+                </label>
+                <select class="form-select" id="type" name="type" aria-label="Default select example"required>
+                  <option value="xxx" selected>Seleccione un tipo</option>
+                  @foreach ($reg_types as $types)
+                    <option value='{{$types->id}}'>{{$types->name}}</option>   
+                  
+                  @endforeach
+                 
+                  
+                </select>
+             
             </div>
-          </div>
-          <div class="col-6">
-            <div class="form-group row d-flex">
-              <label for="celu" class="col-4 col-form-label">
-                {{ __('Celular') }}
-              </label>
-              <div class="col-md-8">
-                <input id="celu" type="tel" class="form-control @error('celu') is-invalid @enderror" name="celu" value="{{ old('celu') }}" autocomplete="celu" autofocus>
-                @error('celu')
-                <span class="invalid-feedback" role="alert">
-                  <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-              </div>
             </div>
-            <div class="form-group row d-flex">
-              <label for="email" class="col-4 col-form-label">
-                {{ __('Correo') }}
-              </label>
-              <div class="col-md-8">
-                <input id="email" type="tel" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" autocomplete="email" autofocus>
-                @error('email')
-                <span class="invalid-feedback" role="alert">
-                  <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-              </div>
-            </div>
-          </div>
         </div>
-        <div class="form-group row d-flex justify-content-center">
+       
+     
+      
+      
+       
+       
+      
+
+       
+
+        <div class="form-group row d-flex justify-content-center " style="padding-top: 20px;padding-bottom: 10px;">
           <div class="col-md-10 d-flex justify-content-center">
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary" id="botonSubir"  >
               {{ __('Regitrar') }}
             </button>
+         
+           
+
+
           </div>
         </div>
       </div>
@@ -303,6 +599,7 @@
 @endsection
 @section('mis_scripts')
 <script src="http://momentjs.com/downloads/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script>
 
   var loadFile = function(event) {
@@ -316,84 +613,273 @@
   $("#elim_image").click(function() {
     $("#foto").val("");
     var image = document.getElementById('output');
-    image.src = "{{asset('imagenes/log.jpg')}}";
+    image.src = "{{asset('imagenes/log.png')}}";
     $("#elim_image").hide();
   });
 
-  document.getElementById("fecha_ingreso").addEventListener("blur", function(e) {
-
-//datos de entrada
-var f1=365*4;
-var f2=365*10;
-
-
-// Crear una nueva instancia del objeto Date
-var fechaActual = new Date();
-
-// Obtener la fecha en formato legible para humanos
-//var fechaEnTexto1 = fechaActual.toLocaleDateString();
-var fechaEnTexto=fechaActual.toISOString().substring(0, 10);
-
-var inputFecha = document.getElementById("fecha_ingreso");
-
-// Obtener el valor del input
-var valorFecha = inputFecha.value;
-
-// Crear una instancia de Date utilizando el valor del input
-var fecha = new Date(valorFecha);
-
-
-
-// Definir las dos fechas
-var fecha1 = new Date(fechaEnTexto);
-var fecha2 = new Date(valorFecha);
-
-// Restar las fechas en milisegundos y convertir el resultado en días
-var resultadoEnDias = Math.round((fecha1.getTime() - fecha2.getTime()) / (1000 * 60 * 60 * 24));
-console.log("La fecha de hoy es " + resultadoEnDias +" f1:" +f1);
-
-if (resultadoEnDias >=f1) {
-  if (resultadoEnDias >= f2) {
-           $("#dias_vacacion_a").val(30);
-    $("#dias_vacacion").val(30);
-    console.log(dias_vacacion);
-  } else {
-   
-
-    $("#dias_vacacion_a").val(20);
-    $("#dias_vacacion").val(20);
-    console.log(dias_vacacion);
-  }
-} 
-else{
-    if (resultadoEnDias>=365) {
-      $("#dias_vacacion_a").val(15);
-    $("#dias_vacacion").val(15);
-    console.log(dias_vacacion);
-   
-    } else {
-      $("#dias_vacacion_a").val(0);
-    $("#dias_vacacion").val(0);
-    console.log(dias_vacacion);
-   
-    }
   
+</script>
+<script>
+  function calcularEdad() {
+      const fechaNacimientoInput = document.getElementById('fecha_nac');
+      const fechaNacimiento = new Date(fechaNacimientoInput.value);
+      const ahora = new Date();
+      const diferenciaMilisegundos = ahora - fechaNacimiento;
+      const edad = new Date(diferenciaMilisegundos);
+      const milisegundosEnAnio = 1000 * 60 * 60 * 24 * 365.25; // Consideramos años bisiestos
+      const diferenciaAnios = diferenciaMilisegundos / milisegundosEnAnio;
+      const añosEnteros = Math.floor(diferenciaAnios);
+  
+    document.getElementById('age').value = añosEnteros;
+  }
+
+</script>
+<script>
+  
+
+
+
+        /* ********************** start nova alert ********************** */
+
+
+        const novaAlert = function ({ icon = '', title = '', text = '', darkMode = false, showCancelButton = false, CancelButtonText = 'NO', ConfirmButtonText = 'Aceptar',ConfirmButtonText2 = 'Cancelar', dismissButton = true, input = false, inputPlaceholder = '' }) {
+
+
+let modal = document.createElement('div');
+modal.setAttribute('class', 'nova-modal');
+document.body.append(modal);
+let alert = document.createElement('div');
+alert.setAttribute('class', 'nova-alert')
+
+modal.appendChild(alert);
+var svg;
+
+if (darkMode == true) {
+    alert.classList.add('nova-dark-mode');
 }
 
 
-  //  var f = new Date();
-  //  var fecha_actual = moment(f.getFullYear() + "-" + (f.getMonth() +1) + "-" + f.getDate()); 
-   // console.log("fecha_actual " +fecha_actual  );
-   // var fecha_ingreso = moment($("#fecha_ingreso").val());
 
-   // console.log("fecha de ingre " +fecha_ingreso  );
-   // var fecha_diff = fecha_actual.diff(fecha_ingreso, 'days');
+
+if (icon == 'success') {
+    svg = `<svg class="circular green-stroke">
+        <circle class="path" cx="75" cy="75" r="50" fill="none" stroke-width="5" stroke-miterlimit="10"/>
+    </svg>
+    <svg class="checkmark green-stroke">
+        <g transform="matrix(0.79961,8.65821e-32,8.39584e-32,0.79961,-489.57,-205.679)">
+            <path class="checkmark__check" fill="none" d="M616.306,283.025L634.087,300.805L673.361,261.53"/>
+        </g>
+    </svg>`;
+} else if (icon == 'danger') {
+    svg = `<svg class="circular red-stroke">
+        <circle class="path" cx="75" cy="75" r="50" fill="none" stroke-width="5" stroke-miterlimit="10"/>
+    </svg>
+    <svg class="cross red-stroke">
+        <g transform="matrix(0.79961,8.65821e-32,8.39584e-32,0.79961,-502.652,-204.518)">
+            <path class="first-line" d="M634.087,300.805L673.361,261.53" fill="none"/>
+        </g>
+        <g transform="matrix(-1.28587e-16,-0.79961,0.79961,-1.28587e-16,-204.752,543.031)">
+            <path class="second-line" d="M634.087,300.805L673.361,261.53"/>
+        </g>
+    </svg>`;
+} else if (icon == 'warning') {
+    svg = `<svg class="circular yellow-stroke">
+        <circle class="path" cx="75" cy="75" r="50" fill="none" stroke-width="5" stroke-miterlimit="10"/>
+    </svg>
+    <svg class="alert-sign yellow-stroke">
+        <g transform="matrix(1,0,0,1,-615.516,-257.346)">
+            <g transform="matrix(0.56541,-0.56541,0.56541,0.56541,93.7153,495.69)">
+                <path class="line" d="M634.087,300.805L673.361,261.53" fill="none"/>
+            </g>
+            <g transform="matrix(2.27612,-2.46519e-32,0,2.27612,-792.339,-404.147)">
+                <circle class="dot" cx="621.52" cy="316.126" r="1.318" />
+            </g>
+        </g>
+    </svg>`;
+} else {
+    svg = '';
+}
+var icon_template = ` <div class="nova-icon">
+   <div class="svg-box">
+     ${svg}
+   </div>
+</div>`;
+var title_and_text = `
+<h3 class="nova-title">
+  ${title}
+</h3>
+<p class="nova-text">
+${text}
+</p>
+`;
+
+if (showCancelButton == true) {
+    var buttons =
+        `
+<div class="nova-btns">
+<a class="accept">
+  ${ConfirmButtonText}
+</a>
+<a class="reject">
+${CancelButtonText}
+</a>
+</div>
+`;
+} else {
+    var buttons =
+        `
+<div class="nova-btns">
+<a class="accept">
+${ConfirmButtonText}
+</a>
+</div>
+`;
+}
+if (dismissButton == true) {
+
+    var dismissButton = `<a class="dismissButton">
+X
+</a>`;
+} else {
+    var dismissButton = `<a class="dismissButton hidden">
+X
+</a>`;
+}
+
+
+if (input == true) {
+    var __input = `<input class="nova-input-alert" placeholder='${inputPlaceholder}'>`;
+} else {
+    var __input = '';
+}
+
+
+var $content = icon_template + title_and_text + __input + buttons + dismissButton;
+
+
+
+
+
+
+alert.innerHTML = $content;
+
+
+
+
+document.querySelector('.nova-alert .reject  , .nova-alert .accept').onclick = closeNova;
+document.querySelector('.dismissButton').onclick = closeNova;
+
+
+
+function closeNova() {
+
+    alert.remove();
+    modal.remove();
+
+}
+
+
+this.then = function (callback) {
+
+
+    document.querySelector('.nova-alert .accept').onclick = accept;
+
+    function accept() {
+
+
+
+
+
+        if (input == true) {
+
+
+            var inputValue = document.querySelector('.nova-input-alert');
+            var val = inputValue.value;
+            closeNova();
+            callback(e = true, val);
+
+        } else {
+            closeNova();
+            callback(e = true);
+        }
+
+
+
+    }
+
+    document.querySelector('.nova-alert .reject').onclick = reject;
+    function reject() {
+        closeNova();
+        callback(e = false);
+    }
+
+
+
+
+}
+
+
+
+}
+
+
+
+
+/* ********************** end nova alert ********************** */
+
+function alertaAceptar(){
+  new novaAlert({
+    icon: 'success',
+    title: 'Registro de usario correcto',
+    text: 'Precione el boton para continuar',
+dismissButton: true,
+
+
+ConfirmButtonText: 'Aceptar',
+
+});
+}
+function alertaFallo(){
+  new novaAlert({
+    icon: 'danger',
+    title: 'Registro no realizado',
+    text: 'Precione el boton para continuar',
+    dismissButton: false,
+
+CancelButtonText: 'Aceptar',
+
+});
+}
+
+
+</script>
+<script>
+  var miDiv = document.getElementById('miDiv');
+
+      var status = "{{ session('status') }}";
+      if (status === 'success') {
+        alertaAceptar();
+      } else if (status === 'error') {
+        alertaFallo();
+      }
+ 
+
+</script>
+<script>
+  function agregarFila() {
+    document.getElementById("table").insertRow(-1).innerHTML = `<td>
+            <input class="form-control"  type="text" name="zone[]" placeholder="Tipo" required>
+          </td>
+          <td>
+            <input class="form-control" type="text" name="street[]" placeholder="Tipo" required>
+          </td>
+          <td>
+            <input class="form-control" type="text" name="number[]" placeholder="Tipo" required>
+          </td>`;
+  }
+  function eliminarFila() {
+    var table = document.getElementById("table").deleteRow(2);
   
-   // var años = parseInt(fecha_diff/366);
-   // var dias_vacacion = años * 15;
-   // $("#dias_vacacion_a").val(años * 15);
-   // $("#dias_vacacion").val(años * 15);
-   // console.log(dias_vacacion);
-  });
+  }
 </script>
 @endsection
