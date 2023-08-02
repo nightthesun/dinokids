@@ -498,11 +498,7 @@ body {
     <div id="{{$moX->nomMo}}" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
       <div class="accordion-body">
         
-        @if ()
-            
-        @else
-            
-        @endif
+        
         <h1>{{$moX->idMO}}</h1>
       </div>
     </div>
