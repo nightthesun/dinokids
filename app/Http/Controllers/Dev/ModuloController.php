@@ -55,8 +55,8 @@ class ModuloController extends Controller
             'paterno' => 'required',
             'materno' => 'required',
             'fecha_nac' => 'nullable',
-            'ci' => 'required|unique:perfils',
-            'ci_e' => 'required',
+            'ci' => 'required|unique:reg_people',
+            
             'unidad_id' => 'required',
             'cargo' => 'nullable',
             'corp_telf' => 'nullable',

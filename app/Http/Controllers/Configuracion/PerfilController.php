@@ -5,14 +5,21 @@ namespace App\Http\Controllers\Configuracion;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
+use App\User;
 use App\Perfil;
 use App\Permiso;
+use App\Modulo;
+use App\SubModulo;
+use App\Program;
 use Illuminate\Support\Facades\Storage;
 use App\Unidad;
 use DateTime;
-use DB;
+//use DB;
+use Illuminate\Support\Facades\DB;
+use Session;
 use App\VacacionForm;
 use PhpOffice\PhpSpreadsheet\Calculation\TextData\Format;
+use Illuminate\Support\Facades\Hash;
 
 class PerfilController extends Controller
 {
@@ -27,11 +34,22 @@ class PerfilController extends Controller
   }
   public function index()
   {
+ 
     if (Auth::user()->authorizePermisos(['Funcionarios', 'Ver'])) {
       $user = Auth::user();
+      
       $perfil = Perfil::orderBy('id', 'DESC')
         ->get();
-      return view('configuracion.perfiles.index', compact('perfil'));
+      // añadidos
+
+      $query_reg_people = 'SELECT * FROM `reg_people p` 
+                            join `reg_types t` on
+                            join `reg_branch b` on 
+                            ORDER BY p.id';
+                          
+      $reg_people = DB::select($query_reg_people);
+      
+      return view('configuracion.perfiles.index', compact('perfil','reg_people'));
     } else {
       return dd('largo de aqui');
     }
@@ -48,11 +66,18 @@ class PerfilController extends Controller
     $jsonDatos = json_encode($exito);
 
     $query_reg_types = 'SELECT * FROM `reg_types` ORDER BY id';
-    $reg_types =DB::select($query_reg_types);
+    $reg_types = DB::select($query_reg_types);
+    $query_reg_branch = 'SELECT * FROM `reg_branch` ORDER BY id';
+    $reg_branch = DB::select($query_reg_branch);
+
+    $query_reg_country = "SELECT * FROM `reg_country` ORDER BY id";
+    $query_reg_city = "SELECT * FROM `reg_city` ORDER BY id";
+    $reg_country = DB::select($query_reg_country);
+    $reg_city = DB::select($query_reg_city);
     //DB::connection('mysql')->select(DB::raw($query_reg_types));
     //dd($reg_types);
  
-  return view('configuracion.perfiles.create', compact('reg_types','jsonDatos'));
+  return view('configuracion.perfiles.create', compact('reg_types','reg_branch','reg_country','reg_city','jsonDatos'));
   }
 
   /**
@@ -63,6 +88,15 @@ class PerfilController extends Controller
    */
   public function store(Request $request)
   {
+   
+    if($request->zone == null || $request->street== null || $request->number == null || $request->numberCell== null){
+      $mensajeError = 'Ocurrió un error al procesar la solicitud, revice los telefono o la dirección. Por favor, inténtalo de nuevo.';
+      Session::flash('error', $mensajeError);
+      return redirect()->back();
+      exit;
+    }
+  
+    
     try {
       $exito=0;
       $jsonDatos = json_encode($exito);
@@ -76,21 +110,21 @@ class PerfilController extends Controller
       $path = NULL;
     }
     
-    
-    $data = $request->validate([
+   $data = $request->validate([
       'first_name' => 'required|max:255',
       'last_name1' => 'nullable',
       'last_name2' => 'nullable',
-      'ci' => 'nullable|unique:perfils',
+      'ci' => 'nullable|unique:reg_people',
       'fecha_nac' => 'nullable',
       'age' =>'nullable',
-      'address' => 'nullable',
-      'corp_celu' => 'nullable',
       'gender' => 'nullable',
       'nationality' => 'nullable',
       'type' => 'nullable',
+      'branch'=> 'nullable',
+      'city' => 'nullable',
       
     ]);
+
    $id_gente= DB::table('reg_people')->insertGetId([
       'first_name' => $data['first_name'],
       'last_name1' => $data['last_name1'],
@@ -98,31 +132,91 @@ class PerfilController extends Controller
       'ci' => $data['ci'],
       'age' => $data['age'],
       'birthdate' => $data['fecha_nac'],
-      'address' => $data['address'],
-      'gender' => $data['age'],
+      'gender' => $data['gender'],
       'nationality' => $data['nationality'],
       'created_user_id' => $user,
       'created_date' => $fecha_actual,
       'deleted' => 0,
       'foto' => $path,
       'id_tipo' => $data['type'],
+      'id_branch' => $data['branch'],
+      'city' => $data['city'],
     ]);
     // Obtener el ID generado en la inserción en la tabla reg_people
     
-    DB::table('reg_telephono')->insert([
-      'number' => $data['corp_celu'],
-      'cod' => "+591",
-      'created_user_id' => $user,
-      'created_date' => $fecha_actual,
-      'deleted' => 0,
-      'id_people'=>$id_gente,
-    ]);
+   
+        
+    $streetFile=$request->zone;
+    $numberFile=$request->numberCell;
+    for ($i=0; $i <sizeof($streetFile) ; $i++) { 
+      DB::table('reg_address')->insert([
+        'zone' => $request->zone[$i],
+        'street' => $request->street[$i],
+        'number' => $request->number[$i],
+        'created_user_id' => $user,
+        'created_date' => $fecha_actual,
+        'deleted' => 0,
+        'id_people'=>$id_gente,
+        'descripcion'=>$request->decriptionAddress[$i],
+        ]);
+    }
+  
+    for ($i=0; $i <sizeof($numberFile) ; $i++) {
+      if($request->description[$i]==null){
+          $des="sin datos";
+      } else{
+          $des=$request->description[$i];
+      }
+    if($request->numberCell[$i]==1010){
+        $des="persona sin celular";
+    } else{
+      if ($request->numberCell[$i]==1000) {
+        $des="menor de edad o estudiante";
+      }else{
+        $des=$request->description[$i];
+      }
+        
+    }
+      DB::table('reg_telephono')->insert([
+        'number' => $request->numberCell[$i],
+        'cod' => "+591",
+        'description' => $des,
+        'created_user_id' => $user,
+        'created_date' => $fecha_actual,
+        'deleted' => 0,
+        'id_people'=>$id_gente,
+        ]);
+    }
     
-    $perfil = Perfil::create(
-      $data += ['foto' => $path]
-    );
+    
     //return view('configuracion.perfiles.create', compact('jsonDatos'));
     //return redirect()->route('perfil.create')->with('jsonDatos',$jsonDatos);
+    if($request->type==3){
+      $number1=0;
+   $palabrasecreta="";
+   while($number1<3){
+    $alfabeto = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $indiceAleatorio = rand(0, strlen($alfabeto) - 1);
+    $letraAleatoria = $alfabeto[$indiceAleatorio];
+    $letraAleatoriaMayuscula = strtoupper($letraAleatoria);
+    $palabrasecreta=$palabrasecreta.$letraAleatoriaMayuscula;
+    $number1++;
+   } 
+   $palabrasecreta= $palabrasecreta.$request->ci;
+      DB::table('users')->insert([
+        'name' =>  $palabrasecreta,
+        'password' => Hash::make('123'),
+        'val' =>1,
+         'elim'=> 0,
+         'created_user_id' => $user,
+        'created_date' => $fecha_actual,
+        'deleted' => 0,
+        'id_people'=>$id_gente,
+        'blockead_user'=>0,
+        ]);
+    }  
+
+
     return redirect()->back()->with('status', 'success');
   
   } catch (\Throwable $th) {
@@ -155,22 +249,50 @@ class PerfilController extends Controller
    */
   public function edit($id)
   {
-    $exito="99";
     
     $user = Auth::user();
     if ($user->authorizePermisos(['Usuarios', 'Ver'])) {
-      $fecha_ingreso = new DateTime(Perfil::find($id)->fecha_ingreso);
+      
       $fecha_actual = new DateTime(date('Y-m-d'));
    
-     
-      $query_cargos = 'SELECT * FROM `cargos` ORDER BY NombreCargo';
-     // $perfilesX='SELECT * FROM `perfiles` ORDER BY nombre';
-      $cargos = DB::select($query_cargos);
-      $perfil = Perfil::find($id);
-     // $perfilesX2=DB::select($perfilesX);
+      $usuario=User::find($id);            
+      $modulo = Modulo::get(); 
+      $query_user = "SELECT p.id as idpersona, p.first_name as nombre, p.last_name1 as apeP, p.last_name2 as apeM, p.ci as CI, p.age as edad, p.birthdate as Fnacimiento,p.gender as genero, c.id as idPais, c.name as namePaid,foto,t.id as idTipo, t.name as nameT,
+b.id as idSucursal, b.name as nameSucm, cc.id as idCiudad, cc.name as nameCC, u.id as idUser, u.name as nameUser  
+,pp.id as idTele,pp.number as numTele,pp.description as descrtiTele,aa.id as idDir,aa.zone as zona, aa.street as calle, aa.number as numeroPuerta
+       FROM `users` u 
+       JOIN `reg_people` p  on p.id=u.id_people
+       join `reg_types` t on t.id=p.id_tipo
+ JOIN `reg_branch` b on p.id_branch=b.id
+ JOIN `reg_country` c on p.nationality=c.id
+ JOIN `reg_city` cc on p.city=cc.id
+       JOIN `reg_telephono` pp on pp.id_people=p.id
+ JOIN `reg_address` aa on aa.id_people=p.id 
+       where  u.deleted=0 and p.id=$id
+       ORDER BY p.id
+       LIMIT 1
+      " ;
+       $userX = DB::select($query_user);
+        
+       $query_reg_types = 'SELECT * FROM `reg_types` ORDER BY id';
+$reg_types = DB::select($query_reg_types);
+$query_reg_branch = 'SELECT * FROM `reg_branch` ORDER BY id';
+$reg_branch = DB::select($query_reg_branch);
 
-      // dd($query_tomados);
-      return view('configuracion.perfiles.edit', compact('perfil','cargos','exito'));
+$query_reg_country = "SELECT * FROM `reg_country` ORDER BY id";
+$query_reg_city = "SELECT * FROM `reg_city` ORDER BY id";
+$reg_country = DB::select($query_reg_country);
+$reg_city = DB::select($query_reg_city);
+
+      $query_telephono ="SELECT * FROM `reg_telephono` where id_people=$id";
+      $query_address ="SELECT * FROM `reg_address` where id_people=$id";
+      $reg_telephono = DB::select($query_telephono);
+      $reg_address = DB::select($query_address);    
+       
+   
+      return view('configuracion.perfiles.edit',compact('usuario', 'modulo','reg_branch','reg_types','userX','reg_country','reg_city','reg_telephono','reg_address'));
+
+      //return view('configuracion.perfiles.edit', compact('reg_branch','reg_types','exito','userX'));
     } else {
       return dd('largo de aqui');
     }
@@ -185,54 +307,141 @@ class PerfilController extends Controller
    */
   public function update(Request $request, $id)
   {
+    
+    if($request->zone == null || $request->street== null || $request->number == null || $request->numberCell== null){
+      $mensajeError = 'Ocurrió un error al procesar la solicitud, revice los telefono o la dirección. Por favor, inténtalo de nuevo.';
+      Session::flash('error', $mensajeError);
+      return redirect()->back();
+      exit;
+    }
+  
+    
     try {
       $exito=0;
+      $jsonDatos = json_encode($exito);
+      $user = Auth::user()->id;
+    
+    $fecha_actual = new DateTime();
+    $fecha_actual=$fecha_actual->Format('Y-m-d H:m:s');
+    if ($request->file('foto')) {
+      $path = $request->file('foto')->store('images');
+    } else {
+      $path = NULL;
+    }
+    
+   $data = $request->validate([
+      'first_name' => 'required|max:255',
+      'last_name1' => 'nullable',
+      'last_name2' => 'nullable',
       
-      $fecha_actual = new DateTime(date('Y-m-d'));
-      $perfil = Perfil::find($id);
+      'ci' => 'required|unique:reg_people,ci,' . $id,
+      'fecha_nac' => 'nullable',
+      'age' =>'nullable',
+      'gender' => 'nullable',
+      'nationality' => 'nullable',
+      'type' => 'nullable',
+      'branch'=> 'nullable',
+      'city' => 'nullable',
       
-      $data = $request->validate([
-        'nombre' => 'required|max:255',
-        'paterno' => 'required',
-        'materno' => 'required',
-        'fecha_nac' => 'nullable',
-        'ci' => 'required|unique:perfils,ci,' . $id,
-        'ci_e' => 'required',
-        'cargo' => 'nullable',
-        'corp_telf' => 'nullable',
-        'corp_int' => 'nullable',
-        'corp_email' => 'nullable|unique:perfils,corp_email,' . $id,
-        'area_id' => 'required',
-        'corp_celu' => 'nullable',
-        'fecha_ingreso' => 'nullable',
-        'dias_vacacion' => 'nullable',
-        'telf' => 'nullable',
-        'direc' => 'nullable',
-        'celu' => 'nullable',
-        'unidad_id' => 'required',
-        'email' => 'nullable|unique:perfils,email,' . $id,
-      ]);
-      
-       
+    ]);
+
+   $id_gente= 
+   DB::table('reg_people')
+   ->where('id',$id) 
+   ->update([
+    'first_name' => $data['first_name'],
+      'last_name1' => $data['last_name1'],
+      'last_name2' => $data['last_name2'],
+      'ci' => $data['ci'],
+      'age' => $data['age'],
+      'birthdate' => $data['fecha_nac'],
+      'gender' => $data['gender'],
+      'nationality' => $data['nationality'],
+      'modified_user' => $user,
+      'modified_date' => $fecha_actual,
+      'foto' => $path,
+      'id_tipo' => $data['type'],
+      'id_branch' => $data['branch'],
+      'city' => $data['city'],
+    ]);
+        
+    $streetFile=$request->zone;
+   
+    $numberFile=$request->numberCell;
+    $ss="SELECT * FROM reg_address where id_people = $id";
+    $ss2 = DB::select($ss);
   
-      if ($request->check_f == 'true') {
-        Storage::delete($perfil->foto);
-        $path = $request->file('foto')->store('images');
-        $perfil->foto = $path;
-        $perfil->save();
-      } elseif ($request->check_f == 'false') {
-        Storage::delete($perfil->foto);
-        $perfil->foto = NULL;
-        $perfil->save();
-      }
-      $perfil->update($request->except(['foto']));
-      //return redirect()->back()->with('success', 'Datos actualizados correctamente.')->with($exito);
-     return redirect()->route('perfil.index');
-    } catch (\Throwable $th) {
-      $exito=1;
-      return redirect()->back()->with('error', 'Ha ocurrido un error al procesar los datos. Por favor, inténtelo nuevamente.')->withInput();
+    $iDarray=[];
+    foreach ($ss2 as $key => $value) {
+     array_push($iDarray,$value->id);
+      
     }
    
+    for ($i=0; $i <sizeof($iDarray) ; $i++) { 
+      
+    $RR = DB::table('reg_address')
+      ->where('id',$iDarray[$i]) 
+      ->update([
+        'zone' => $request->zone[$i],
+        'street' => $request->street[$i],
+        'number' => $request->number[$i],
+        'modified_user' => $user,
+        'modified_date' => $fecha_actual,
+        'id_people'=>$id,
+        'descripcion'=>$request->decriptionAddress[$i],
+        ]);
+    }
+    $ss="SELECT * FROM reg_telephono where id_people = $id";
+    $ss2 = DB::select($ss);
+  
+    $iDarray=[];
+    foreach ($ss2 as $key => $value) {
+     array_push($iDarray,$value->id);
+      
+    }
+    for ($i=0; $i <sizeof($iDarray) ; $i++) {
+      if($request->description[$i]==null){
+          $des="sin datos";
+      } else{
+          $des=$request->description[$i];
+      }
+    if($request->numberCell[$i]==1010){
+        $des="persona sin celular";
+    } else{
+      if ($request->numberCell[$i]==1000) {
+        $des="menor de edad o estudiante";
+      }else{
+        $des=$request->description[$i];
+      }
+        
+    }
+    
+
+      DB::table('reg_telephono')
+      ->where('id',$iDarray[$i]) 
+      ->update([
+        'number' => $request->numberCell[$i],
+        'cod' => "+591",
+        'description' => $des,
+        'modified_user' => $user,
+        'modified_date' => $fecha_actual,
+        'id_people'=>$id,
+        ]);
+    }
+   
+
+
+    return redirect()->back()->with('status', 'success');
+  
+  } catch (\Throwable $th) {
+      throw $th;
+     
+      //return redirect()->route('perfil.create')->with('jsonDatos',$jsonDatos)->with('jsonDatos',$jsonDatos);
+          //return view('configuracion.perfiles.create', compact('jsonDatos'));
+          return redirect()->back()->with('status', 'error');
+   
+    }
+
   }
 
   /**

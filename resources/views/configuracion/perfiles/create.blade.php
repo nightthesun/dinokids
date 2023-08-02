@@ -32,7 +32,49 @@
     color: white;
     border: 2px solid #B40F7F;  
 }
-
+#botonSubir:hover {
+  background-color: #B40F7F;
+    color: white;
+    border: 2px solid #B40F7F;  
+    
+}
+#botonSalir {
+   background-color: #ffffff;
+   color: #B40F7F;
+   border: none;
+   border-radius: 0%;
+   cursor: pointer;
+  
+   font-size: 40px;
+}
+#botonSalir:hover {
+ background-color: #ffffff;
+   color: #74AB36;
+   border: none;  
+   animation: swing 1s ease;
+    animation-iteration-count: 1;
+    
+     @keyframes swing { 
+    15% { 
+    transform: translateX(5px);
+    } 
+    30% { 
+    transform: translateX(-5px);
+    } 
+    50% { 
+    transform: translateX(3px);
+    } 
+    65% { 
+    transform: translateX(-3px);
+    } 
+    80% { 
+    transform: translateX(2px);
+    } 
+    100% { 
+    transform: translateX(0);
+    } 
+}
+}
 
 
 /************ALERTAS*************/
@@ -342,16 +384,30 @@ body {
 @endsection
 
 @section('content')
-<!-- Mostrar mensaje de éxito -->
 
+@if(Session::has('error'))
+    <div class="alert alert-danger">
+        {{ Session::get('error') }}
+    </div>
+@endif
 <!-- Mostrar mensaje de éxito -->
 <div id="miDiv"></div>
 
 
-<div style="padding: 6rem; padding-top:2rem;">
+<div style="padding: 6rem; padding-top:0.5rem;">
   <div class="row d-flex justify-content-center mb-3">
     <div class="col-lg-6 col-sm-12 d-flex align-items-center justify-content-center">
       <h3 class="text-center titulo1">Registro de usuario</h3>
+      <a href="{{ url('/') }}">
+        <button type="button" class="btn btn-primary align-self-end" id="botonSalir"  data-bs-toggle="tooltip" data-bs-placement="right" title="Regresar al inicio" >
+            <i class="fas fa-house-user"></i>
+          </button> 
+      </a>
+      <a href="{{ route('usuario.index') }}">
+        <button type="button" class="btn btn-primary align-self-end" id="botonSalir"  data-bs-toggle="tooltip" data-bs-placement="right" title="volver a lista" >
+          <i class="far fa-address-book"></i>
+          </button> 
+      </a>
     </div>
   </div>
   <form method="POST" enctype="multipart/form-data" action="{{ route('perfil.store') }}">
@@ -401,7 +457,7 @@ body {
           <label for="last_name1" class="col col-form-label" style="padding-top: 5px">
             {{ __('Apellido Paterno:') }}
           </label>
-           <input id="last_name1" type="text" class="form-control @error('last_name1') is-invalid @enderror" name="last_name1" value="{{ old('last_name') }}" required autocomplete="last_name1">
+           <input id="last_name1" type="text" class="form-control @error('last_name1') is-invalid @enderror" name="last_name1" value="{{ old('last_name1') }}" required autocomplete="last_name1">
             @error('last_name1')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>
@@ -453,16 +509,7 @@ body {
   </div>
   
   
-  <div class="col">
-    <label for="corp_celu" class="col col-form-label">{{ __('Numero Celular:') }}</label>
-   
-      <input id="corp_celu" type="text" class="form-control @error('corp_celu') is-invalid @enderror" name="corp_celu" value="{{ old('corp_celu') }}" autocomplete="corp_celu" autofocus>
-      @error('corp_celu')
-      <span class="invalid-feedback" role="alert">
-        <strong>{{ $message }}</strong>
-      </span>
-      @enderror
-  </div>
+
   <div class="col">
     <label for="gender" class="col col-form-label">
              {{ __('Genero:') }}
@@ -488,24 +535,80 @@ body {
           
 
   </div>
-
   <div class="col" style="padding-left: 10px;padding-right: 10px;">
     <label for="nationality" class="col col-form-label">
-      {{ __('Nacionalidad') }}
+      {{ __('Pais') }}
     </label>
     <select class="form-select" id="nationality" name="nationality" aria-label="Default select example"required>
-      <option value="xxx">Seleccione un pais</option>
-      <option value="bol" selected>Boliva</option>
-      <option value="per">Peru</option>
-      <option value="ecu">Ecuador</option>
-      <option value="chi">Chile</option>
-      <option value="ven">Venezuela</option>
-      <option value="fra">Frencia</option>
+      <option value="">Seleccione un pais</option>
+      @foreach ($reg_country as $pais)
+        @if ($pais->id==1)
+        <option value="{{$pais->id}}" selected>{{$pais->name}}</option>      
+        @else
+        <option value="{{$pais->id}}">{{$pais->name}}</option>
+        @endif
+          
+      @endforeach
+      
     </select>
   </div>
+  <div class="col" style="padding-left: 10px;padding-right: 10px;">
+    <label for="city" class="col col-form-label">
+      {{ __('Ciudad') }}
+    </label>
+    <select class="form-select" id="city" name="city" aria-label="Default select example"required>
+      <option value="">Seleccione una ciudad</option>
+      @foreach ($reg_city as $ciudad)
+      @if ($ciudad->id==1)
+      <option value="{{$ciudad->id}}" selected>{{$ciudad->name}}</option>      
+      @else
+      <option value="{{$ciudad->id}}">{{$ciudad->name}}</option>
+      @endif
+        
+    @endforeach
+    </select>
+  </div>
+   
 
 </div>
-<h3>Datos de domicilio</h3>
+<h3 style="padding-top: 20px">Datos de Coorporativos</h3>
+<div class="col-4">
+  
+ 
+ 
+    <label for="type" class="col col-form-label">
+      {{ __('Tipo') }}
+    </label>
+    <select class="form-select" id="type" name="type" aria-label="Default select example"  required>
+      <option value="" selected>Seleccione un tipo</option>
+      @foreach ($reg_types as $types)
+        <option value='{{$types->id}}'>{{$types->name}}</option>   
+      
+      @endforeach
+     
+      
+    </select>
+ 
+
+</div>
+<div class="col-4">
+
+ 
+    <label for="branch" class="col col-form-label">
+      {{ __('Sucursal') }}
+    </label>
+    <select class="form-select" id="branch" name="branch" aria-label="Default select example"  required>
+      <option value="" selected>Seleccione un tipo</option>
+      @foreach ($reg_branch as $sucursal)
+        <option value='{{$sucursal->id}}'>{{$sucursal->name}}</option>   
+      
+      @endforeach
+     
+      
+    </select>
+
+</div>
+<h3 style="padding-top: 20px">Datos de domicilio</h3>
       
 
 <div class="table-responsive">
@@ -515,18 +618,22 @@ body {
         <th>Zona</th>
         <th>Calle</th>
         <th>Numero</th>
+        <th>Datos adicionales</th>
       </tr>
     </thead>  
       <tbody >
         <tr>
           <td>
-            <input class="form-control"  type="text" name="zone[]" placeholder="Tipo" required>
+            <input class="form-control"  type="text" name="zone[]" placeholder="Zona donde vive" required>
           </td>
           <td>
-            <input class="form-control" type="text" name="street[]" placeholder="Tipo" required>
+            <input class="form-control" type="text" name="street[]" placeholder="Calle donde vive" required>
           </td>
           <td>
-            <input class="form-control" type="text" name="number[]" placeholder="Tipo" required>
+            <input class="form-control" type="text" name="number[]" placeholder="Numero de la casa" required>
+          </td>
+          <td>
+            <input class="form-control" type="text" name="decriptionAddress[]" placeholder="Puede dejar en blanco esta parte tambien puede llenar datos como ser edificio, etc" >
           </td>
         </tr>
       </tbody>
@@ -536,50 +643,37 @@ body {
     <button type="button" class="btn btn-primary mb-2" onclick="eliminarFila(this)" style="height: 35px;width: 35px;">-</button>
   </div>
 </div>
-        
-        <div class="row" style="padding-top: 20px">
-            <div class="col">
-              <h3 >Datos de telefono/celular</h3>
-              <label for="number" class="col col-form-label" >
-                {{ __('Numero:') }}
-              </label>
-               <input id="number" type="text" style="width: 30%" class="form-control @error('number') is-invalid @enderror" name="number" value="{{ old('number') }}" required autocomplete="number">
-                @error('number')
-                <span class="invalid-feedback" role="alert">
-                  <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-            </div>
-            <div class="col">
-              <h3>Datos de Coorporativos</h3>
-              <div class="col-4 .col-md-4" style="align-content: center">
-             
-                <label for="type" class="col col-form-label">
-                  {{ __('Tipo') }}
-                </label>
-                <select class="form-select" id="type" name="type" aria-label="Default select example"required>
-                  <option value="xxx" selected>Seleccione un tipo</option>
-                  @foreach ($reg_types as $types)
-                    <option value='{{$types->id}}'>{{$types->name}}</option>   
-                  
-                  @endforeach
-                 
-                  
-                </select>
-             
-            </div>
-            </div>
-        </div>
-       
-     
-      
-      
-       
-       
-      
+<h3>Datos telefono/celular</h3>
+<div class="alert alert-warning" role="alert">
+  <span>Recuerde para estos dos casos usar los siguientes codigos en la parte de numero de celular, para personas sin numero celular asignar el codigo "1010" y para menores de edad o estudiantes sin celular  usar el codigo "1000"</span>
+</div> 
 
-       
+<div class="table-responsive">
+  <table class="table table-striped table-hover"  id="table2">
+    <thead class="thead">
+      <tr>
+        <th>Numero</th>
+        <th>Descripción</th>
+      </tr>
+    </thead>  
+      <tbody >
+        <tr>
+          <td>
+            <input class="form-control" type="number" name="numberCell[]" placeholder="Celular" required>
+          </td>
+          <td>
+            <input class="form-control" type="text" name="description[]" placeholder="Puede dejalo en blanco, tambien puede indicar Numero principal, observaciones">
+          </td>
+        </tr>
+      </tbody>
+  </table>
 
+  <div class="form-group">
+    <button type="button" class="btn btn-primary mb-2" onclick="agregarFilaT()" style="height: 35px;width: 35px;">+</button>
+    <button type="button" class="btn btn-primary mb-2" onclick="eliminarFilaT(this)" style="height: 35px;width: 35px;">-</button>
+  </div>
+</div>
+       
         <div class="form-group row d-flex justify-content-center " style="padding-top: 20px;padding-bottom: 10px;">
           <div class="col-md-10 d-flex justify-content-center">
             <button type="submit" class="btn btn-primary" id="botonSubir"  >
@@ -863,23 +957,45 @@ CancelButtonText: 'Aceptar',
         alertaFallo();
       }
  
-
 </script>
 <script>
   function agregarFila() {
-    document.getElementById("table").insertRow(-1).innerHTML = `<td>
-            <input class="form-control"  type="text" name="zone[]" placeholder="Tipo" required>
+    document.getElementById("table").insertRow(-1).innerHTML = ` <td>
+            <input class="form-control"  type="text" name="zone[]" placeholder="Zona donde vive" required>
           </td>
           <td>
-            <input class="form-control" type="text" name="street[]" placeholder="Tipo" required>
+            <input class="form-control" type="text" name="street[]" placeholder="Calle donde vive" required>
           </td>
           <td>
-            <input class="form-control" type="text" name="number[]" placeholder="Tipo" required>
-          </td>`;
+            <input class="form-control" type="text" name="number[]" placeholder="Numero de la casa" required>
+          </td>
+          <td>
+            <input class="form-control" type="text" name="decriptionAddress[]" placeholder="Puede dejar en blanco esta parte tambien puede llenar datos como ser edificio, etc" >
+        </td>`;
   }
   function eliminarFila() {
     var table = document.getElementById("table").deleteRow(2);
   
   }
+
+  
+</script>
+<script>
+  function agregarFilaT() {
+    document.getElementById("table2").insertRow(-1).innerHTML = `
+    <td>
+            <input class="form-control" type="number" name="numberCell[]" placeholder="Celular" required>
+          </td>
+          <td>
+            <input class="form-control" type="text" name="description[]" placeholder="Puede dejalo en blanco, tambien puede indicar Numero principal, observaciones">
+         </td>`;
+  }
+  function eliminarFilaT() {
+    var table = document.getElementById("table2").deleteRow(2);
+  
+  }
+
+  
 </script>
 @endsection
+

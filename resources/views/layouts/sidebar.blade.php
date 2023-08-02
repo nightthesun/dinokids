@@ -12,6 +12,12 @@
       <i class="fas fa-arrow-left"></i>
     </a>
   </div>
+
+
+  <h5 style="">{{Auth::user()->usuarioLogueado( Auth::user()->id_people)->foto}}</h5>
+
+  <h1></h1>
+
   <nav id="sidebar" class="sidebar-wrapper">
     <div class="sidebar-content">
         <div class="sidebar-brand">
@@ -24,6 +30,7 @@
                 <i class="fas fa-times"></i>
             </div>
         </div>
+       
         <div class="sidebar-controls">   
           <a href="{{ url('/') }}">
             <i class="fas fa-home"></i>
@@ -38,19 +45,22 @@
         @auth
           <div class="sidebar-header">         
               <div class="user-pic">
-                  @if(Auth::user()->perfiles->foto != NULL)      
-                      <img alt="foto" class="img-fluid img-rounded" src="{{ asset(Auth::user()->perfiles->foto) }}"/>
+               
+                  @if(Auth::user()->usuarioLogueado( Auth::user()->id_people)->foto != NULL)      
+                      <img alt="foto" class="img-fluid img-rounded" src="{{ asset(Auth::user()->usuarioLogueado( Auth::user()->id_people)->foto) }}"/>
                   @else
                       <img alt="foto" class="img-fluid img-rounded" src="{{asset('imagenes/log.png')}}"/>
                   @endif   
               </div>
               <div class="user-info">        
                   <span class="user-name">
-                    {{  Auth::user()->perfiles->paterno.' '. Auth::user()->perfiles->materno}}
+                    {{Auth::user()->usuarioLogueado( Auth::user()->id_people)->last_name1.' '.Auth::user()->usuarioLogueado( Auth::user()->id_people)->last_name2}} 
                   </span>
-                  <span class="user-name">{{  Auth::user()->perfiles->nombre}}
+                  <span class="user-name">
+                    {{ Auth::user()->usuarioLogueado( Auth::user()->id_people)->first_name}}
                   </span>
-            <span class="user-role">{{Auth::user()->perfiles->cargo}}</span>
+          
+                  <span class="user-role">Administrador</span>
               </div>
           </div>
         @endauth

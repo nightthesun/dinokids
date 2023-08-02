@@ -1,145 +1,858 @@
 @extends('layouts.app')
-@section('static', 'statick-side')
 @section('estilo')
- 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<style>
+
+.contenedorX {
+  ...
+  display: flex;
+  justify-content: center;
+}
+.borde1 {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #6c757d;
+  border-radius: 10px;
+  
+}
+.fondoTitulo{
+  background: #EBEEF5;
+  margin:auto;
+}
+.titulo1{
+  color: #B40F7F;
+  border-width: 1px;
+  
+}
+.borde2 {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #6c757d;
+  border-radius: 10px;
+  
+}
+
+#botonSubir {
+   
+    background-color: #74AB36;
+    color: white;
+   
+    border: 2px solid #74AB36;
+    border-radius: 25px;
+    cursor: pointer;
+    width:200px;
+  height:50px;
+  font-size: 20px;
+}
+#botonSubir:hover {
+  background-color: #B40F7F;
+    color: white;
+    border: 2px solid #B40F7F;  
+    
+}
+#botonSalir {
+   background-color: #ffffff;
+   color: #B40F7F;
+   border: none;
+   border-radius: 0%;
+   cursor: pointer;
+  
+   font-size: 40px;
+}
+#botonSalir:hover {
+ background-color: #ffffff;
+   color: #74AB36;
+   border: none;  
+   animation: swing 1s ease;
+    animation-iteration-count: 1;
+    
+     @keyframes swing { 
+    15% { 
+    transform: translateX(5px);
+    } 
+    30% { 
+    transform: translateX(-5px);
+    } 
+    50% { 
+    transform: translateX(3px);
+    } 
+    65% { 
+    transform: translateX(-3px);
+    } 
+    80% { 
+    transform: translateX(2px);
+    } 
+    100% { 
+    transform: translateX(0);
+    } 
+}
+}
+
+
+/************ALERTAS*************/
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  outline: 0;
+  direction: ltr;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+body {
+  background-color: #ffffff;
+  color: #000000;
+  padding: 20px;
+}
+
+.nova-modal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 999999999999;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nova-modal .nova-alert {
+  position: relative;
+  width: 70%;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 0px;
+  border-radius: 3px;
+  text-align: center;
+  animation: 0.6s 1 novaAnimate;
+  -webkit-animation: 0.6s 1 novaAnimate;
+}
+
+@media (min-width: 768px) {
+  .nova-modal .nova-alert {
+    width: 350px;
+  }
+}
+
+@keyframes novaAnimate {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.nova-modal .nova-alert div.nova-icon {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nova-modal .nova-alert div.nova-icon div {
+  transform: scale(1.2);
+}
+
+.nova-modal .nova-alert .nova-title {
+  color: black;
+  font-size: large;
+}
+
+.nova-modal .nova-alert .nova-text {
+  color: #888888;
+  font-size: 15px;
+  margin: 10px 0px;
+}
+
+.nova-modal .nova-alert .nova-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.nova-modal .nova-alert .nova-btns a {
+  text-decoration: none;
+  padding: 7px 10px;
+  flex: 100%;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.nova-modal .nova-alert .nova-btns a.accept {
+  background: #74AB36;
+  color: #ffffff;
+}
+
+.nova-modal .nova-alert .nova-btns a.reject {
+  background: #B40F7F;
+  color: #ffffff;
+}
+
+.nova-modal .nova-alert .dismissButton {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  cursor: pointer;
+  font-size: large;
+  border: 1px solid rgba(126, 126, 126, 0.5);
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  color: rgba(126, 126, 126, 0.5) !important;
+}
+
+.nova-modal .nova-alert .dismissButton.hidden {
+  display: none;
+}
+
+.nova-modal .nova-alert input.nova-input-alert {
+  width: 100%;
+  padding: 5px 5px;
+  margin: 10px 0px;
+  border-radius: 3px;
+  border: 1px solid rgba(126, 126, 126, 0.5);
+  background-color: transparent;
+}
+
+.nova-dark-mode {
+  background-color: #2b2b2b !important;
+}
+
+.nova-dark-mode * {
+  color: white !important;
+}
+
+/*    animation svg icon    */
+.svg-box {
+  display: inline-block;
+  position: relative;
+  width: 150px;
+}
+
+.green-stroke {
+  stroke: #7CB342;
+}
+
+.red-stroke {
+  stroke: #FF6245;
+}
+
+.yellow-stroke {
+  stroke: #FFC107;
+}
+
+.circular circle.path {
+  stroke-dasharray: 330;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  opacity: 0.4;
+  animation: 0.7s draw-circle ease-out;
+}
+
+/*------- Checkmark ---------*/
+.checkmark {
+  stroke-width: 6.25;
+  stroke-linecap: round;
+  position: absolute;
+  top: 56px;
+  left: 49px;
+  width: 52px;
+  height: 40px;
+}
+
+.checkmark path {
+  animation: 1s draw-check ease-out;
+}
+
+@keyframes draw-circle {
+  0% {
+    stroke-dasharray: 0,330;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  80% {
+    stroke-dasharray: 330,330;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes draw-check {
+  0% {
+    stroke-dasharray: 49,80;
+    stroke-dashoffset: 48;
+    opacity: 0;
+  }
+  50% {
+    stroke-dasharray: 49,80;
+    stroke-dashoffset: 48;
+    opacity: 1;
+  }
+  100% {
+    stroke-dasharray: 130,80;
+    stroke-dashoffset: 48;
+  }
+}
+
+/*---------- Cross ----------*/
+.cross {
+  stroke-width: 6.25;
+  stroke-linecap: round;
+  position: absolute;
+  top: 54px;
+  left: 54px;
+  width: 40px;
+  height: 40px;
+}
+
+.cross .first-line {
+  animation: 0.7s draw-first-line ease-out;
+}
+
+.cross .second-line {
+  animation: 0.7s draw-second-line ease-out;
+}
+
+@keyframes draw-first-line {
+  0% {
+    stroke-dasharray: 0,56;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 0,56;
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dasharray: 56,330;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes draw-second-line {
+  0% {
+    stroke-dasharray: 0,55;
+    stroke-dashoffset: 1;
+  }
+  50% {
+    stroke-dasharray: 0,55;
+    stroke-dashoffset: 1;
+  }
+  100% {
+    stroke-dasharray: 55,0;
+    stroke-dashoffset: 70;
+  }
+}
+
+.alert-sign {
+  stroke-width: 6.25;
+  stroke-linecap: round;
+  position: absolute;
+  top: 40px;
+  left: 68px;
+  width: 15px;
+  height: 70px;
+  animation: 0.5s alert-sign-bounce cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.alert-sign .dot {
+  stroke: none;
+  fill: #FFC107;
+}
+
+@keyframes alert-sign-bounce {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+
+
+/********************************/
+/* Cambiar el background-color de la pestaña */
+
+
+/* Estilos cuando se selecciona la pestaña */
+.nav-pills .nav-link {
+   /* Cambiar a tu color deseado */
+    color: #B40F7F; /* Cambiar a tu color de texto deseado */
+}
+
+/* Estilos cuando se selecciona la pestaña */
+.nav-pills .nav-link.active {
+    background-color: #B40F7F; /* Cambiar a tu color deseado */
+    color: white; /* Cambiar a tu color de texto deseado */
+}
+.text1{
+  color: #9e2b7a;
+}
+.text2{
+  color: #9e5988;
+}
+.miCheckbox {
+      /* Establecer aquí el color de fondo cuando el checkbox está marcado */
+      background-color: #B40F7F;
+      /* Ajustar otros estilos del checkbox, como el tamaño */
+      width: 20px;
+      height: 20px;
+      /* Puedes agregar bordes redondeados para hacerlo más atractivo */
+      border-radius: 4px;
+      /* Puedes agregar un margen derecho para separar el checkbox de la etiqueta */
+      margin-right: 5px;
+    }
+    .miCheckbox:checked {
+      /* Establecer aquí el color de fondo cuando el checkbox está marcado */
+      background-color: #B40F7F;
+      box-shadow: 0 4px 8px rgba(97, 238, 3, 0.4);
+    }
+    /* Estilo para el label asociado al checkbox */
+   
+</style> 
+
 @endsection
 
 @section('content')
-@include('layouts.sidebar', ['hide'=>'1']) 
-<form method="POST" enctype="multipart/form-data" action="{{ route('usuario.update', $usuario->id) }}">
-    @csrf
-    <input name="_method" type="hidden" value="PATCH">    
-    <div class="container p-4">
-        <div class="row">                                     
-            <div class="col-4">
-                <h5>{{"Funcionario ".$usuario->perfiles->paterno. " ".$usuario->perfiles->nombre}}</h5>
-                <div class="row d-flex mb-2">
-                    <label for="name" class="col-sm-5 col-form-label col-form-label-sm text-left">
-                        Nombre de Usuario:
-                    </label>
-                    <div class="col-md-7">
-                        <input id="name" type="text" value="{{$usuario->name}}" class="form-control form-control-sm  @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-                        @error('name')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                </div>
-                <div class="row d-flex">
-                    <label for="name" class="col-sm-5 col-form-label col-form-label-sm text-left">
-                        Usuario DualbizERP:
-                    </label>
-                    <div class="col-md-7">
-                        <select name="dbiz_user" id="dbiz_user" class="form-control form-control-sm">
-                            
-                            <option value = "{{null}}"  
-                            @if(!$usuario->dbiz_user) selected @endif>
-                                NINGUNO
-                            </option>                            
-                            @foreach($dbiz_usr as $u)
-                                <option value = "{{$u->adusrCusr}}" 
-                                @if($usuario->dbiz_user == $u->adusrCusr) selected @endif>
-                                    {{$u->adusrNomb}}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="col-8 border border-primary rounded">
-                <div class="container py-3">
-                    <h3 class="text-center">Permisos</h3>
-                    <div class="row col">
-                        <ul class="nav nav-pills mb-3 mt-4" id="pills-tab" role="tablist">
-                            @foreach($modulo as $modu)
-                                @if(count($modu->submodulos)||count($modu->programs))
-                                    <li class="nav-item" role="presentation">
-                                        <a class="nav-link @if ($loop->first) active @endif" id="pills-{{$modu->id}}-tab" 
-                                        data-bs-toggle="pill" href="#pills-{{$modu->id}}" role="tab" 
-                                        aria-controls="pills-{{$modu->id}}" aria-selected="@if ($loop->first) true @else false @endif">
-                                            {{($modu->nombre)}}
-                                        </a>
-                                    </li>
-                                @endif
-                            @endforeach                        
-                        </ul>
-                    </div>
-                    <div class="tab-content" id="pills-tabContent">
-                        @foreach($modulo as $modu)
-                            @if(count($modu->programs))
-                                <div class="tab-pane fade show @if ($loop->first) active @endif" id="pills-{{($modu->id)}}" role="tabpanel" aria-labelledby="pills-{{($modu->id)}}-tab">
-                                    <div class="row">
-                                        @foreach($modu->programs as $prog)                                   
-                                            <div class="col-4 mb-3">
-                                                <div class="form-group row">
-                                                    <h6 class='ml-3 text-primary'><b>{{($prog->nombre)}}</b></h6>
-                                                </div>
-                                                @foreach($prog->permisos as $perm)
-                                                <div class="form-group row">
-                                                    <div class="col">
-                                                        <div class="ml-3 form-check">                        
-                                                            <input type="checkbox" class="form-check-input" id="permiso[]" name="permiso[]" value="G{{$prog->id}}.{{$perm->id}}" 
-                                                            @if(App\Acceso::where('user_id', $usuario->id)
-                                                            ->where('program_id', $prog->id)
-                                                            ->where('permiso_id',$perm->id)->first()
-                                                            ) checked @endif>
-                                                            <label class="form-check-label" for="exampleCheck1"> 
-                                                                {{$perm->p}}
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                @endforeach
-                                            </div>                
-                                        @endforeach
-                                    </div>
-                                </div>
-                            @endif
-                        @endforeach 
-                    </div>
-                </div>
-            </div> 
-        </div>  
-        <div class="controles-form">
-            <button type="submit" class="btn btn-primary btn-sm">
-                Guardar <i class="fas fa-save"></i>
-            </button>
-            <button type="button" class="btn btn-danger btn-sm text-white" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Resetear Contraseña <i class="fas fa-key"></i>
-            </button>
-        </div>
+
+@if(Session::has('error'))
+    <div class="alert alert-danger">
+        {{ Session::get('error') }}
     </div>
-</form>
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Resetear Contraseña</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+@endif
+<!-- Mostrar mensaje de éxito -->
+
+<div id="miDiv"></div>
+<div class="contenedorX">
+  
+    <!-- Contenido del div -->
+    <div style="padding: 6rem; padding-top:0.5rem;">
+      <div class="row d-flex justify-content-center mb-3">
+        <div class="col-lg-6 col-sm-12 d-flex align-items-center justify-content-center">
+          <h3 class="text-center titulo1">Permisos</h3>
+          <a href="{{ url('/') }}">
+            <button type="button" class="btn btn-primary align-self-end" id="botonSalir"  data-bs-toggle="tooltip" data-bs-placement="right" title="Tooltip on right" >
+                <i class="fas fa-house-user"></i>
+              </button> 
+          </a>
+          <a href="{{ route('usuario.index') }}">
+            <button type="button" class="btn btn-primary align-self-end" id="botonSalir"  data-bs-toggle="tooltip" data-bs-placement="right" title="volver a lista" >
+              <i class="far fa-address-book"></i>
+              </button> 
+          </a> 
+        </div>
       </div>
-      <div class="modal-body">
-        Se cambiar la contraseña del usuario 
-        {{$usuario->perfiles->paterno}} {{$usuario->perfiles->materno}} {{$usuario->perfiles->nombre}}
-        con nombre de usuario {{$usuario->name}}. La nueva contraseña sera "123".
+      <form method="POST" enctype="multipart/form-data" action="{{ route('usuario.update', $userX[0]->idpersona) }}">
+        @csrf
+        <div class="row">
+         
+    
+          <div class="col-12 borde1">
+            <div class="row">
+              <div class="col">
+                <h3 class="mt-3">
+                  <label style="font-size: 20px">{{"Nombre:"." ".$userX[0]->nombre." ".$userX[0]->apeP." ".$userX[0]->apeM}}</label>
+                </h3>
+              </div>
+                <div class="col">
+                  <h3 class="mt-3">
+                    <label style="font-size: 20px">{{"Usuario:"." ".$userX[0]->userName}}</label>
+                  </h3>  
+              </div>
+            </div>
+     
+
+
+<hr>
+<div class="accordion" id="accordionExample">
+  @foreach ($moduloX as $moX)
+      
+  
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+1     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#{{$moX->nomMo}}" aria-expanded="false" aria-controls="{{$moX->nomMo}}">
+        {{$moX->nomMo}}
+      </button>
+
+
+    </h2>
+    <div id="{{$moX->nomMo}}" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        
+        @if ()
+            
+        @else
+            
+        @endif
+        <h1>{{$moX->idMO}}</h1>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
-        <form method="POST" enctype="multipart/form-data" action="{{ route('usuario.reset', $usuario->id) }}">
-             @csrf
-            <button type="submit" class="btn btn-danger text-white">Resetear <i class="fas fa-key"></i></button>
-        </form>
-       </div>
     </div>
   </div>
+  @endforeach
+
+  
 </div>
+
+
+
+           <hr>
+          <div class="container p-1" >
+            <div class="row">
+              <div class="col-12  rounded">
+                <div class="container">
+                  <div class="row col">
+                   <ul class="nav nav-pills mb-3 mt-4"  id="pills-tab" role="tablist">
+                    @foreach($modulo as $modu)
+                    @if(count($modu->submodulos)||count($modu->programs))
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link @if ($loop->first) active @endif" id="pills-{{$modu->id}}-tab" 
+                            data-bs-toggle="pill" href="#pills-{{$modu->id}}" role="tab" 
+                            aria-controls="pills-{{$modu->id}}" aria-selected="@if ($loop->first) true @else false @endif">
+                                {{($modu->nombre)}}
+                            </a>
+                        </li>
+                    @endif
+                @endforeach  
+                
+                    </ul>
+                  </div>
+                  
+                  <div class="tab-content" id="pills-tabContent">
+                    @foreach($modulo as $modu)
+                    {{$modulo}}
+                   <h3>{{$modu}}</h3> 
+                        @if(count($modu->programs))
+                            <div class="tab-pane fade show @if ($loop->first) active @endif" id="pills-{{($modu->id)}}" role="tabpanel" aria-labelledby="pills-{{($modu->id)}}-tab">
+                                <div class="row">
+                                    @foreach($modu->programs as $prog)                                   
+                                        <div class="col-4 mb-3">
+                                            <div class="form-group row">
+                                                <h6 class='ml-3 text1'><b>{{($prog->nombre)}}</b></h6>
+                                            </div>
+                                            @foreach($prog->permisos as $perm)
+                                            <div class="form-group row">
+                                                <div class="col">
+                                                    <div class="ml-3 form-check">                        
+                                                
+                                                     
+                                                        <label class="form-check-label text2" for="exampleCheck1"> 
+                                                            {{$perm->p}} 
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </div>                
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach 
+                </div>
+                </div>
+              </div>  
+            </div>
+
+          </div>
+            
+        </form>
+          
+   
+           
+            <div class="form-group row d-flex justify-content-center " style="padding-top: 20px;padding-bottom: 10px;">
+              <div class="col-md-10 d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary" id="botonSubir"  >
+                  {{ __('Agregas permisos') }}
+                </button>
+             
+               
+    
+    
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  
+</div>
+
+
+
 @endsection
 @section('mis_scripts')
+<script src="http://momentjs.com/downloads/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script>
-var loadFile = function(event) {
-	var image = document.getElementById('output');
-	image.src = URL.createObjectURL(event.target.files[0]);  
-};
+
+  var loadFile = function(event) {
+    var image = document.getElementById('output');
+    image.src = URL.createObjectURL(event.target.files[0]);
+    var foto = $("#foto").val();
+    if (foto !== "") {
+      $("#elim_image").show();
+    }
+  };
+  $("#elim_image").click(function() {
+    $("#foto").val("");
+    var image = document.getElementById('output');
+    image.src = "{{asset('imagenes/log.png')}}";
+    $("#elim_image").hide();
+  });
+
+  
 </script>
+
+<script>
+  
+
+
+
+        /* ********************** start nova alert ********************** */
+
+
+        const novaAlert = function ({ icon = '', title = '', text = '', darkMode = false, showCancelButton = false, CancelButtonText = 'NO', ConfirmButtonText = 'Aceptar',ConfirmButtonText2 = 'Cancelar', dismissButton = true, input = false, inputPlaceholder = '' }) {
+
+
+let modal = document.createElement('div');
+modal.setAttribute('class', 'nova-modal');
+document.body.append(modal);
+let alert = document.createElement('div');
+alert.setAttribute('class', 'nova-alert')
+
+modal.appendChild(alert);
+var svg;
+
+if (darkMode == true) {
+    alert.classList.add('nova-dark-mode');
+}
+
+
+
+
+if (icon == 'success') {
+    svg = `<svg class="circular green-stroke">
+        <circle class="path" cx="75" cy="75" r="50" fill="none" stroke-width="5" stroke-miterlimit="10"/>
+    </svg>
+    <svg class="checkmark green-stroke">
+        <g transform="matrix(0.79961,8.65821e-32,8.39584e-32,0.79961,-489.57,-205.679)">
+            <path class="checkmark__check" fill="none" d="M616.306,283.025L634.087,300.805L673.361,261.53"/>
+        </g>
+    </svg>`;
+} else if (icon == 'danger') {
+    svg = `<svg class="circular red-stroke">
+        <circle class="path" cx="75" cy="75" r="50" fill="none" stroke-width="5" stroke-miterlimit="10"/>
+    </svg>
+    <svg class="cross red-stroke">
+        <g transform="matrix(0.79961,8.65821e-32,8.39584e-32,0.79961,-502.652,-204.518)">
+            <path class="first-line" d="M634.087,300.805L673.361,261.53" fill="none"/>
+        </g>
+        <g transform="matrix(-1.28587e-16,-0.79961,0.79961,-1.28587e-16,-204.752,543.031)">
+            <path class="second-line" d="M634.087,300.805L673.361,261.53"/>
+        </g>
+    </svg>`;
+} else if (icon == 'warning') {
+    svg = `<svg class="circular yellow-stroke">
+        <circle class="path" cx="75" cy="75" r="50" fill="none" stroke-width="5" stroke-miterlimit="10"/>
+    </svg>
+    <svg class="alert-sign yellow-stroke">
+        <g transform="matrix(1,0,0,1,-615.516,-257.346)">
+            <g transform="matrix(0.56541,-0.56541,0.56541,0.56541,93.7153,495.69)">
+                <path class="line" d="M634.087,300.805L673.361,261.53" fill="none"/>
+            </g>
+            <g transform="matrix(2.27612,-2.46519e-32,0,2.27612,-792.339,-404.147)">
+                <circle class="dot" cx="621.52" cy="316.126" r="1.318" />
+            </g>
+        </g>
+    </svg>`;
+} else {
+    svg = '';
+}
+var icon_template = ` <div class="nova-icon">
+   <div class="svg-box">
+     ${svg}
+   </div>
+</div>`;
+var title_and_text = `
+<h3 class="nova-title">
+  ${title}
+</h3>
+<p class="nova-text">
+${text}
+</p>
+`;
+
+if (showCancelButton == true) {
+    var buttons =
+        `
+<div class="nova-btns">
+<a class="accept">
+  ${ConfirmButtonText}
+</a>
+<a class="reject">
+${CancelButtonText}
+</a>
+</div>
+`;
+} else {
+    var buttons =
+        `
+<div class="nova-btns">
+<a class="accept">
+${ConfirmButtonText}
+</a>
+</div>
+`;
+}
+if (dismissButton == true) {
+
+    var dismissButton = `<a class="dismissButton">
+X
+</a>`;
+} else {
+    var dismissButton = `<a class="dismissButton hidden">
+X
+</a>`;
+}
+
+
+if (input == true) {
+    var __input = `<input class="nova-input-alert" placeholder='${inputPlaceholder}'>`;
+} else {
+    var __input = '';
+}
+
+
+var $content = icon_template + title_and_text + __input + buttons + dismissButton;
+
+
+
+
+
+
+alert.innerHTML = $content;
+
+
+
+
+document.querySelector('.nova-alert .reject  , .nova-alert .accept').onclick = closeNova;
+document.querySelector('.dismissButton').onclick = closeNova;
+
+
+
+function closeNova() {
+
+    alert.remove();
+    modal.remove();
+
+}
+
+
+this.then = function (callback) {
+
+
+    document.querySelector('.nova-alert .accept').onclick = accept;
+
+    function accept() {
+
+
+
+
+
+        if (input == true) {
+
+
+            var inputValue = document.querySelector('.nova-input-alert');
+            var val = inputValue.value;
+            closeNova();
+            callback(e = true, val);
+
+        } else {
+            closeNova();
+            callback(e = true);
+        }
+
+
+
+    }
+
+    document.querySelector('.nova-alert .reject').onclick = reject;
+    function reject() {
+        closeNova();
+        callback(e = false);
+    }
+
+
+
+
+}
+
+
+
+}
+
+
+
+
+/* ********************** end nova alert ********************** */
+
+function alertaAceptar(){
+  new novaAlert({
+    icon: 'success',
+    title: 'Registro de usario correcto',
+    text: 'Precione el boton para continuar',
+dismissButton: true,
+
+
+ConfirmButtonText: 'Aceptar',
+
+});
+}
+function alertaFallo(){
+  new novaAlert({
+    icon: 'danger',
+    title: 'Registro no realizado',
+    text: 'Precione el boton para continuar',
+    dismissButton: false,
+
+CancelButtonText: 'Aceptar',
+
+});
+}
+
+
+</script>
+<script>
+  var miDiv = document.getElementById('miDiv');
+
+      var status = "{{ session('status') }}";
+      if (status === 'success') {
+        alertaAceptar();
+      } else if (status === 'error') {
+        alertaFallo();
+      }
+ 
+</script>
+
+
 @endsection
+

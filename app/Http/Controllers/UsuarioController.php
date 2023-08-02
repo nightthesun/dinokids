@@ -30,10 +30,24 @@ class UsuarioController extends Controller
     {  
         if(Auth::user()->authorizePermisos(['Usuarios', 'Ver']))
         {
+            $query_reg_people = 'SELECT p.id, p.first_name, p.last_name1, p.last_name2, p.ci, p.age, p.birthdate, p.deleted as eliU, t.name as nameT, b.name as nameS,b.deleted as eliSucu
+            FROM `reg_people` p
+            JOIN `reg_types` t on t.id=p.id_tipo
+            JOIN `reg_branch` b ON p.id_branch = b.id
+            where  p.deleted=0 and b.deleted=0
+            ORDER BY p.id';
+             $query_user = 'SELECT *
+             FROM `users` u 
+             JOIN `reg_people` p  on p.id=u.id_people
+             where  u.deleted=0
+             ORDER BY p.id';
+            $user2 = DB::select($query_user);
             $user = Auth::user();
             $usuario=User::orderBy('id','DESC')->get();
             
-            return view('configuracion.usuario.index',compact('usuario'));      
+
+           
+            return view('configuracion.usuario.index',compact('usuario','user2'));      
         }
         else
         {
@@ -128,14 +142,59 @@ class UsuarioController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id, Request $request)
-    {
+    {// id de la persona 
+        $accesos="SELECT * FROM `users` u 
+        JOIN `reg_people` p  on p.id=u.id_people
+        JOIN `accesos` a  on u.id=a.user_id
+        ";
+         
+         
         $user = Auth::user();
         if($user->authorizePermisos(['Usuarios', 'Editar']))
-        {
+        {           
             $usuario=User::find($id);            
-            $modulo = Modulo::get(); 
-                               
-            return view('configuracion.usuario.edit',compact('usuario', 'modulo'));
+            $modulo = Modulo::get();
+            $query_modulo="SELECT m.id as idMO, m.nombre as nomMo, m.desc as decMo, m.icon as icoMo  FROM `modulos` m 
+            "; 
+            $moduloX = DB::select($query_modulo);
+                  
+
+
+          //  dd($moduloX);
+            $query_user = "SELECT u.name as userName, p.id as idpersona, p.first_name as nombre, p.last_name1 as apeP, p.last_name2 as apeM, p.ci as CI, p.age as edad, p.birthdate as Fnacimiento,p.gender as genero, c.id as idPais, c.name as namePaid,foto,t.id as idTipo, t.name as nameT,
+			b.id as idSucursal, b.name as nameSucm, cc.id as idCiudad, cc.name as nameCC, u.id as idUser, u.name as nameUser  
+			,pp.id as idTele,pp.number as numTele,pp.description as descrtiTele,aa.id as idDir,aa.zone as zona, aa.street as calle, aa.number as numeroPuerta
+             FROM `users` u 
+             JOIN `reg_people` p  on p.id=u.id_people
+             join `reg_types` t on t.id=p.id_tipo
+			 JOIN `reg_branch` b on p.id_branch=b.id
+			 JOIN `reg_country` c on p.nationality=c.id
+			 JOIN `reg_city` cc on p.city=cc.id
+             JOIN `reg_telephono` pp on pp.id_people=p.id
+			 JOIN `reg_address` aa on aa.id_people=p.id 
+             where  u.deleted=0 and p.id=$id
+             ORDER BY p.id
+             LIMIT 1
+            " ;
+             $userX = DB::select($query_user);
+              
+             $query_reg_types = 'SELECT * FROM `reg_types` ORDER BY id';
+    $reg_types = DB::select($query_reg_types);
+    $query_reg_branch = 'SELECT * FROM `reg_branch` ORDER BY id';
+    $reg_branch = DB::select($query_reg_branch);
+
+    $query_reg_country = "SELECT * FROM `reg_country` ORDER BY id";
+    $query_reg_city = "SELECT * FROM `reg_city` ORDER BY id";
+    $reg_country = DB::select($query_reg_country);
+    $reg_city = DB::select($query_reg_city);
+
+            $query_telephono ="SELECT * FROM `reg_telephono` where id_people=$id";
+            $query_address ="SELECT * FROM `reg_address` where id_people=$id";
+            $reg_telephono = DB::select($query_telephono);
+            $reg_address = DB::select($query_address);    
+             
+         
+            return view('configuracion.usuario.edit',compact('moduloX','usuario', 'modulo','reg_branch','reg_types','userX','reg_country','reg_city','reg_telephono','reg_address'));
         }
         else
         {
@@ -160,6 +219,7 @@ class UsuarioController extends Controller
             {
                 foreach($sm->permisos as $pe)
                 {
+                    
                     if(Acceso::where('user_id', $user->id)
                     ->where ('program_id', $sm->id)
                     ->where('permiso_id', $pe->id)->first())

@@ -15,6 +15,7 @@ use Auth;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Yajra\DataTables\Html\Editor\Fields\Select;
 
 class User extends Authenticatable
 {
@@ -26,7 +27,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'val','dbiz_user', 'password', 'elim'
+        'name', 'val', 'password', 'elim'
     ];
 
     /**
@@ -51,12 +52,15 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Form::class)->withTimestamps();
     }
-
+   
     public function perfiles()
     {
         return $this->hasOne(Perfil::class, 'user_id');
     }
-
+    public function personas()
+    {
+        return $this->hasOne(Personas::class, 'user_id');
+    }
     
     public function tieneModulo($sm)
     {
@@ -71,6 +75,7 @@ class User extends Authenticatable
                 {
                     return true;
                 }
+
             } 
             elseif(Program::find($ac->program_id) && $mod = Program::find($ac->program_id)->submodulos->modulos)
             {
@@ -85,9 +90,12 @@ class User extends Authenticatable
 
     public function tieneSubModulo($sm)
     {
+        //sm sub modulo
         $user = Auth::user();
         $submodulo = SubModulo::find($sm);
+        
         $acces = Acceso::where('user_id', $user->id)->get();
+       
         foreach($acces as $ac)
         {
             if($submod = Program::find($ac->program_id)->submodulos)
@@ -135,9 +143,15 @@ class User extends Authenticatable
     
     public function hasPermiso($p, $p2)
     {
+            // $p Usuarios
+            // $p2 Ver
+        
         $program = Program::where('nombre', $p)->first();
+       
         $perm = Permiso::where('p', $p2)->first();
+       
         $user = Auth::user();
+        
         if($program && $perm &&(Acceso::where('program_id',$program->id)
         ->where('permiso_id', $perm->id)
         ->where('user_id', $user->id)
@@ -159,5 +173,26 @@ class User extends Authenticatable
         }               
         return false;
     }
+    public function usuarioLogueado($user)
+    {
+        $query = $this->select('*')
+        ->from('users as u')
+        ->join('reg_people as p', 'u.id_people', '=', 'p.id')
+        ->where('id_people', $user)
+        ->first();
+                                
+        return $query;
+    }
+
+    public function querySub($user){
+        $query = $this->select('*')
+        ->from('sub_modulos')
+        ->where('id',$user)
+        ->first();
+        
+        return $query;
+    }
+
+
 
 }
