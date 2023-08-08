@@ -9,6 +9,7 @@ use App\Acceso;
 use App\Modulo;
 use App\SubModulo;
 use App\Program;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
@@ -43,6 +44,7 @@ class UsuarioController extends Controller
              ORDER BY p.id';
             $user2 = DB::select($query_user);
             $user = Auth::user();
+     
             $usuario=User::orderBy('id','DESC')->get();
             
 
@@ -143,24 +145,28 @@ class UsuarioController extends Controller
      */
     public function edit($id, Request $request)
     {// id de la persona 
+       
         $accesos="SELECT * FROM `users` u 
         JOIN `reg_people` p  on p.id=u.id_people
         JOIN `accesos` a  on u.id=a.user_id
         ";
          
+
+         
          
         $user = Auth::user();
         if($user->authorizePermisos(['Usuarios', 'Editar']))
         {           
-            $usuario=User::find($id);            
+            
+            $ss="SELECT id FROM users where id_people = $id limit 1";
+            $ss2 = DB::select($ss);
+            $usuario=User::find($ss2[0]->id); 
+         
             $modulo = Modulo::get();
             $query_modulo="SELECT m.id as idMO, m.nombre as nomMo, m.desc as decMo, m.icon as icoMo  FROM `modulos` m 
             "; 
             $moduloX = DB::select($query_modulo);
-                  
-
-
-          //  dd($moduloX);
+          
             $query_user = "SELECT u.name as userName, p.id as idpersona, p.first_name as nombre, p.last_name1 as apeP, p.last_name2 as apeM, p.ci as CI, p.age as edad, p.birthdate as Fnacimiento,p.gender as genero, c.id as idPais, c.name as namePaid,foto,t.id as idTipo, t.name as nameT,
 			b.id as idSucursal, b.name as nameSucm, cc.id as idCiudad, cc.name as nameCC, u.id as idUser, u.name as nameUser  
 			,pp.id as idTele,pp.number as numTele,pp.description as descrtiTele,aa.id as idDir,aa.zone as zona, aa.street as calle, aa.number as numeroPuerta
@@ -211,7 +217,12 @@ class UsuarioController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::find($id);
+        try {
+            $ss="SELECT id FROM users where id_people = $id limit 1";
+        $ss2 = DB::select($ss);
+      
+       
+        $user = User::find($ss2[0]->id);
         $smod = Program::get();
         if($request->permiso)
         {
@@ -255,7 +266,7 @@ class UsuarioController extends Controller
             Acceso::where('user_id', $user->id)->delete();
         } 
 
-        $user->dbiz_user = $request->dbiz_user;
+        
         $user->save();
         /*Storage::delete($user->foto);
         if($request->foto)
@@ -265,9 +276,19 @@ class UsuarioController extends Controller
             $user->save();
         }*/
         //return dd("XD");
-        return redirect()->route('usuario.edit', $user->id);
+        return redirect()->back()->with('status', 'success');
+  
+    } catch (\Throwable $th) {
+        throw $th;
+       
+        //return redirect()->route('perfil.create')->with('jsonDatos',$jsonDatos)->with('jsonDatos',$jsonDatos);
+            //return view('configuracion.perfiles.create', compact('jsonDatos'));
+        return redirect()->back()->with('status', 'error');
+     
+      }
+        
     }
-
+   
     /**
      * Remove the specified resource from storage.
      *
@@ -275,8 +296,54 @@ class UsuarioController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        //
+    {     
+     try {
+        $userX= "SELECT id FROM users WHERE id_people = $id LIMIT 1
+            ";
+        $userD = DB::select($userX);
+        
+        $user = Auth::user()->id;
+    
+        $fecha_actual = new DateTime();
+        $fecha_actual=$fecha_actual->Format('Y-m-d H:m:s');
+        $persona =" SELECT ci FROM reg_people where $id = id limit 1
+        ";
+        $personaBD=DB::select($persona);
+        $ciP=$personaBD[0]->ci;
+        $letras = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $cadenaAleatoria= substr(str_shuffle($letras), 0, 10);
+        
+        
+        $id_gente= 
+       
+        DB::table('reg_people')
+        ->where('id',($id)) 
+        ->update([
+         
+           'ci' => $cadenaAleatoria.$ciP,
+           'deleted_user_id' => $user,
+           'deleted_date' => $fecha_actual,
+           'deleted' => 1,
+           'ci_delete' =>$ciP, 
+           
+           
+         ]);
+         $user = User::find($userD[0]->id);
+         $user->elim = 1;
+         $user->deleted = 1;
+         $user->deleted_user_id =Auth::user()->id;
+         $user->deleted_date =$fecha_actual;   
+         $user->save();
+        //$user->delete(); elimina 
+
+    
+        return redirect()->back()->with('status', 'delete');
+        
+     } catch (\Throwable $th) {
+        dd ($th);
+        return redirect()->back()->with('status', 'error');
+        
+    }
     }
     public function updatePassword(Request $request)
     {
@@ -299,10 +366,126 @@ class UsuarioController extends Controller
     }
     public function resetPassword($id)
     {
-        $user = User::find($id);
-        $user->password = Hash::make('123');
-        $user->val = 0;
-        $user->save();
-        return redirect()->route('usuario.index');
+           
+          try {
+            $userX= "SELECT id FROM users WHERE id_people = $id LIMIT 1
+            ";
+             $userD = DB::select($userX);
+            $user = User::find($userD[0]->id);
+            $user->password = Hash::make('123');
+            $user->val = 0;
+            $user->save();
+            return redirect()->back()->with('status', 'success');
+          } catch (\Throwable $th) {
+            return redirect()->back()->with('status', 'error');
+          }
+        
+       // return redirect()->route('inicio')->with('success','La contrasesa se combio de forma correcta');
     }
+
+    public function BloquearUser(Request $request, $id)
+    {
+     try {
+        $userX= "SELECT id FROM users WHERE id_people = $id LIMIT 1
+            ";
+            $ban=$request->ban;
+       
+            if ($ban=="pir") {
+                $ban=1;
+                } else {
+                if($ban=="rip"){
+                   $ban=0;     
+                }else{
+                    return redirect()->back()->with('status', 'error');
+                    exit;            
+                }
+
+            }
+            
+        $userD = DB::select($userX);
+        $user = Auth::user()->id;
+       $user = User::find($userD[0]->id);
+         $user->blockead_user = $ban;
+         $user->save();
+        return redirect()->back()->with('status', 'banned');
+        
+     } catch (\Throwable $th) {
+        
+        return redirect()->back()->with('status', 'error');
+        
+    }
+    }
+    public function SuperUsuario(Request $request, $id)
+    {
+       
+     try {
+        $userX= "SELECT id FROM users WHERE id_people = $id LIMIT 1
+            ";
+            $super=$request->super;
+            
+            if ($super==1) {
+                $userD = DB::select($userX);
+        $user = Auth::user()->id;
+       $user = User::find($userD[0]->id);
+         $user->super_user = 1;
+         $user->save();
+        return redirect()->back()->with('status', 'userSuper');
+                } else {
+                if($super==0){
+                    $userD = DB::select($userX);
+                    $user = Auth::user()->id;
+                   $user = User::find($userD[0]->id);
+                     $user->super_user = 0;
+                     $user->save();
+                    return redirect()->back()->with('status', 'userNormal'); 
+                }else{
+                    return redirect()->back()->with('status', 'error');
+                    exit;            
+                }
+
+            }
+            
+        
+        
+     } catch (\Throwable $th) {
+        
+        return redirect()->back()->with('status', 'error');
+        
+    }
+    }
+    public function  AumentoUsuario(Request $request, $id)
+    {
+        
+       
+     try {
+        $userX= "SELECT id,number_modif FROM users WHERE id_people = $id LIMIT 1
+            ";
+            $userD = DB::select($userX);
+            $super=$userD[0]->number_modif;
+            
+            if ($super==0) {
+                $super=$super+1;
+             
+        $user = Auth::user()->id;
+       $user = User::find($userD[0]->id);
+         $user->number_modif = $super;
+         $user->save();
+        return redirect()->back()->with('status', 'aumento0');
+                } else {
+              
+                    return redirect()->back()->with('status', 'aumento1'); 
+             
+
+            }
+            
+        
+        
+     } catch (\Throwable $th) {
+        
+        return redirect()->back()->with('status', 'error');
+        
+    }
+    }
+   
+
 }

@@ -206,13 +206,15 @@ class PerfilController extends Controller
       DB::table('users')->insert([
         'name' =>  $palabrasecreta,
         'password' => Hash::make('123'),
-        'val' =>1,
+        'val' =>0,
          'elim'=> 0,
          'created_user_id' => $user,
         'created_date' => $fecha_actual,
         'deleted' => 0,
         'id_people'=>$id_gente,
         'blockead_user'=>0,
+        'number_modif' =>1,
+        'super_user' =>0,
         ]);
     }  
 

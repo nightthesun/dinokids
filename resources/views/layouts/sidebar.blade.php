@@ -1,16 +1,9 @@
   <div id="control" >
-    <a id="show-sidebar" href="#">
-      <i class="fas fa-bars"></i>
+    <a id="show-sidebar" href="#" style="color: #B40F7F; font-size: 20px">
+      <i class="fas fa-th-list"></i>
     </a>
-    <a href="{{ url('/') }}">
-      <i class="fas fa-home"></i>
-    </a>
-    <a href="#" class="reload_page">
-      <i class="fas fa-sync-alt"></i>
-    </a>
-    <a href="#" class="previous_page">
-      <i class="fas fa-arrow-left"></i>
-    </a>
+    
+    
   </div>
 
 

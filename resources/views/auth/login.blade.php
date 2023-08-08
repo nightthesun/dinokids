@@ -9,7 +9,7 @@
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="row mb-3 justify-content-center">
-                            <label for="name" class="col-md-6 col-form-label ">Numero CI</label>
+                            <label for="name" class="col-md-6 col-form-label ">Usuario</label>
                             <div class="col-md-6">
                                 <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
                                 @error('name')

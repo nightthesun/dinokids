@@ -2,54 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Form;
-use Auth;
-use App\DataForm;
 use Illuminate\Http\Request;
 
-class InicioController extends Controller
+class EstudianteController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    
-    public function index(Request $request)
+    public function index()
     {
-        //$rem= Auth::viaremember();
-        //return dd($rem);
-
-        if (Auth::viaRemember()) {
-            return view('inicio');
-        }
-        $user = Auth::user();
-        if ($user->deleted==1) {
-            return redirect()->route('errors.deleted');
-            exit;
-        } else {
-            if ($user->blockead_user==1) {
-                return redirect()->route('errors.banned');
-                exit;
-            } else {
-                if($user->val == NULL || $user->val == 0) 
-                {
-                    return view('auth.password');
-                }
-                elseif($user->val===1)
-                {
-                    return view('inicio');          
-                } 
-            }
-            
-        }
-        
-        
-
+        //
     }
 
     /**

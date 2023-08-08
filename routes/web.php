@@ -18,14 +18,26 @@ Route::get('/', 'InicioController@index')->name('inicio');
 Route::get('/home', 'InicioController@index')->name('inicio');  
 
 Route::resource('usuario', 'UsuarioController');
+
+Route::post('resetpassword/1/{id}', 'UsuarioController@resetPassword')->name('usuario.reset');
+Route::post('eliminarU/{id}', 'UsuarioController@destroy')->name('usuario.destroy');
+Route::post('Bloqueo/{id}', 'UsuarioController@BloquearUser')->name('usuario.bloqueo');
+Route::post('SuperUser/{id}', 'UsuarioController@SuperUsuario')->name('usuario.super');
+Route::post('aumentarCantidad/{id}', 'UsuarioController@AumentoUsuario')->name('usuario.aumento');
 Route::prefix('usuario')->group(function()
 {    
-    Route::post('resetpassword/{id}', 'UsuarioController@resetPassword')->name('usuario.reset');
+    Route::post('resetpassword/{id}', 'UsuarioController@resetPassword')->name('usuario.reset1');
     Route::post('password/', 'UsuarioController@updatePassword')->name('usuario.updatepass');
     Route::any('create/{id}', 'UsuarioController@create')->name('usuario.create');
     Route::any('store/{id}', 'UsuarioController@store')->name('usuario.store');
 });
+Route::get('/errors/banned', function () {
+    return view('errors.banned'); // Asegúrate de tener una vista llamada "errors/banned.blade.php"
+})->name('errors.banned');
 
+Route::get('/errors/deleted', function () {
+    return view('errors.deleted'); // Asegúrate de tener una vista llamada "errors/banned.blade.php"
+})->name('errors.deleted');
 
 Route::resource('/notificaciones', 'NotificationsController');
 Route::patch('notificaciones/read/{id}','NotificationsController@read');
@@ -34,6 +46,7 @@ Route::post('notificaciones/deleteall','NotificationsController@deleteall');
 Route::get('notificaciones/{url}/{id}','NotificationsController@redirect')->name('notifications.redirect');
 
 Route::resource('perfil','Configuracion\PerfilController');
+
 
 Route::prefix('dev')->group(function(){
     Route::resource('modulo', 'Dev\ModuloController');
@@ -71,7 +84,7 @@ Route::get('/sidebar', function()
 });
 Route::get('/pass', function()
 {
-    //$pass = Hash::make("victorS22");
+    $pass = Hash::make("Rm22");
     return dd($pass);
 }); 
 

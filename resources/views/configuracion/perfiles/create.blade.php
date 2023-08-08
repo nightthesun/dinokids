@@ -384,12 +384,8 @@ body {
 @endsection
 
 @section('content')
+@include('layouts.sidebar', ['hide'=>'0'])
 
-@if(Session::has('error'))
-    <div class="alert alert-danger">
-        {{ Session::get('error') }}
-    </div>
-@endif
 <!-- Mostrar mensaje de éxito -->
 <div id="miDiv"></div>
 
