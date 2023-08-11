@@ -387,7 +387,7 @@ body {
 
 @section('content')
 @include('layouts.sidebar', ['hide'=>'0']) 
-@if(Auth::user()->authorizepermisos(['Usuarios', 'Ver']) && Auth::user()->authorizepermisos(['Usuarios', 'Editar']) )
+@if(Auth::user()->authorizepermisos(['Listar Comunidad', 'Ver']) && Auth::user()->authorizepermisos(['Listar Comunidad', 'Editar']) )
     
 @if(Session::has('error'))
 <div class="alert alert-danger">
@@ -402,13 +402,13 @@ body {
 <div style="padding: 6rem; padding-top:0.5rem;">
   <div class="row d-flex justify-content-center mb-3">
     <div class="col-lg-6 col-sm-12 d-flex align-items-center justify-content-center">
-      <h3 class="text-center titulo1">Edición de Persona</h3>
+      <h3 class="text-center titulo1">Edición de Tutor</h3>
       <a href="{{ url('/') }}">
         <button type="button" class="btn btn-primary align-self-end" id="botonSalir"  data-bs-toggle="tooltip" data-bs-placement="right" title="Volver a pagina principal" >
             <i class="fas fa-house-user"></i>
           </button> 
       </a>
-      <a href="{{ route('usuario.index') }}">
+      <a href="{{ route('perfil.index') }}">
         <button type="button" class="btn btn-primary align-self-end" id="botonSalir"  data-bs-toggle="tooltip" data-bs-placement="right" title="volver a lista" >
           <i class="far fa-address-book"></i>
           </button> 
@@ -418,7 +418,7 @@ body {
       
     </div>
   </div>
-  <form method="POST" enctype="multipart/form-data" action="{{ route('perfil.update', $userX[0]->idpersona) }}">
+  <form method="POST" enctype="multipart/form-data" action="{{ route('perfilTutor.update', $userX[0]->idpersona) }}">
     @method('PUT')
     @csrf
 
@@ -488,16 +488,16 @@ body {
             @enderror
   </div>
   <div class="col">
-          <label for="ci" class="col col-form-label">
-            {{ __('Documento de identidad:') }}
-          </label>
-          <input id="ci" type="text" value="{{$userX[0]->CI}}" class="form-control @error('ci') is-invalid @enderror" name="ci" value="{{ old('ci') }}" autocomplete="ci">
-            @error('ci')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-  </div>
+    <label for="ci" class="col col-form-label">
+      {{ __('Documento de identidad:') }}
+    </label>
+    <input id="ci" type="text" value="{{$userX[0]->CI}}" class="form-control @error('ci') is-invalid @enderror" name="ci" value="{{ old('ci') }}" autocomplete="ci">
+      @error('ci')
+      <span class="invalid-feedback" role="alert">
+        <strong>{{ $message }}</strong>
+      </span>
+      @enderror
+</div>
 </div>
 
 <div class="row" style="padding-top: 1.5%;">
@@ -609,44 +609,7 @@ body {
 
 </div>
 <h3 style="padding-top: 20px">Datos de Coorporativos</h3>
-<div class="col-4">
-  
- 
- 
-    <label for="type" class="col col-form-label">
-      {{ __('Tipo') }}
-    </label>
-    <select class="form-select" id="type" name="type" aria-label="Default select example"  required>
-      <option value="" selected>Seleccione un tipo</option>
-      @foreach ($reg_types as $types)
-      @if ($types->name=="Empleado")
-      @if(Auth::user()->authorizepermisos(['Usuarios', 'Ver tipo empleado']) && Auth::user()->authorizepermisos(['Usuarios', 'Super usuario']) )
-       @if ($types->id==$userX[0]->idTipo) 
-       <option value='{{$types->id}}' selected>{{$types->name}}</option>  
-       @else
-       <option value='{{$types->id}}'>{{$types->name}}</option>  
-       @endif 
-      
-      @endif
-         
-      @else
-      @if ($types->id==$userX[0]->idTipo)      
-      <option value='{{$types->id}}' selected>{{$types->name}}</option>
-      @else
-      <option value='{{$types->id}}'>{{$types->name}}</option>
-       @endif
-      @endif 
-      
 
-   
-
-      @endforeach
-     
-      
-    </select>
- 
-
-</div>
 <div class="col-4">
 
  
@@ -666,6 +629,29 @@ body {
      
       
     </select>
+
+</div>
+<div class="col-4">
+
+ 
+  <label for="Parentesco" class="col col-form-label">
+    {{ __('Parentesco') }}
+  </label>
+  <select class="form-select" id="parentesco" name="parentesco" aria-label="Default select example"  required>
+    <option value="">Seleccione un tipo</option>
+ 
+    @foreach ($parentescoArray as $key=>  $para)
+      @if ($reg_parentesco[0]->parentesco==$key)
+      <option value="{{$key}}" selected>{{$para}} </option>
+      @else
+      <option value="{{$key}}">{{$para}}</option>
+      @endif
+    
+    
+    @endforeach
+   
+    
+  </select>
 
 </div>
 <h3 style="padding-top: 20px">Datos de domicilio</h3>
@@ -743,7 +729,7 @@ body {
         <div class="form-group row d-flex justify-content-center " style="padding-top: 20px;padding-bottom: 10px;">
           <div class="col-md-10 d-flex justify-content-center">
             <button type="submit" class="btn btn-primary" id="botonSubir"  >
-              {{ __('Regitrar') }}
+              {{ __('Actualizar') }}
             </button>
          
            

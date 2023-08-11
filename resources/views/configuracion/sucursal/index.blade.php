@@ -99,23 +99,16 @@
 @endsection
 
 
-  @if(Auth::user()->authorizepermisos(['Listar Comunidad', 'Ver']) ) 
+  @if(Auth::user()->authorizepermisos(['sucursal', 'Ver']) ) 
   <div id="miDiv"></div>
   <div class="contenedor">
-    <h3 class="titulo1 h11">Lista de estudiantes y tutores</h3>
-    @if (Auth::user()->authorizepermisos(['Listar Comunidad', 'Crear']))
-    <a href="{{ route('perfilEstudiante.create') }}">
+    <h3 class="titulo1 h11">Lista de sucursales</h3>
+    
+    <a href="{{ route('sucursal.create') }}">
       <button type="button" class="btn btn-primary" id="botonSubir2"  >
-        <i class="fas fa-child"></i>{{ __('Añadir Estudiante') }}
+        <i class="fas fa-child"></i>{{ __('Añadir Sucursal') }}
        </button>
       </a>
-      <a href="{{ route('perfilTutor.create') }}" >
-        <button type="button" class="btn btn-primary" id="botonSubir"  >
-          <i class="fas fa-male"></i> {{ __('Añadir Tutor') }}
-         </button>
-        </a>     
-    @endif
-   
   </div>
   <div class="container"> 
     <div class="alert alert-info" role="alert" >
@@ -131,48 +124,33 @@
     <thead>
       <tr>
         <th>Nombre</th>
-        <th>CI</th>
-        <th>Edad</th>
-        <th>Fecha de nacimiento</th>  
-        <th>Sucursal</th>
-        <th>Tipo</th>
-        <th>Fecha de creación</th>
+        <th>Descripción</th>
+        <th>Dirección</th>
+        
         <th>Opcines</th>
                 
       </tr>
     </thead>
     <tbody>
-     @if (count($people))
-     @foreach ($people as $person)
+     @if (count($branch))
+     @foreach ($branch as $su)
     
      <tr>
-      
-       <td>{{$person->first_name." ".$person->last_name1." ".$person->last_name2}}</td>
-       @if ($person->nameT=="Estudiante")
-           <td>N/S</td>
-       @else
-           <td>{{$person->ci}}</td>
-       @endif
-       <td style="text-align: center">{{$person->age}}</td> 
-       <td>{{$person->birthdate}}</td>
-       <td>{{$person->nameS}}</td>
-       <td>{{$person->nameT}}</td>
-       <td>{{$person->created_date}}</td>
+        <td>{{$su->nameDres}}</td>
+       <td>{{$su->descripS}}</td>
+       <td>{{$su->zone." ".$su->street." ".$su->number}}</td>
+       
        <td class="small-cell" >
-        @if(Auth::user()->authorizepermisos(['Listar Comunidad', 'Editar']) ) 
-          @if ($person->nameT=="Estudiante")
-          <a class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Editar" href="{{ route('perfilEstudiante.edit',$person->id) }}" >
+        @if(Auth::user()->authorizepermisos(['sucursal', 'Editar']) ) 
+          
+          <a class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Editar" href="{{ route('sucursal.edit',$su->id) }}" >
             <i class="fas fa-user-edit"></i>  
            </a>      
-          @else
-                @if ($person->nameT=="Tutor")
-                <a class="btn btn-info btn-sm text-white"  data-toggle="tooltip" data-placement="top" title="Editar" href="{{ route('perfilTutor.edit',$person->id) }}" >
-                  <i class="fas fa-user-edit"></i>
-                </a>  
-                @else
+       
+               
+                
                     
-                @endif
-          @endif
+        
             
         @else
         <button type="button" class="btn btn-warning"><i class="fas fa-exclamation-triangle"></i></button>

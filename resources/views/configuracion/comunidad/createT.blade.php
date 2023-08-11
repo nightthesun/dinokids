@@ -31,6 +31,11 @@
   background-color: #B40F7F;
     color: white;
     border: 2px solid #B40F7F;  
+}
+#botonSubir:hover {
+  background-color: #B40F7F;
+    color: white;
+    border: 2px solid #B40F7F;  
     
 }
 #botonSalir {
@@ -373,6 +378,8 @@ body {
 
 
 /********************************/
+
+
 .message-container {
             text-align: center;
             background-color: #fff;
@@ -381,48 +388,34 @@ body {
             border-radius: 5px;
             box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
         }
+
 </style> 
 
 @endsection
 
 @section('content')
-@include('layouts.sidebar', ['hide'=>'0']) 
-@if(Auth::user()->authorizepermisos(['Usuarios', 'Ver']) && Auth::user()->authorizepermisos(['Usuarios', 'Editar']) )
-    
-@if(Session::has('error'))
-<div class="alert alert-danger">
-    {{ Session::get('error') }}
-</div>
-@endif
-<!-- Mostrar mensaje de éxito -->
-
+@include('layouts.sidebar', ['hide'=>'0'])
+@if(Auth::user()->authorizepermisos(['Listar Comunidad', 'Ver']) && Auth::user()->authorizepermisos(['Listar Comunidad', 'Crear']) )
+    <!-- Mostrar mensaje de éxito -->
 <div id="miDiv"></div>
-
-
 <div style="padding: 6rem; padding-top:0.5rem;">
   <div class="row d-flex justify-content-center mb-3">
     <div class="col-lg-6 col-sm-12 d-flex align-items-center justify-content-center">
-      <h3 class="text-center titulo1">Edición de Persona</h3>
+      <h3 class="text-center titulo1">Registro de tutores</h3>
       <a href="{{ url('/') }}">
-        <button type="button" class="btn btn-primary align-self-end" id="botonSalir"  data-bs-toggle="tooltip" data-bs-placement="right" title="Volver a pagina principal" >
+        <button type="button" class="btn btn-primary align-self-end" id="botonSalir"  data-bs-toggle="tooltip" data-bs-placement="right" title="Regresar al inicio" >
             <i class="fas fa-house-user"></i>
           </button> 
       </a>
-      <a href="{{ route('usuario.index') }}">
+      <a href="{{ route('perfil.index') }}">
         <button type="button" class="btn btn-primary align-self-end" id="botonSalir"  data-bs-toggle="tooltip" data-bs-placement="right" title="volver a lista" >
           <i class="far fa-address-book"></i>
           </button> 
       </a>
-         
-    
-      
     </div>
   </div>
-  <form method="POST" enctype="multipart/form-data" action="{{ route('perfil.update', $userX[0]->idpersona) }}">
-    @method('PUT')
+  <form method="POST" enctype="multipart/form-data" action="{{ route('perfilTutor.store') }}">
     @csrf
-
-    <input name="_method" type="hidden" value="PATCH">
     <div class="row">
       <div class="col-2">
         <div class="form-group row d-flex">
@@ -457,7 +450,7 @@ body {
           <label for="nombre" class="col-md-2 col-form-label">
             {{ __('Nombres:') }}
           </label>
-          <input id="first_name" type="text" value="{{$userX[0]->nombre}}" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name') }}" required autocomplete="first_name" autofocus>
+          <input id="first_name" type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name') }}" required autocomplete="first_name" autofocus>
             @error('first_name')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>
@@ -468,7 +461,7 @@ body {
           <label for="last_name1" class="col col-form-label" style="padding-top: 5px">
             {{ __('Apellido Paterno:') }}
           </label>
-           <input id="last_name1" type="text"   value="{{$userX[0]->apeP}}" class="form-control @error('last_name1') is-invalid @enderror" name="last_name1" value="{{ old('last_name1') }}" required autocomplete="last_name1">
+           <input id="last_name1" type="text" class="form-control @error('last_name1') is-invalid @enderror" name="last_name1" value="{{ old('last_name1') }}" required autocomplete="last_name1">
             @error('last_name1')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>
@@ -480,7 +473,7 @@ body {
           <label for="last_name2" class="col col-form-label">
             {{ __('Apellido Materno:') }}
           </label>
-          <input id="last_name2" type="text" value="{{$userX[0]->apeM}}" class="form-control @error('last_name1') is-invalid @enderror" name="last_name2" value="{{ old('last_name2') }}" autocomplete="last_name2">
+          <input id="last_name2" type="text" class="form-control @error('last_name1') is-invalid @enderror" name="last_name2" value="{{ old('last_name2') }}" autocomplete="last_name2">
             @error('last_name2')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>
@@ -488,16 +481,16 @@ body {
             @enderror
   </div>
   <div class="col">
-          <label for="ci" class="col col-form-label">
-            {{ __('Documento de identidad:') }}
-          </label>
-          <input id="ci" type="text" value="{{$userX[0]->CI}}" class="form-control @error('ci') is-invalid @enderror" name="ci" value="{{ old('ci') }}" autocomplete="ci">
-            @error('ci')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-  </div>
+    <label for="ci" class="col col-form-label">
+      {{ __('Documento de identidad:') }}
+    </label>
+    <input id="ci" type="text" class="form-control @error('ci') is-invalid @enderror" name="ci" value="{{ old('ci') }}" autocomplete="ci">
+      @error('ci')
+      <span class="invalid-feedback" role="alert">
+        <strong>{{ $message }}</strong>
+      </span>
+      @enderror
+</div>
 </div>
 
 <div class="row" style="padding-top: 1.5%;">
@@ -505,7 +498,7 @@ body {
     <label for="fecha_nac" class="col col-form-label">
             {{ __('Fecha de Nacimiento:') }}
     </label>
-            <input id="fecha_nac" type="date" value="{{$userX[0]->Fnacimiento}}" class="form-control @error('fecha_nac') is-invalid @enderror" name="fecha_nac" onchange="calcularEdad()" value="{{ old('fecha_nac') }}" autocomplete="fecha_nac" autofocus>
+            <input id="fecha_nac" type="date" class="form-control @error('fecha_nac') is-invalid @enderror" name="fecha_nac" onchange="calcularEdad()" value="{{ old('fecha_nac') }}" autocomplete="fecha_nac" autofocus>
             @error('fecha_nac')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>
@@ -516,7 +509,7 @@ body {
     <label for="age" class="col col-form-label">
             {{ __('Edad:') }}
     </label>
-  <input id="age" name="age" type="text" value="{{$userX[0]->edad}}" class="form-control ">
+  <input id="age" name="age" type="text" value="" class="form-control ">
   </div>
   
   
@@ -526,48 +519,22 @@ body {
              {{ __('Genero:') }}
     </label>
     <div class="row">
-        @if ($userX[0]->genero=="Hombre")
-        <div class="col">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" value="Hombre" name="gender" id="gender1"checked>
-                <label class="form-check-label" for="age1">
-                  {{ __('Hombre') }}
-      </label>
-    </div>
-          </div>
-          <div class="col" style="">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" value="Mujer" name="gender" id="gender2" >
-              <label class="form-check-label" for="gender2">
-                            {{ __('Mujer') }}
-              </label>
-            </div>
-          </div>      
-        @else
-            @if ($userX[0]->genero=="Mujer")
-            <div class="col">
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" value="Hombre" name="gender" id="gender1">
-                    <label class="form-check-label" for="age1">
-                      {{ __('Hombre') }}
+      <div class="col">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" value="Hombre" name="gender" id="gender1"checked>
+            <label class="form-check-label" for="age1">
+              {{ __('Hombre') }}
+  </label>
+</div>
+      </div>
+      <div class="col" style="">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" value="Mujer" name="gender" id="gender2" >
+          <label class="form-check-label" for="gender2">
+                        {{ __('Mujer') }}
           </label>
         </div>
-              </div>
-              <div class="col" style="">
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" value="Mujer" name="gender" id="gender2" checked>
-                  <label class="form-check-label" for="gender2">
-                                {{ __('Mujer') }}
-                  </label>
-                </div>
-              </div>
-            @else
-            <label class="form-check-label" for="gender2">
-                {{ __('Consulte al administrador') }}
-            </label>
-            @endif
-        @endif
-      
+      </div>
     </div>
           
 
@@ -579,8 +546,8 @@ body {
     <select class="form-select" id="nationality" name="nationality" aria-label="Default select example"required>
       <option value="">Seleccione un pais</option>
       @foreach ($reg_country as $pais)
-        @if ($pais->id==$userX[0]->idPais)
-        <option value="{{$userX[0]->idPais}}" selected>{{$userX[0]->namePaid}}</option>      
+        @if ($pais->id==1)
+        <option value="{{$pais->id}}" selected>{{$pais->name}}</option>      
         @else
         <option value="{{$pais->id}}">{{$pais->name}}</option>
         @endif
@@ -596,7 +563,7 @@ body {
     <select class="form-select" id="city" name="city" aria-label="Default select example"required>
       <option value="">Seleccione una ciudad</option>
       @foreach ($reg_city as $ciudad)
-      @if ($ciudad->id==$userX[0]->idCiudad)
+      @if ($ciudad->id==1)
       <option value="{{$ciudad->id}}" selected>{{$ciudad->name}}</option>      
       @else
       <option value="{{$ciudad->id}}">{{$ciudad->name}}</option>
@@ -609,44 +576,7 @@ body {
 
 </div>
 <h3 style="padding-top: 20px">Datos de Coorporativos</h3>
-<div class="col-4">
-  
- 
- 
-    <label for="type" class="col col-form-label">
-      {{ __('Tipo') }}
-    </label>
-    <select class="form-select" id="type" name="type" aria-label="Default select example"  required>
-      <option value="" selected>Seleccione un tipo</option>
-      @foreach ($reg_types as $types)
-      @if ($types->name=="Empleado")
-      @if(Auth::user()->authorizepermisos(['Usuarios', 'Ver tipo empleado']) && Auth::user()->authorizepermisos(['Usuarios', 'Super usuario']) )
-       @if ($types->id==$userX[0]->idTipo) 
-       <option value='{{$types->id}}' selected>{{$types->name}}</option>  
-       @else
-       <option value='{{$types->id}}'>{{$types->name}}</option>  
-       @endif 
-      
-      @endif
-         
-      @else
-      @if ($types->id==$userX[0]->idTipo)      
-      <option value='{{$types->id}}' selected>{{$types->name}}</option>
-      @else
-      <option value='{{$types->id}}'>{{$types->name}}</option>
-       @endif
-      @endif 
-      
 
-   
-
-      @endforeach
-     
-      
-    </select>
- 
-
-</div>
 <div class="col-4">
 
  
@@ -654,18 +584,38 @@ body {
       {{ __('Sucursal') }}
     </label>
     <select class="form-select" id="branch" name="branch" aria-label="Default select example"  required>
-      <option value="" selected>Seleccione un tipo</option>
-      @foreach ($reg_branch as $sucursal)
-      @if ($sucursal->id==$userX[0]->idSucursal)   
-      <option value='{{$sucursal->id}}' selected>{{$sucursal->name}}</option>   
-        @else
-        <option value='{{$sucursal->id}}'>{{$sucursal->name}}</option>   
-        @endif
-       
+      <option value="" >Seleccione un tipo</option>
+      @foreach ($reg_branch as $sucur)
+       @if ($sucur->id==$sucursal[0]->id_branch)
+        <option value='{{$sucur->id}}' selected>{{$sucur->name}}</option>   
+         @else
+        <option value='{{$sucur->id}}'>{{$sucur->name}}</option>      
+       @endif
+      
+      
       @endforeach
      
       
     </select>
+
+</div>
+<div class="col-4">
+
+ 
+  <label for="Parentesco" class="col col-form-label">
+    {{ __('Parentesco') }}
+  </label>
+  <select class="form-select" id="parentesco" name="parentesco" aria-label="Default select example"  required>
+    <option value="" selected>Seleccione un tipo</option>
+ 
+    @foreach ($parentescoArray as $key=>  $para)
+    <option value="{{$key}}">{{$para}}</option>
+    
+    
+    @endforeach
+   
+    
+  </select>
 
 </div>
 <h3 style="padding-top: 20px">Datos de domicilio</h3>
@@ -682,23 +632,20 @@ body {
       </tr>
     </thead>  
       <tbody >
-        @foreach ($reg_address as $direccion)
         <tr>
           <td>
-            <input class="form-control" value="{{$direccion->zone}}" type="text" name="zone[]" placeholder="Zona donde vive" required>
+            <input class="form-control"  type="text" name="zone[]" placeholder="Zona donde vive" required>
           </td>
           <td>
-            <input class="form-control" value="{{$direccion->street}}" type="text" name="street[]" placeholder="Calle donde vive" required>
+            <input class="form-control" type="text" name="street[]" placeholder="Calle donde vive" required>
           </td>
           <td>
-            <input class="form-control" value="{{$direccion->number}}" type="text" name="number[]" placeholder="Numero de la casa" required>
+            <input class="form-control" type="text" name="number[]" placeholder="Numero de la casa" required>
           </td>
           <td>
-            <input class="form-control" value="{{$direccion->descripcion}}" type="text" name="decriptionAddress[]" placeholder="Puede dejar en blanco esta parte tambien puede llenar datos como ser edificio, etc" >
+            <input class="form-control" type="text" name="decriptionAddress[]" placeholder="Puede dejar en blanco esta parte tambien puede llenar datos como ser edificio, etc" >
           </td>
-        </tr>    
-        @endforeach
-        
+        </tr>
       </tbody>
   </table>
   <div class="form-group">
@@ -720,17 +667,14 @@ body {
       </tr>
     </thead>  
       <tbody >
-        @foreach ($reg_telephono as $cell)
         <tr>
           <td>
-            <input class="form-control" value="{{$cell->number}}" type="number" name="numberCell[]" placeholder="Celular" required>
+            <input class="form-control" type="number" name="numberCell[]" placeholder="Celular" required>
           </td>
           <td>
-            <input class="form-control" value="{{$cell->description}}" type="text" name="description[]" placeholder="Puede dejalo en blanco, tambien puede indicar Numero principal, observaciones">
+            <input class="form-control" type="text" name="description[]" placeholder="Puede dejalo en blanco, tambien puede indicar Numero principal, observaciones">
           </td>
-        </tr>    
-        @endforeach
-     
+        </tr>
       </tbody>
   </table>
 
@@ -761,6 +705,7 @@ body {
   <p>Lo siento, no tienes permisos para acceder a esta página.</p>
 </div>
 @endif
+
 
 
 
@@ -956,10 +901,6 @@ this.then = function (callback) {
 
     function accept() {
 
-
-
-
-
         if (input == true) {
 
 
@@ -983,9 +924,6 @@ this.then = function (callback) {
         callback(e = false);
     }
 
-
-
-
 }
 
 
@@ -1000,7 +938,7 @@ this.then = function (callback) {
 function alertaAceptar(){
   new novaAlert({
     icon: 'success',
-    title: 'Registro de usario correcto',
+    title: 'Registro de estudiante correcto',
     text: 'Precione el boton para continuar',
 dismissButton: true,
 
@@ -1012,7 +950,7 @@ ConfirmButtonText: 'Aceptar',
 function alertaFallo(){
   new novaAlert({
     icon: 'danger',
-    title: 'Registro no realizado',
+    title: 'Registro denegado',
     text: 'Precione el boton para continuar',
     dismissButton: false,
 
@@ -1021,32 +959,16 @@ CancelButtonText: 'Aceptar',
 });
 }
 
-function alertaEdicion(){
-  new novaAlert({
-    icon: 'warning',
-    title: 'Agoto el numero de ediciones',
-    text: 'Precione el boton para continuar y contactar con el soporte',
-    dismissButton: false,
-
-CancelButtonText: 'Aceptar',
-
-});
-} 
 
 </script>
 <script>
   var miDiv = document.getElementById('miDiv');
-  
+
       var status = "{{ session('status') }}";
       if (status === 'success') {
         alertaAceptar();
-      } 
-      if (status === 'error') {
+      } else if (status === 'error') {
         alertaFallo();
-      }
-
-      if (status === 'edit') {
-        alertaEdicion();
       }
  
 </script>

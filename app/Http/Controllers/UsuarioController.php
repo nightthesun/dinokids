@@ -53,7 +53,7 @@ class UsuarioController extends Controller
         }
         else
         {
-            return dd('largo de aqui');
+            return redirect()->route('errors.permisos');
         }
     }
 
@@ -145,18 +145,15 @@ class UsuarioController extends Controller
      */
     public function edit($id, Request $request)
     {// id de la persona 
-       
-        $accesos="SELECT * FROM `users` u 
+        if (Auth::user()->authorizepermisos(['Usuarios', 'Super usuario'])) 
+        {
+            $accesos="SELECT * FROM `users` u 
         JOIN `reg_people` p  on p.id=u.id_people
         JOIN `accesos` a  on u.id=a.user_id
         ";
-         
-
-         
-         
+        
         $user = Auth::user();
-        if($user->authorizePermisos(['Usuarios', 'Editar']))
-        {           
+                 
             
             $ss="SELECT id FROM users where id_people = $id limit 1";
             $ss2 = DB::select($ss);
@@ -201,11 +198,12 @@ class UsuarioController extends Controller
              
          
             return view('configuracion.usuario.edit',compact('moduloX','usuario', 'modulo','reg_branch','reg_types','userX','reg_country','reg_city','reg_telephono','reg_address'));
+    
+        } else {
+            return redirect()->route('errors.permisos');
         }
-        else
-        {
-            return dd('largo de aqui');
-        }
+        
+            
     }
 
     /**

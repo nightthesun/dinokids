@@ -34,24 +34,30 @@ class PerfilController extends Controller
   }
   public function index()
   {
- 
-    if (Auth::user()->authorizePermisos(['Funcionarios', 'Ver'])) {
-      $user = Auth::user();
+    
+    if (Auth::user()->authorizePermisos(['Listar Comunidad', 'Ver'])) {
+        $userX = Auth::user();
+        $query_reg_people = 'SELECT p.id, p.first_name, p.last_name1, p.last_name2, p.ci, p.age, p.birthdate, p.deleted as eliU,p.created_date, t.name as nameT, b.name as nameS,b.deleted as eliSucu
+            FROM `reg_people` p
+            JOIN `reg_types` t on t.id=p.id_tipo
+            JOIN `reg_branch` b ON p.id_branch = b.id
+            where  p.deleted=0 and b.deleted=0 and (t.name="Tutor" or t.name="Estudiante")
+            ORDER BY p.id desc';
+             $query_user = 'SELECT *
+             FROM `users` u 
+             JOIN `reg_people` p  on p.id=u.id_people
+             where  u.deleted=0
+             ORDER BY p.id ';
+            
+            $people = DB::select($query_reg_people);
+            $user2 = DB::select($query_user);
+            $user = Auth::user();
+     
+            $usuario=User::orderBy('id','DESC')->get();
+            return view('configuracion.perfiles.index',compact('usuario','user2','people'));  
       
-      $perfil = Perfil::orderBy('id', 'DESC')
-        ->get();
-      // añadidos
-
-      $query_reg_people = 'SELECT * FROM `reg_people p` 
-                            join `reg_types t` on
-                            join `reg_branch b` on 
-                            ORDER BY p.id';
-                          
-      $reg_people = DB::select($query_reg_people);
-      
-      return view('configuracion.perfiles.index', compact('perfil','reg_people'));
     } else {
-      return dd('largo de aqui');
+      return redirect()->route('errors.permisos');
     }
   }
 
@@ -88,7 +94,7 @@ class PerfilController extends Controller
    */
   public function store(Request $request)
   {
-   
+    
     if($request->zone == null || $request->street== null || $request->number == null || $request->numberCell== null){
       $mensajeError = 'Ocurrió un error al procesar la solicitud, revice los telefono o la dirección. Por favor, inténtalo de nuevo.';
       Session::flash('error', $mensajeError);
@@ -253,7 +259,7 @@ class PerfilController extends Controller
   {
     
     $user = Auth::user();
-    if ($user->authorizePermisos(['Usuarios', 'Ver'])) {
+    if ($user->authorizePermisos(['Usuarios', 'Ver']) && $user->authorizePermisos(['Usuarios', 'Editar'])) {
       
       $fecha_actual = new DateTime(date('Y-m-d'));
    
@@ -296,7 +302,9 @@ $reg_city = DB::select($query_reg_city);
 
       //return view('configuracion.perfiles.edit', compact('reg_branch','reg_types','exito','userX'));
     } else {
-      return dd('largo de aqui');
+      
+      return redirect()->route('errors.permisos');
+      
     }
   }
 
@@ -309,140 +317,151 @@ $reg_city = DB::select($query_reg_city);
    */
   public function update(Request $request, $id)
   {
-    
-    if($request->zone == null || $request->street== null || $request->number == null || $request->numberCell== null){
-      $mensajeError = 'Ocurrió un error al procesar la solicitud, revice los telefono o la dirección. Por favor, inténtalo de nuevo.';
-      Session::flash('error', $mensajeError);
-      return redirect()->back();
-      exit;
-    }
-  
-    
-    try {
-      $exito=0;
-      $jsonDatos = json_encode($exito);
-      $user = Auth::user()->id;
-    
-    $fecha_actual = new DateTime();
-    $fecha_actual=$fecha_actual->Format('Y-m-d H:m:s');
-    if ($request->file('foto')) {
-      $path = $request->file('foto')->store('images');
+    if (Auth::user()->number_modif<=0) {
+      return redirect()->back()->with('status', 'edit');
     } else {
-      $path = NULL;
-    }
+      if($request->zone == null || $request->street== null || $request->number == null || $request->numberCell== null){
+        $mensajeError = 'Ocurrió un error al procesar la solicitud, revice los telefono o la dirección. Por favor, inténtalo de nuevo.';
+        Session::flash('error', $mensajeError);
+        return redirect()->back();
+        exit;
+      }
     
-   $data = $request->validate([
-      'first_name' => 'required|max:255',
-      'last_name1' => 'nullable',
-      'last_name2' => 'nullable',
       
-      'ci' => 'required|unique:reg_people,ci,' . $id,
-      'fecha_nac' => 'nullable',
-      'age' =>'nullable',
-      'gender' => 'nullable',
-      'nationality' => 'nullable',
-      'type' => 'nullable',
-      'branch'=> 'nullable',
-      'city' => 'nullable',
+      try {
+        $exito=0;
+        $jsonDatos = json_encode($exito);
+        $user = Auth::user()->id;
       
-    ]);
-
-   $id_gente= 
-   DB::table('reg_people')
-   ->where('id',$id) 
-   ->update([
-    'first_name' => $data['first_name'],
-      'last_name1' => $data['last_name1'],
-      'last_name2' => $data['last_name2'],
-      'ci' => $data['ci'],
-      'age' => $data['age'],
-      'birthdate' => $data['fecha_nac'],
-      'gender' => $data['gender'],
-      'nationality' => $data['nationality'],
-      'modified_user' => $user,
-      'modified_date' => $fecha_actual,
-      'foto' => $path,
-      'id_tipo' => $data['type'],
-      'id_branch' => $data['branch'],
-      'city' => $data['city'],
-    ]);
+      $fecha_actual = new DateTime();
+      $fecha_actual=$fecha_actual->Format('Y-m-d H:m:s');
+      if ($request->file('foto')) {
+        $path = $request->file('foto')->store('images');
+      } else {
+        $path = NULL;
+      }
+      
+     $data = $request->validate([
+        'first_name' => 'required|max:255',
+        'last_name1' => 'nullable',
+        'last_name2' => 'nullable',
         
-    $streetFile=$request->zone;
-   
-    $numberFile=$request->numberCell;
-    $ss="SELECT * FROM reg_address where id_people = $id";
-    $ss2 = DB::select($ss);
+        'ci' => 'required|unique:reg_people,ci,' . $id,
+        'fecha_nac' => 'nullable',
+        'age' =>'nullable',
+        'gender' => 'nullable',
+        'nationality' => 'nullable',
+        'type' => 'nullable',
+        'branch'=> 'nullable',
+        'city' => 'nullable',
+        
+      ]);
   
-    $iDarray=[];
-    foreach ($ss2 as $key => $value) {
-     array_push($iDarray,$value->id);
-      
-    }
-   
-    for ($i=0; $i <sizeof($iDarray) ; $i++) { 
-      
-    $RR = DB::table('reg_address')
-      ->where('id',$iDarray[$i]) 
-      ->update([
-        'zone' => $request->zone[$i],
-        'street' => $request->street[$i],
-        'number' => $request->number[$i],
+     $id_gente= 
+     DB::table('reg_people')
+     ->where('id',$id) 
+     ->update([
+      'first_name' => $data['first_name'],
+        'last_name1' => $data['last_name1'],
+        'last_name2' => $data['last_name2'],
+        'ci' => $data['ci'],
+        'age' => $data['age'],
+        'birthdate' => $data['fecha_nac'],
+        'gender' => $data['gender'],
+        'nationality' => $data['nationality'],
         'modified_user' => $user,
         'modified_date' => $fecha_actual,
-        'id_people'=>$id,
-        'descripcion'=>$request->decriptionAddress[$i],
-        ]);
-    }
-    $ss="SELECT * FROM reg_telephono where id_people = $id";
-    $ss2 = DB::select($ss);
-  
-    $iDarray=[];
-    foreach ($ss2 as $key => $value) {
-     array_push($iDarray,$value->id);
-      
-    }
-    for ($i=0; $i <sizeof($iDarray) ; $i++) {
-      if($request->description[$i]==null){
-          $des="sin datos";
-      } else{
-          $des=$request->description[$i];
-      }
-    if($request->numberCell[$i]==1010){
-        $des="persona sin celular";
-    } else{
-      if ($request->numberCell[$i]==1000) {
-        $des="menor de edad o estudiante";
-      }else{
-        $des=$request->description[$i];
-      }
-        
-    }
-    
-
-      DB::table('reg_telephono')
-      ->where('id',$iDarray[$i]) 
-      ->update([
-        'number' => $request->numberCell[$i],
-        'cod' => "+591",
-        'description' => $des,
-        'modified_user' => $user,
-        'modified_date' => $fecha_actual,
-        'id_people'=>$id,
-        ]);
-    }
-   
-
-
-    return redirect()->back()->with('status', 'success');
-  
-  } catch (\Throwable $th) {
-      throw $th;
+        'foto' => $path,
+        'id_tipo' => $data['type'],
+        'id_branch' => $data['branch'],
+        'city' => $data['city'],
+      ]);
+          
+      $streetFile=$request->zone;
      
-      //return redirect()->route('perfil.create')->with('jsonDatos',$jsonDatos)->with('jsonDatos',$jsonDatos);
-          //return view('configuracion.perfiles.create', compact('jsonDatos'));
-          return redirect()->back()->with('status', 'error');
-   
+      $numberFile=$request->numberCell;
+      $ss="SELECT * FROM reg_address where id_people = $id";
+      $ss2 = DB::select($ss);
+    
+      $iDarray=[];
+      foreach ($ss2 as $key => $value) {
+       array_push($iDarray,$value->id);
+        
+      }
+     
+      for ($i=0; $i <sizeof($iDarray) ; $i++) { 
+        
+      $RR = DB::table('reg_address')
+        ->where('id',$iDarray[$i]) 
+        ->update([
+          'zone' => $request->zone[$i],
+          'street' => $request->street[$i],
+          'number' => $request->number[$i],
+          'modified_user' => $user,
+          'modified_date' => $fecha_actual,
+          'id_people'=>$id,
+          'descripcion'=>$request->decriptionAddress[$i],
+          ]);
+      }
+      $ss="SELECT * FROM reg_telephono where id_people = $id";
+      $ss2 = DB::select($ss);
+    
+      $iDarray=[];
+      foreach ($ss2 as $key => $value) {
+       array_push($iDarray,$value->id);
+        
+      }
+      for ($i=0; $i <sizeof($iDarray) ; $i++) {
+        if($request->description[$i]==null){
+            $des="sin datos";
+        } else{
+            $des=$request->description[$i];
+        }
+      if($request->numberCell[$i]==1010){
+          $des="persona sin celular";
+      } else{
+        if ($request->numberCell[$i]==1000) {
+          $des="menor de edad o estudiante";
+        }else{
+          $des=$request->description[$i];
+        }
+          
+      }
+      
+  
+        DB::table('reg_telephono')
+        ->where('id',$iDarray[$i]) 
+        ->update([
+          'number' => $request->numberCell[$i],
+          'cod' => "+591",
+          'description' => $des,
+          'modified_user' => $user,
+          'modified_date' => $fecha_actual,
+          'id_people'=>$id,
+          ]);
+      }
+      
+    
+      $uu2=Auth::user()->id;
+      $uu3=Auth::user()->number_modif;
+    
+      $usuario3 = User::find($uu2);
+      $usuario3->number_modif=$uu3-1;
+      $usuario3->save();
+     
+      return redirect()->back()->with('status', 'success');
+    
+    } catch (\Throwable $th) {
+        throw $th;
+       
+        //return redirect()->route('perfil.create')->with('jsonDatos',$jsonDatos)->with('jsonDatos',$jsonDatos);
+            //return view('configuracion.perfiles.create', compact('jsonDatos'));
+            return redirect()->back()->with('status', 'error');
+     
+      }
     }
+    
+    
 
   }
 

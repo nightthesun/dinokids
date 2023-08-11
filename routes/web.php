@@ -38,6 +38,10 @@ Route::get('/errors/banned', function () {
 Route::get('/errors/deleted', function () {
     return view('errors.deleted'); // Asegúrate de tener una vista llamada "errors/banned.blade.php"
 })->name('errors.deleted');
+Route::get('/errors/permisos', function () {
+    return view('errors.permisos'); // Asegúrate de tener una vista llamada "errors/banned.blade.php"
+})->name('errors.permisos');
+
 
 Route::resource('/notificaciones', 'NotificationsController');
 Route::patch('notificaciones/read/{id}','NotificationsController@read');
@@ -46,6 +50,11 @@ Route::post('notificaciones/deleteall','NotificationsController@deleteall');
 Route::get('notificaciones/{url}/{id}','NotificationsController@redirect')->name('notifications.redirect');
 
 Route::resource('perfil','Configuracion\PerfilController');
+
+Route::resource('/perfilEstudiante','Comunidad\EstudianteController');
+Route::resource('/perfilTutor','Comunidad\TutorController');
+Route::resource('/sucursal','Configuracion\SucursalController');
+
 
 
 Route::prefix('dev')->group(function(){

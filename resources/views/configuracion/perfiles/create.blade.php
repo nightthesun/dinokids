@@ -379,17 +379,25 @@ body {
 
 /********************************/
 
+
+.message-container {
+            text-align: center;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
 </style> 
 
 @endsection
 
 @section('content')
 @include('layouts.sidebar', ['hide'=>'0'])
-
-<!-- Mostrar mensaje de éxito -->
+@if(Auth::user()->authorizepermisos(['Usuarios', 'Ver']) && Auth::user()->authorizepermisos(['Usuarios', 'Crear']) )
+    <!-- Mostrar mensaje de éxito -->
 <div id="miDiv"></div>
-
-
 <div style="padding: 6rem; padding-top:0.5rem;">
   <div class="row d-flex justify-content-center mb-3">
     <div class="col-lg-6 col-sm-12 d-flex align-items-center justify-content-center">
@@ -473,16 +481,16 @@ body {
             @enderror
   </div>
   <div class="col">
-          <label for="ci" class="col col-form-label">
-            {{ __('Documento de identidad:') }}
-          </label>
-          <input id="ci" type="text" class="form-control @error('ci') is-invalid @enderror" name="ci" value="{{ old('ci') }}" autocomplete="ci">
-            @error('ci')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-  </div>
+    <label for="ci" class="col col-form-label">
+      {{ __('Documento de identidad:') }}
+    </label>
+    <input id="ci" type="text" class="form-control @error('ci') is-invalid @enderror" name="ci" value="{{ old('ci') }}" autocomplete="ci">
+      @error('ci')
+      <span class="invalid-feedback" role="alert">
+        <strong>{{ $message }}</strong>
+      </span>
+      @enderror
+</div>
 </div>
 
 <div class="row" style="padding-top: 1.5%;">
@@ -578,8 +586,16 @@ body {
     <select class="form-select" id="type" name="type" aria-label="Default select example"  required>
       <option value="" selected>Seleccione un tipo</option>
       @foreach ($reg_types as $types)
-        <option value='{{$types->id}}'>{{$types->name}}</option>   
-      
+        
+        @if ($types->name=="Empleado")
+        @if(Auth::user()->authorizepermisos(['Usuarios', 'Ver tipo empleado']) && Auth::user()->authorizepermisos(['Usuarios', 'Super usuario']) )
+        <option value='{{$types->id}}'>{{$types->name}}</option>
+        @endif
+           
+        @else
+        <option value='{{$types->id}}'>{{$types->name}}</option> 
+        @endif  
+        
       @endforeach
      
       
@@ -685,6 +701,17 @@ body {
     </div>
   </form>
 </div>
+@else
+<div class="message-container">
+  <h1>Sin Permisos</h1>
+  <p>Lo siento, no tienes permisos para acceder a esta página.</p>
+</div>
+@endif
+
+
+
+
+
 
 @endsection
 @section('mis_scripts')
