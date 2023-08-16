@@ -45,7 +45,7 @@
      border: 2px solid #B40F7F;
      border-radius: 25px;
      cursor: pointer;
-     width:200px;
+     width:250px;
    height:50px;
    font-size: 20px;
  }
@@ -99,20 +99,20 @@
 @endsection
 
 
-  @if(Auth::user()->authorizepermisos(['Sucursal', 'Ver']) ) 
+  @if(Auth::user()->authorizepermisos(['Relacion', 'Ver']) ) 
   <div id="miDiv"></div>
   <div class="contenedor">
-    <h3 class="titulo1 h11">Lista de sucursales</h3>
-      <a href="{{ route('sucursal.create') }}">
+    <h3 class="titulo1 h11">Lista de tutores principales</h3>
+      <a href="{{ route('relacion.create') }}">
        <button type="button" class="btn btn-primary" id="botonSubir2"  >
-        <i class="fas fa-code-branch"></i>{{ __('Añadir Sucursal') }}
+        <i class="fas fa-user-friends"></i> {{ __('Añadir tutor principal') }}
        </button>
       </a>
   </div>
   <div class="container"> 
     <div class="alert alert-info" role="alert" >
       El boton <i class="fas fa-user-edit"></i> es para editar la información.
-      @if (Auth::user()->authorizepermisos(['Sucursal', 'Editar']))
+      @if (Auth::user()->authorizepermisos(['Relacion', 'Editar']))
             
       Si desea eliminar usuarios <i class="fas fa-user-times"></i>      
             
@@ -121,115 +121,7 @@
      
   </div>  
     
-  <table class="cell-border compact hover" id="myTable" style="width:100%;" >
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Descripción</th>
-         <th>Opcines</th>
-                
-      </tr>
-    </thead>
-    <tbody>
-     @if (count($branch))
-     @foreach ($branch as $su)
-     
-     <tr>
 
-      @if ($su->elim==1)
-      <td style="color: red" >{{$su->nameDres}}</td>
-      <td style="color: red">{{$su->descripS}}</td>
-     
-      @else          
-      <td>{{$su->nameDres}}</td>
-      <td>{{$su->descripS}}</td>
-      
-      @endif
-      
-       <td class="small-cell" >
-        @if(Auth::user()->authorizepermisos(['sucursal', 'Editar']) ) 
-          
-          <a class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Editar" href="{{ route('sucursal.edit',$su->id) }}" >
-            <i class="fas fa-user-edit"></i>  
-           </a>   
-           
-           
-           
-        @else
-        <button type="button" class="btn btn-warning"><i class="fas fa-exclamation-triangle"></i></button>
-       @endif
-       @if(Auth::user()->authorizepermisos(['sucursal', 'Ver informacion']) ) 
-          <a class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Ver" href="{{ route('sucursal.show',$su->id) }}" >
-            <i class="far fa-eye"></i>
-           </a>  
-          @endif 
-         
-      <!-- Button trigger modal delete-->
-      @if(Auth::user()->authorizepermisos(['sucursal', 'Eliminar']) ) 
-      <form method="POST" enctype="multipart/form-data" action="{{ route('sucursal.destroy', $su->id) }}" class="d-inline">
-        @csrf 
-       
-       @if ($su->elim==0)
-       <button type="button" class="btn btn-danger btn-sm text-white" title="Eliminar" data-bs-toggle="modal" data-bs-target="#Delete{{$su->id}}" data-toggle="tooltip" data-placement="top">
-               <i class="fas fa-folder-minus"></i>
-      </button>
-        @else
-            @if ($su->elim==1)
-            <button type="button" class="btn btn-secondary btn-sm text-white" title="Activar" data-bs-toggle="modal" data-bs-target="#Delete{{$su->id}}" data-toggle="tooltip" data-placement="top">
-       
-              <i class="fas fa-folder-plus"></i>
-          </button>
-            @endif
-        @endif
-       
-     
-      
-      <!-- Modal -->
-      <div class="modal fade" id="Delete{{$su->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-      <div class="modal-dialog">
-      <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">¿Desea Eliminar?</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Realmente decea eliminar a la sucursal 
-        {{$su->nameDres}}.
-      
-      
-      
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-      
-              <button type="submit"  class="btn btn-danger   text-white">Eliminar <i class="far fa-trash-alt"></i></button>
-      
-       
-       
-      </div>
-      </div>
-      </div>
-      </div>
-      </form>
-
-          
-      @endif
-   
-     
-      </td>
-      </tr>
-  
-  
-  
-      
-  @endforeach
-     @else
-     <tr>
-      <td>No hay registro !!</td>
-    </tr> 
-     @endif
-    </tbody>  
-  </table>
   
   @endsection
   

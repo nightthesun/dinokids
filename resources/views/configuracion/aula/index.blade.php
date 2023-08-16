@@ -105,7 +105,7 @@
     <h3 class="titulo1 h11">Lista de sucursales</h3>
       <a href="{{ route('sucursal.create') }}">
        <button type="button" class="btn btn-primary" id="botonSubir2"  >
-        <i class="fas fa-code-branch"></i>{{ __('Añadir Sucursal') }}
+        <i class="fas fa-child"></i>{{ __('Añadir Sucursal') }}
        </button>
       </a>
   </div>

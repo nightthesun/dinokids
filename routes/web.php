@@ -48,14 +48,22 @@ Route::patch('notificaciones/read/{id}','NotificationsController@read');
 Route::put('notificaciones/read/{id}','NotificationsController@read');
 Route::post('notificaciones/deleteall','NotificationsController@deleteall');
 Route::get('notificaciones/{url}/{id}','NotificationsController@redirect')->name('notifications.redirect');
-
+//perfiles------------------------
 Route::resource('perfil','Configuracion\PerfilController');
-
 Route::resource('/perfilEstudiante','Comunidad\EstudianteController');
 Route::resource('/perfilTutor','Comunidad\TutorController');
+//tutor principal----------------------
+Route::resource('relacion','Configuracion\TutorprincipalController');
+//sucursales--------------------------
 Route::resource('/sucursal','Configuracion\SucursalController');
-
-
+Route::post('/sucursal/{id}','Configuracion\SucursalController@update')->name('sucursal.update');
+Route::post('/sucursalE/{id}','Configuracion\SucursalController@destroy')->name('sucursal.destroy');
+//aulas-------------------
+Route::resource('/aula','Configuracion\AulaController');
+//programa area de intervencion 
+Route::resource('/programa','Configuracion\ProgramaController');
+Route::post('/programa/{id}','Configuracion\ProgramaController@update')->name('programa.update');
+Route::post('/programaE/{id}','Configuracion\ProgramaController@destroy')->name('programa.destroy');
 
 Route::prefix('dev')->group(function(){
     Route::resource('modulo', 'Dev\ModuloController');

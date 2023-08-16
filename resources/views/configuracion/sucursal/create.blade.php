@@ -395,222 +395,68 @@ body {
 
 @section('content')
 @include('layouts.sidebar', ['hide'=>'0'])
-@if(Auth::user()->authorizepermisos(['Listar Comunidad', 'Ver']) && Auth::user()->authorizepermisos(['Listar Comunidad', 'Crear']) )
+@if(Auth::user()->authorizepermisos(['Sucursal', 'Ver']) && Auth::user()->authorizepermisos(['Sucursal', 'Crear']) )
     <!-- Mostrar mensaje de éxito -->
 <div id="miDiv"></div>
 <div style="padding: 6rem; padding-top:0.5rem;">
   <div class="row d-flex justify-content-center mb-3">
     <div class="col-lg-6 col-sm-12 d-flex align-items-center justify-content-center">
-      <h3 class="text-center titulo1">Registro de estudiantes</h3>
+      <h3 class="text-center titulo1">Registro de sucursal</h3>
       <a href="{{ url('/') }}">
         <button type="button" class="btn btn-primary align-self-end" id="botonSalir"  data-bs-toggle="tooltip" data-bs-placement="right" title="Regresar al inicio" >
             <i class="fas fa-house-user"></i>
           </button> 
       </a>
-      <a href="{{ route('perfil.index') }}">
+      <a href="{{ route('sucursal.index') }}">
         <button type="button" class="btn btn-primary align-self-end" id="botonSalir"  data-bs-toggle="tooltip" data-bs-placement="right" title="volver a lista" >
           <i class="far fa-address-book"></i>
           </button> 
       </a>
     </div>
   </div>
-  <form method="POST" enctype="multipart/form-data" action="{{ route('perfilEstudiante.store') }}">
+  <form method="POST" enctype="multipart/form-data" action="{{ route('sucursal.store') }}">
     @csrf
     <div class="row">
-      <div class="col-2">
-        <div class="form-group row d-flex">
-          <div class="col">
-            <a id="elim_image" style="position: absolute; right:43px;cursor:pointer; font-size: 1.3rem; display: none;" class="text-danger"><i class="fas fa-times-circle"></i></a>
-            <img alt="foto" id="output" class="img-fluid borde1 " src="{{asset('imagenes/log.png')}}" />
-          </div>
-        </div>
-        
-        <div class="file-input row" style="padding-top: 5px">
-          <div class="col">
-            <input type="file" accept="image/*" name="foto" id="foto" onchange="loadFile(event)" class="file-input__input " />
-            <label class="file-input__label w-100 text-center mb-0" for="foto">
-              <span>Subir Imagen</span>
-            </label>
-            @error('foto')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-          </div>
-        </div>
-      </div>
+      
 
-      <div class="col-10 borde1">
-        <h3 class="mt-3">Datos Personales</h3>
+      <div class="col-12 borde1">
+        <h3 class="mt-3">Datos de sucursal</h3>
         <div class="form-group row d-flex">
-
 
 <div class="row">
   <div class="col">
           <label for="nombre" class="col-md-2 col-form-label">
-            {{ __('Nombres:') }}
+            {{ __('Nombre:') }}
           </label>
-          <input id="first_name" type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name') }}" required autocomplete="first_name" autofocus>
-            @error('first_name')
+          <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+            @error('name')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>
             </span>
             @enderror
     </div>
+  
   <div class="col">
-          <label for="last_name1" class="col col-form-label" style="padding-top: 5px">
-            {{ __('Apellido Paterno:') }}
+          <label for="descripcion" class="col col-form-label">
+            {{ __('Descripción:') }}
           </label>
-           <input id="last_name1" type="text" class="form-control @error('last_name1') is-invalid @enderror" name="last_name1" value="{{ old('last_name1') }}" required autocomplete="last_name1">
-            @error('last_name1')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-
-  </div>
-  <div class="col">
-          <label for="last_name2" class="col col-form-label">
-            {{ __('Apellido Materno:') }}
-          </label>
-          <input id="last_name2" type="text" class="form-control @error('last_name1') is-invalid @enderror" name="last_name2" value="{{ old('last_name2') }}" autocomplete="last_name2">
-            @error('last_name2')
+          <input id="descripcion" type="text" class="form-control @error('descripcion') is-invalid @enderror" name="descripcion" value="{{ old('descripcion') }}" autocomplete="descripcion">
+            @error('descripcion')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>
             </span>
             @enderror
   </div>
- 
+  
 </div>
 
 <div class="row" style="padding-top: 1.5%;">
-  <div class="col">
-    <label for="fecha_nac" class="col col-form-label">
-            {{ __('Fecha de Nacimiento:') }}
-    </label>
-            <input id="fecha_nac" type="date" class="form-control @error('fecha_nac') is-invalid @enderror" name="fecha_nac" onchange="calcularEdad()" value="{{ old('fecha_nac') }}" autocomplete="fecha_nac" autofocus>
-            @error('fecha_nac')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-  </div>
-  <div class="col" >
-    <label for="age" class="col col-form-label">
-            {{ __('Edad:') }}
-    </label>
-  <input id="age" name="age" type="text" value="" class="form-control ">
-  </div>
-  
   
 
-  <div class="col">
-    <label for="gender" class="col col-form-label">
-             {{ __('Genero:') }}
-    </label>
-    <div class="row">
-      <div class="col">
-        <div class="form-check">
-          <input class="form-check-input" type="radio" value="Hombre" name="gender" id="gender1"checked>
-            <label class="form-check-label" for="age1">
-              {{ __('Hombre') }}
-  </label>
-</div>
-      </div>
-      <div class="col" style="">
-        <div class="form-check">
-          <input class="form-check-input" type="radio" value="Mujer" name="gender" id="gender2" >
-          <label class="form-check-label" for="gender2">
-                        {{ __('Mujer') }}
-          </label>
-        </div>
-      </div>
-    </div>
-          
-
-  </div>
-  <div class="col" style="padding-left: 10px;padding-right: 10px;">
-    <label for="nationality" class="col col-form-label">
-      {{ __('Pais') }}
-    </label>
-    <select class="form-select" id="nationality" name="nationality" aria-label="Default select example"required>
-      <option value="">Seleccione un pais</option>
-      @foreach ($reg_country as $pais)
-        @if ($pais->id==1)
-        <option value="{{$pais->id}}" selected>{{$pais->name}}</option>      
-        @else
-        <option value="{{$pais->id}}">{{$pais->name}}</option>
-        @endif
-          
-      @endforeach
-      
-    </select>
-  </div>
-  <div class="col" style="padding-left: 10px;padding-right: 10px;">
-    <label for="city" class="col col-form-label">
-      {{ __('Ciudad') }}
-    </label>
-    <select class="form-select" id="city" name="city" aria-label="Default select example"required>
-      <option value="">Seleccione una ciudad</option>
-      @foreach ($reg_city as $ciudad)
-      @if ($ciudad->id==1)
-      <option value="{{$ciudad->id}}" selected>{{$ciudad->name}}</option>      
-      @else
-      <option value="{{$ciudad->id}}">{{$ciudad->name}}</option>
-      @endif
-        
-    @endforeach
-    </select>
-  </div>
-   
-
-</div>
-<h3 style="padding-top: 20px">Datos de Coorporativos</h3>
-
-<div class="col-4">
-
- 
-    <label for="branch" class="col col-form-label">
-      {{ __('Sucursal') }}
-    </label>
-    <select class="form-select" id="branch" name="branch" aria-label="Default select example"  required>
-      <option value="" >Seleccione un tipo</option>
-      @foreach ($reg_branch as $sucur)
-       @if ($sucur->id==$sucursal[0]->id_branch)
-        <option value='{{$sucur->id}}' selected>{{$sucur->name}}</option>   
-         @else
-        <option value='{{$sucur->id}}'>{{$sucur->name}}</option>      
-       @endif
-      
-      
-      @endforeach
-     
-      
-    </select>
-
-</div>
-<div class="col-4">
-
- 
-  <label for="grade" class="col col-form-label">
-    {{ __('Grado academico') }}
-  </label>
-  <select class="form-select" id="reg_academic_degree" name="reg_academic_degree" aria-label="Default select example"  required>
-    <option value="" >Seleccione un tipo</option>
-    @foreach ($reg_academic_degree as $grado)
-         
-      <option value='{{$grado->id}}' data-bs-toggle="tooltip" data-bs-placement="right" title="{{$grado->description}}">{{$grado->name}}</option>      
-    
-    @endforeach
-   
-    
-  </select>
-
 </div>
 
 
-
-<h3 style="padding-top: 20px">Datos de domicilio</h3>
+<h3 style="padding-top: 20px">Datos de lugar</h3>
       
 
 <div class="table-responsive">
@@ -620,7 +466,7 @@ body {
         <th>Zona</th>
         <th>Calle</th>
         <th>Numero</th>
-        <th>Morada</th>
+        <th>Datos adicionales</th>
       </tr>
     </thead>  
       <tbody >
@@ -635,7 +481,7 @@ body {
             <input class="form-control" type="text" name="number[]" placeholder="Numero de la casa" required>
           </td>
           <td>
-            <input class="form-control" type="text" name="decriptionAddress[]" placeholder="Escriba con quien vive el niño@ y otros datos." >
+            <input class="form-control" type="text" name="decriptionAddress[]" placeholder="Puede dejar en blanco esta parte tambien puede llenar datos como ser edificio, etc" >
           </td>
         </tr>
       </tbody>
@@ -645,7 +491,34 @@ body {
     <button type="button" class="btn btn-primary mb-2" onclick="eliminarFila(this)" style="height: 35px;width: 35px;">-</button>
   </div>
 </div>
+<h3>Datos telefono/celular</h3>
 
+
+<div class="table-responsive">
+  <table class="table table-striped table-hover"  id="table2">
+    <thead class="thead">
+      <tr>
+        <th>Numero</th>
+        <th>Descripción</th>
+      </tr>
+    </thead>  
+      <tbody >
+        <tr>
+          <td>
+            <input class="form-control" type="number" name="numberCell[]" placeholder="Celular" required>
+          </td>
+          <td>
+            <input class="form-control" type="text" name="description[]" placeholder="Puede dejalo en blanco, tambien puede indicar Numero principal, observaciones">
+          </td>
+        </tr>
+      </tbody>
+  </table>
+
+  <div class="form-group">
+    <button type="button" class="btn btn-primary mb-2" onclick="agregarFilaT()" style="height: 35px;width: 35px;">+</button>
+    <button type="button" class="btn btn-primary mb-2" onclick="eliminarFilaT(this)" style="height: 35px;width: 35px;">-</button>
+  </div>
+</div>
        
         <div class="form-group row d-flex justify-content-center " style="padding-top: 20px;padding-bottom: 10px;">
           <div class="col-md-10 d-flex justify-content-center">
@@ -678,40 +551,8 @@ body {
 @section('mis_scripts')
 <script src="http://momentjs.com/downloads/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<script>
 
-  var loadFile = function(event) {
-    var image = document.getElementById('output');
-    image.src = URL.createObjectURL(event.target.files[0]);
-    var foto = $("#foto").val();
-    if (foto !== "") {
-      $("#elim_image").show();
-    }
-  };
-  $("#elim_image").click(function() {
-    $("#foto").val("");
-    var image = document.getElementById('output');
-    image.src = "{{asset('imagenes/log.png')}}";
-    $("#elim_image").hide();
-  });
 
-  
-</script>
-<script>
-  function calcularEdad() {
-      const fechaNacimientoInput = document.getElementById('fecha_nac');
-      const fechaNacimiento = new Date(fechaNacimientoInput.value);
-      const ahora = new Date();
-      const diferenciaMilisegundos = ahora - fechaNacimiento;
-      const edad = new Date(diferenciaMilisegundos);
-      const milisegundosEnAnio = 1000 * 60 * 60 * 24 * 365.25; // Consideramos años bisiestos
-      const diferenciaAnios = diferenciaMilisegundos / milisegundosEnAnio;
-      const añosEnteros = Math.floor(diferenciaAnios);
-  
-    document.getElementById('age').value = añosEnteros;
-  }
-
-</script>
 <script>
   
 
@@ -864,6 +705,10 @@ this.then = function (callback) {
 
     function accept() {
 
+
+
+
+
         if (input == true) {
 
 
@@ -887,6 +732,9 @@ this.then = function (callback) {
         callback(e = false);
     }
 
+
+
+
 }
 
 
@@ -901,7 +749,7 @@ this.then = function (callback) {
 function alertaAceptar(){
   new novaAlert({
     icon: 'success',
-    title: 'Registro de estudiante correcto',
+    title: 'Registro de sucursal correcto',
     text: 'Precione el boton para continuar',
 dismissButton: true,
 
@@ -913,7 +761,7 @@ ConfirmButtonText: 'Aceptar',
 function alertaFallo(){
   new novaAlert({
     icon: 'danger',
-    title: 'Registro denegado',
+    title: 'Registro no realizado',
     text: 'Precione el boton para continuar',
     dismissButton: false,
 

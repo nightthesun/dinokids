@@ -73,7 +73,7 @@ class PerfilController extends Controller
 
     $query_reg_types = 'SELECT * FROM `reg_types` ORDER BY id';
     $reg_types = DB::select($query_reg_types);
-    $query_reg_branch = 'SELECT * FROM `reg_branch` ORDER BY id';
+    $query_reg_branch = 'SELECT * FROM `reg_branch` where deleted=0 ORDER BY id' ;
     $reg_branch = DB::select($query_reg_branch);
 
     $query_reg_country = "SELECT * FROM `reg_country` ORDER BY id";
@@ -284,7 +284,7 @@ b.id as idSucursal, b.name as nameSucm, cc.id as idCiudad, cc.name as nameCC, u.
         
        $query_reg_types = 'SELECT * FROM `reg_types` ORDER BY id';
 $reg_types = DB::select($query_reg_types);
-$query_reg_branch = 'SELECT * FROM `reg_branch` ORDER BY id';
+$query_reg_branch = 'SELECT * FROM `reg_branch` where deleted=0 ORDER BY id' ;
 $reg_branch = DB::select($query_reg_branch);
 
 $query_reg_country = "SELECT * FROM `reg_country` ORDER BY id";

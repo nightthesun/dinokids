@@ -621,6 +621,26 @@ body {
     </select>
 
 </div>
+<div class="col-4">
+   
+
+  <label for="grade" class="col col-form-label">
+    {{ __('Grado academico') }}
+  </label>
+  <select class="form-select" id="reg_academic_degree" name="reg_academic_degree" aria-label="Default select example"  required>
+    <option value="" >Seleccione un tipo</option>
+    @foreach ($academic_degree as $grado)
+         @if ($userX[0]->id_academic_degree==$grado->id)
+         <option value='{{$grado->id}}' data-bs-toggle="tooltip" data-bs-placement="right" title="{{$grado->description}}" selected>{{$grado->name}}</option>      
+         @else
+      <option value='{{$grado->id}}' data-bs-toggle="tooltip" data-bs-placement="right" title="{{$grado->description}}">{{$grado->name}}</option>      
+         @endif
+    @endforeach
+   
+    
+  </select>
+
+</div>
 <h3 style="padding-top: 20px">Datos de domicilio</h3>
       
 

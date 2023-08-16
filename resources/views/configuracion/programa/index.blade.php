@@ -45,7 +45,7 @@
      border: 2px solid #B40F7F;
      border-radius: 25px;
      cursor: pointer;
-     width:200px;
+     width:250px;
    height:50px;
    font-size: 20px;
  }
@@ -99,20 +99,20 @@
 @endsection
 
 
-  @if(Auth::user()->authorizepermisos(['Sucursal', 'Ver']) ) 
+  @if(Auth::user()->authorizepermisos(['Programa', 'Ver']) ) 
   <div id="miDiv"></div>
   <div class="contenedor">
-    <h3 class="titulo1 h11">Lista de sucursales</h3>
-      <a href="{{ route('sucursal.create') }}">
+    <h3 class="titulo1 h11">Lista de Programas</h3>
+      <a href="{{ route('programa.create') }}">
        <button type="button" class="btn btn-primary" id="botonSubir2"  >
-        <i class="fas fa-code-branch"></i>{{ __('Añadir Sucursal') }}
+        <i class="fas fa-project-diagram"></i>{{ __('Añadir Programa') }}
        </button>
       </a>
   </div>
   <div class="container"> 
     <div class="alert alert-info" role="alert" >
       El boton <i class="fas fa-user-edit"></i> es para editar la información.
-      @if (Auth::user()->authorizepermisos(['Sucursal', 'Editar']))
+      @if (Auth::user()->authorizepermisos(['Programa', 'Editar']))
             
       Si desea eliminar usuarios <i class="fas fa-user-times"></i>      
             
@@ -131,25 +131,18 @@
       </tr>
     </thead>
     <tbody>
-     @if (count($branch))
-     @foreach ($branch as $su)
+     @if (count($programa))
+     @foreach ($programa as $P)
      
      <tr>
-
-      @if ($su->elim==1)
-      <td style="color: red" >{{$su->nameDres}}</td>
-      <td style="color: red">{{$su->descripS}}</td>
-     
-      @else          
-      <td>{{$su->nameDres}}</td>
-      <td>{{$su->descripS}}</td>
-      
-      @endif
+       
+      <td>{{$P->interventionarea_name}}</td>
+      <td>{{$P->interventionarea_description}}</td>
       
        <td class="small-cell" >
-        @if(Auth::user()->authorizepermisos(['sucursal', 'Editar']) ) 
+        @if(Auth::user()->authorizepermisos(['Programa', 'Editar']) ) 
           
-          <a class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Editar" href="{{ route('sucursal.edit',$su->id) }}" >
+          <a class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Editar" href="{{ route('programa.edit',$P->id) }}" >
             <i class="fas fa-user-edit"></i>  
            </a>   
            
@@ -158,24 +151,24 @@
         @else
         <button type="button" class="btn btn-warning"><i class="fas fa-exclamation-triangle"></i></button>
        @endif
-       @if(Auth::user()->authorizepermisos(['sucursal', 'Ver informacion']) ) 
-          <a class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Ver" href="{{ route('sucursal.show',$su->id) }}" >
+       @if(Auth::user()->authorizepermisos(['Programa', 'Ver informacion']) ) 
+          <a class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Ver" href="{{ route('programa.show',$P->id) }}" >
             <i class="far fa-eye"></i>
            </a>  
           @endif 
          
       <!-- Button trigger modal delete-->
-      @if(Auth::user()->authorizepermisos(['sucursal', 'Eliminar']) ) 
-      <form method="POST" enctype="multipart/form-data" action="{{ route('sucursal.destroy', $su->id) }}" class="d-inline">
+      @if(Auth::user()->authorizepermisos(['Programa', 'Eliminar']) ) 
+      <form method="POST" enctype="multipart/form-data" action="{{ route('programa.destroy', $P->id) }}" class="d-inline">
         @csrf 
        
-       @if ($su->elim==0)
-       <button type="button" class="btn btn-danger btn-sm text-white" title="Eliminar" data-bs-toggle="modal" data-bs-target="#Delete{{$su->id}}" data-toggle="tooltip" data-placement="top">
+       @if ($P->deleted==0)
+       <button type="button" class="btn btn-danger btn-sm text-white" title="Eliminar" data-bs-toggle="modal" data-bs-target="#Delete{{$P->id}}" data-toggle="tooltip" data-placement="top">
                <i class="fas fa-folder-minus"></i>
       </button>
         @else
-            @if ($su->elim==1)
-            <button type="button" class="btn btn-secondary btn-sm text-white" title="Activar" data-bs-toggle="modal" data-bs-target="#Delete{{$su->id}}" data-toggle="tooltip" data-placement="top">
+            @if ($P->deleted==1)
+            <button type="button" class="btn btn-secondary btn-sm text-white" title="Activar" data-bs-toggle="modal" data-bs-target="#Delete{{$P->id}}" data-toggle="tooltip" data-placement="top">
        
               <i class="fas fa-folder-plus"></i>
           </button>
@@ -185,16 +178,16 @@
      
       
       <!-- Modal -->
-      <div class="modal fade" id="Delete{{$su->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal fade" id="Delete{{$P->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog">
       <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">¿Desea Eliminar?</h5>
+        <h5 class="modal-title" id="staticBackdropLabel">¿Desea realizar la acción?</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         Realmente decea eliminar a la sucursal 
-        {{$su->nameDres}}.
+        {{$P->interventionarea_name}}.
       
       
       
@@ -202,7 +195,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
       
-              <button type="submit"  class="btn btn-danger   text-white">Eliminar <i class="far fa-trash-alt"></i></button>
+              <button type="submit"  class="btn btn-danger   text-white">Aceptar <i class="far fa-trash-alt"></i></button>
       
        
        

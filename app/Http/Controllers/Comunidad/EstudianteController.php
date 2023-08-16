@@ -48,13 +48,15 @@ class EstudianteController extends Controller
         
             $query_reg_types = 'SELECT * FROM `reg_types` ORDER BY id';
             $reg_types = DB::select($query_reg_types);
-            $query_reg_branch = 'SELECT * FROM `reg_branch` ORDER BY id';
+            $query_reg_branch = 'SELECT * FROM `reg_branch` where deleted=0 ORDER BY id' ;
             $reg_branch = DB::select($query_reg_branch);
         
             $query_reg_country = "SELECT * FROM `reg_country` ORDER BY id";
             $query_reg_city = "SELECT * FROM `reg_city` ORDER BY id";
+            $query_reg_academic_degree ="SELECT * FROM `reg_academic_degree` where id in (1,10,11,12,13,14,15,16,17,18,19,20,21) ORDER BY id";
             $reg_country = DB::select($query_reg_country);
             $reg_city = DB::select($query_reg_city);
+            $reg_academic_degree = DB::select($query_reg_academic_degree);
             //DB::connection('mysql')->select(DB::raw($query_reg_types));
             //dd($reg_types);
             $idA=Auth::user()->id;
@@ -62,7 +64,7 @@ class EstudianteController extends Controller
             $query_sucursal="SELECT u.id as idU, p.id as idP,id_branch  FROM `users` u JOIN `reg_people` p on u.id_people = p.id where u.id=$idA limit 1
             ";
             $sucursal = DB::select($query_sucursal);
-        return view('configuracion.comunidad.createEstu',compact('reg_types','reg_branch','reg_country','reg_city','jsonDatos','sucursal')); 
+        return view('configuracion.comunidad.createEstu',compact('reg_types','reg_branch','reg_country','reg_city','jsonDatos','sucursal','reg_academic_degree')); 
         } else {
             return redirect()->route('errors.permisos');
         }
@@ -114,6 +116,7 @@ class EstudianteController extends Controller
          
             'branch'=> 'nullable',
             'city' => 'nullable',
+            'reg_academic_degree' => 'nullable',
             
           ]);
           $randomString = Str::random(10);
@@ -159,7 +162,7 @@ class EstudianteController extends Controller
             'created_date' => $fecha_actual,
             'deleted' => 0,
             'id_people'=>$id_gente,
-            
+            'id_academic_degree' => $data['reg_academic_degree'],
             ]);
           
           return redirect()->back()->with('status', 'success');
@@ -193,7 +196,7 @@ class EstudianteController extends Controller
      */
     public function edit($id)
     {
-
+   
         $user = Auth::user();
         if ($user->authorizePermisos(['Listar Comunidad', 'Ver']) && $user->authorizePermisos(['Listar Comunidad', 'Editar'])) {
           
@@ -202,24 +205,30 @@ class EstudianteController extends Controller
           $modulo = Modulo::get(); 
           $query_user = "SELECT p.id as idpersona, p.first_name as nombre, p.last_name1 as apeP, p.last_name2 as apeM, p.ci as CI, p.age as edad, p.birthdate as Fnacimiento,p.gender as genero, c.id as idPais, c.name as namePaid,foto,t.id as idTipo, t.name as nameT,
           b.id as idSucursal, b.name as nameSucm, cc.id as idCiudad, cc.name as nameCC  
-          ,aa.id as idDir,aa.zone as zona, aa.street as calle, aa.number as numeroPuerta
+          ,aa.id as idDir,aa.zone as zona, aa.street as calle, aa.number as numeroPuerta,ss.id_academic_degree 
                  FROM `reg_people` P 
                  
                  join `reg_types` t on t.id=p.id_tipo
            JOIN `reg_branch` b on p.id_branch=b.id
            JOIN `reg_country` c on p.nationality=c.id
            JOIN `reg_city` cc on p.city=cc.id
-        
+           
            JOIN `reg_address` aa on aa.id_people=p.id 
+           join `reg_students` ss on ss.id_people=$id
                  where  p.deleted=0 and p.id=$id
                  ORDER BY p.id
                  LIMIT 1
           " ;
+
+        $query_reg_academic_degree ="SELECT * FROM `reg_academic_degree` where id in (1,10,11,12,13,14,15,16,17,18,19,20,21) ORDER BY id";
+        $academic_degree = DB::select($query_reg_academic_degree);
+          
            $userX = DB::select($query_user);
-            
+          
+         // $query_reg_student="SELECT id_academic_degree from reg_students where id_people";  
            $query_reg_types = 'SELECT * FROM `reg_types` ORDER BY id';
     $reg_types = DB::select($query_reg_types);
-    $query_reg_branch = 'SELECT * FROM `reg_branch` ORDER BY id';
+    $query_reg_branch = 'SELECT * FROM `reg_branch` where deleted=0 ORDER BY id' ;
     $reg_branch = DB::select($query_reg_branch);
     
     $query_reg_country = "SELECT * FROM `reg_country` ORDER BY id";
@@ -233,7 +242,7 @@ class EstudianteController extends Controller
           $reg_address = DB::select($query_address);    
            
        
-          return view('configuracion.comunidad.editE',compact( 'modulo','reg_branch','reg_types','userX','reg_country','reg_city','reg_address'));
+          return view('configuracion.comunidad.editE',compact( 'modulo','reg_branch','reg_types','userX','reg_country','reg_city','reg_address','academic_degree'));
     
           //return view('configuracion.perfiles.edit', compact('reg_branch','reg_types','exito','userX'));
         } else {
@@ -252,6 +261,7 @@ class EstudianteController extends Controller
      */
     public function update(Request $request, $id)
     {
+      
         if (Auth::user()->number_modif<=0) {
             return redirect()->back()->with('status', 'edit');
           } else {
@@ -299,7 +309,7 @@ class EstudianteController extends Controller
             'first_name' => $data['first_name'],
               'last_name1' => $data['last_name1'],
               'last_name2' => $data['last_name2'],
-              'ci' => $data['ci'],
+           
               'age' => $data['age'],
               'birthdate' => $data['fecha_nac'],
               'gender' => $data['gender'],
@@ -337,14 +347,17 @@ class EstudianteController extends Controller
                 'descripcion'=>$request->decriptionAddress[$i],
                 ]);
             }
-            $ss="SELECT * FROM reg_telephono where id_people = $id";
-            $ss2 = DB::select($ss);
-          
-            $iDarray=[];
-            foreach ($ss2 as $key => $value) {
-             array_push($iDarray,$value->id);
+            
+             DB::table('reg_students')
+            ->where('id_people',$id) 
+            ->update([
               
-            }
+              'modified_user' => $user,
+              'modified_date' => $fecha_actual,
+              'id_academic_degree' => $request->reg_academic_degree,
+                
+            ]);
+           
             
             
           
