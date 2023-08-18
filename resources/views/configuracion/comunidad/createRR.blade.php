@@ -9,6 +9,13 @@
   border-radius: 10px;
   
 }
+.borde2 {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #8092a1;
+  border-radius: 0px;
+  
+}
 .titulo1{
   color: #B40F7F;
   font-weight: bold;
@@ -395,295 +402,159 @@ body {
 
 @section('content')
 @include('layouts.sidebar', ['hide'=>'0'])
-@if(Auth::user()->authorizepermisos(['Listar Comunidad', 'Ver']) && Auth::user()->authorizepermisos(['Listar Comunidad', 'Crear']) )
+@if(Auth::user()->authorizepermisos(['Relacion', 'Ver']) && Auth::user()->authorizepermisos(['Relacion', 'Crear']) )
     <!-- Mostrar mensaje de éxito -->
 <div id="miDiv"></div>
 <div style="padding: 6rem; padding-top:0.5rem;">
   <div class="row d-flex justify-content-center mb-3">
     <div class="col-lg-6 col-sm-12 d-flex align-items-center justify-content-center">
-      <h3 class="text-center titulo1">Registro de tutores</h3>
+      <h3 class="text-center titulo1">Parentesco</h3>
       <a href="{{ url('/') }}">
         <button type="button" class="btn btn-primary align-self-end" id="botonSalir"  data-bs-toggle="tooltip" data-bs-placement="right" title="Regresar al inicio" >
             <i class="fas fa-house-user"></i>
           </button> 
       </a>
-      <a href="{{ route('perfil.index') }}">
+      <a href="{{ route('relacion.index') }}">
         <button type="button" class="btn btn-primary align-self-end" id="botonSalir"  data-bs-toggle="tooltip" data-bs-placement="right" title="volver a lista" >
           <i class="far fa-address-book"></i>
           </button> 
       </a>
     </div>
   </div>
-  <form method="POST" enctype="multipart/form-data" action="{{ route('perfilTutor.store') }}">
+  <form method="POST" enctype="multipart/form-data" action="{{ route('relacion.store') }}">
     @csrf
     <div class="row">
-      <div class="col-2">
-        <div class="form-group row d-flex">
-          <div class="col">
-            <a id="elim_image" style="position: absolute; right:43px;cursor:pointer; font-size: 1.3rem; display: none;" class="text-danger"><i class="fas fa-times-circle"></i></a>
-            <img alt="foto" id="output" class="img-fluid borde1 " src="{{asset('imagenes/log.png')}}" />
-          </div>
-        </div>
+      
+
+      <div class="col-12 borde1">
         
-        <div class="file-input row" style="padding-top: 5px">
-          <div class="col">
-            <input type="file" accept="image/*" name="foto" id="foto" onchange="loadFile(event)" class="file-input__input " />
-            <label class="file-input__label w-100 text-center mb-0" for="foto">
-              <span>Subir Imagen</span>
-            </label>
-            @error('foto')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-          </div>
-        </div>
-      </div>
-
-      <div class="col-10 borde1">
-        <h3 class="mt-3">Datos Personales</h3>
+        
         <div class="form-group row d-flex">
 
 
-<div class="row">
-  <div class="col">
-          <label for="nombre" class="col-md-2 col-form-label">
-            {{ __('Nombres:') }}
-          </label>
-          <input id="first_name" type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name') }}" required autocomplete="first_name" autofocus>
-            @error('first_name')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-    </div>
-  <div class="col">
-          <label for="last_name1" class="col col-form-label" style="padding-top: 5px">
-            {{ __('Apellido Paterno:') }}
-          </label>
-           <input id="last_name1" type="text" class="form-control @error('last_name1') is-invalid @enderror" name="last_name1" value="{{ old('last_name1') }}" required autocomplete="last_name1">
-            @error('last_name1')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
+<h3 style="padding-top: 10px">Datos de relación</h3>
 
-  </div>
-  <div class="col">
-          <label for="last_name2" class="col col-form-label">
-            {{ __('Apellido Materno:') }}
-          </label>
-          <input id="last_name2" type="text" class="form-control @error('last_name1') is-invalid @enderror" name="last_name2" value="{{ old('last_name2') }}" autocomplete="last_name2">
-            @error('last_name2')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-  </div>
-  <div class="col">
-    <label for="ci" class="col col-form-label">
-      {{ __('Documento de identidad:') }}
-    </label>
-    <input id="ci" type="text" class="form-control @error('ci') is-invalid @enderror" name="ci" value="{{ old('ci') }}" autocomplete="ci">
-      @error('ci')
-      <span class="invalid-feedback" role="alert">
-        <strong>{{ $message }}</strong>
-      </span>
-      @enderror
-</div>
-</div>
-
-<div class="row" style="padding-top: 1.5%;">
-  <div class="col">
-    <label for="fecha_nac" class="col col-form-label">
-            {{ __('Fecha de Nacimiento:') }}
-    </label>
-            <input id="fecha_nac" type="date" class="form-control @error('fecha_nac') is-invalid @enderror" name="fecha_nac" onchange="calcularEdad()" value="{{ old('fecha_nac') }}" autocomplete="fecha_nac" autofocus>
-            @error('fecha_nac')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-  </div>
-  <div class="col" >
-    <label for="age" class="col col-form-label">
-            {{ __('Edad:') }}
-    </label>
-  <input id="age" name="age" type="text" value="" class="form-control ">
-  </div>
-  
-  
-
-  <div class="col">
-    <label for="gender" class="col col-form-label">
-             {{ __('Genero:') }}
-    </label>
+<div class="container" style="padding-top: 10px">
     <div class="row">
-      <div class="col">
-        <div class="form-check">
-          <input class="form-check-input" type="radio" value="Hombre" name="gender" id="gender1"checked>
-            <label class="form-check-label" for="age1">
-              {{ __('Hombre') }}
-  </label>
-</div>
+        <div class="col-6 borde2">
+            <h4 style="padding-top: 10px">Tutores</h4>
+            <table class="cell-border compact hover" id="myTable2" style="width:100%;" >
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Nombre</th>
+                    <th>CI</th>
+                    <th>Parentesco</th>
+                    <th>Tutor Principal</th>
+                     
+                            
+                  </tr>
+                </thead>
+                <tbody>
+                 @if (count($reg_tutors))
+                 @foreach ($reg_tutors as $p)
+                 
+                <tr>
+                   <td>
+                    <div class="form-check">
+                    <input class="tutor-check-input" type="checkbox" value="{{$p->id_people}}" id="{{$p->id_people}}" name="tutor[]">
+                    
+                  </div>
+                </td>
+                   <td class="studentCheckbox">{{$p->first_name." ".$p->last_name1." ".$p->last_name2}}</td>
+                   <td class="studentCheckbox">{{$p->ci}}</td> 
+                   <td class="studentCheckbox">{{$p->parentesco}}</td>
+                   <td>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" value="{{$p->id_people}}" name="principal" id="principal"required >
+                        
+                      </div>
+                   </td> 
+                </tr>
+              @endforeach
+                 @else
+                 <tr>
+                  <td>No hay registro !!</td>
+                </tr> 
+                 @endif
+                </tbody>  
+              </table>
       </div>
-      <div class="col" style="">
-        <div class="form-check">
-          <input class="form-check-input" type="radio" value="Mujer" name="gender" id="gender2" >
-          <label class="form-check-label" for="gender2">
-                        {{ __('Mujer') }}
-          </label>
-        </div>
+      
+      <div class="col-6 borde2">
+        <h4 style="padding-top: 10px">Estudiantes</h4>
+            <table class="cell-border compact hover" id="myTable" style="width:100%;" >
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Nombre</th>
+                    <th>Edad</th>
+                  </tr>
+                </thead>
+                <tbody>
+                 @if (count($reg_students))
+                 @foreach ($reg_students as $p)
+                 
+                <tr>
+                   <td>
+                    <div class="form-check">
+                    <input class="student-check-input" type="checkbox" value="{{$p->id_student}}" id="{{$p->id_student}}"  name="estudiante[]">
+                    
+                  </div>
+                </td>
+                   <td>{{$p->first_name." ".$p->last_name1." ".$p->last_name2}}</td>
+                   <td>{{$p->age}}</td>
+                   
+                </tr>
+              
+              
+              
+                  
+              @endforeach
+                 @else
+                 <tr>
+                  <td>No hay registro !!</td>
+                </tr> 
+                 @endif
+                </tbody>  
+              </table>
       </div>
+      
     </div>
-          
+  </div>
 
-  </div>
-  <div class="col" style="padding-left: 10px;padding-right: 10px;">
-    <label for="nationality" class="col col-form-label">
-      {{ __('Pais') }}
-    </label>
-    <select class="form-select" id="nationality" name="nationality" aria-label="Default select example"required>
-      <option value="">Seleccione un pais</option>
-      @foreach ($reg_country as $pais)
-        @if ($pais->id==1)
-        <option value="{{$pais->id}}" selected>{{$pais->name}}</option>      
-        @else
-        <option value="{{$pais->id}}">{{$pais->name}}</option>
-        @endif
-          
-      @endforeach
-      
-    </select>
-  </div>
-  <div class="col" style="padding-left: 10px;padding-right: 10px;">
-    <label for="city" class="col col-form-label">
-      {{ __('Ciudad') }}
-    </label>
-    <select class="form-select" id="city" name="city" aria-label="Default select example"required>
-      <option value="">Seleccione una ciudad</option>
-      @foreach ($reg_city as $ciudad)
-      @if ($ciudad->id==1)
-      <option value="{{$ciudad->id}}" selected>{{$ciudad->name}}</option>      
-      @else
-      <option value="{{$ciudad->id}}">{{$ciudad->name}}</option>
-      @endif
-        
-    @endforeach
-    </select>
-  </div>
+
+  
+
+  
+
    
-
-</div>
-<h3 style="padding-top: 20px">Datos de Coorporativos</h3>
-
-<div class="col-4">
-
- 
-    <label for="branch" class="col col-form-label">
-      {{ __('Sucursal') }}
-    </label>
-    <select class="form-select" id="branch" name="branch" aria-label="Default select example"  required>
-      <option value="" >Seleccione un tipo</option>
-      @foreach ($reg_branch as $sucur)
-       @if ($sucur->id==$sucursal[0]->id_branch)
-        <option value='{{$sucur->id}}' selected>{{$sucur->name}}</option>   
-         @else
-        <option value='{{$sucur->id}}'>{{$sucur->name}}</option>      
-       @endif
-      
-      
-      @endforeach
-     
-      
-    </select>
-
-</div>
-<div class="col-4">
-
- 
-  <label for="Parentesco" class="col col-form-label">
-    {{ __('Parentesco') }}
-  </label>
-  <select class="form-select" id="parentesco" name="parentesco" aria-label="Default select example"  required>
-    <option value="" selected>Seleccione un tipo</option>
- 
-    @foreach ($parentescoArray as $key=>  $para)
-    <option value="{{$para}}">{{$para}}</option>
-    
-    
-    @endforeach
-   
-    
-  </select>
-
-</div>
-<h3 style="padding-top: 20px">Datos de domicilio</h3>
-      
-
-<div class="table-responsive">
-  <table class="table table-striped table-hover"  id="table">
-    <thead class="thead">
-      <tr>
-        <th>Zona</th>
-        <th>Calle</th>
-        <th>Numero</th>
-        <th>Datos adicionales</th>
-      </tr>
-    </thead>  
-      <tbody >
-        <tr>
-          <td>
-            <input class="form-control"  type="text" name="zone[]" placeholder="Zona donde vive" required>
-          </td>
-          <td>
-            <input class="form-control" type="text" name="street[]" placeholder="Calle donde vive" required>
-          </td>
-          <td>
-            <input class="form-control" type="text" name="number[]" placeholder="Numero de la casa" required>
-          </td>
-          <td>
-            <input class="form-control" type="text" name="decriptionAddress[]" placeholder="Puede dejar en blanco esta parte tambien puede llenar datos como ser edificio, etc" >
-          </td>
-        </tr>
+  <div class="container">
+    <div class="row">
+      <div class="col-6">
+        <h5 style="padding-top: 10px">Tutores Seleccionados</h5>
+  <div id="selectedTutorsContainer" hidden></div>
+  <table id="selectedTutors">
+      <tbody>
+          <!-- Aquí se agregarán las filas de tutores seleccionados -->
       </tbody>
   </table>
-  <div class="form-group">
-    <button type="button" class="btn btn-primary mb-2" onclick="agregarFila()" style="height: 35px;width: 35px;">+</button>
-    <button type="button" class="btn btn-primary mb-2" onclick="eliminarFila(this)" style="height: 35px;width: 35px;">-</button>
+      </div>
+      <div class="col-6">
+        <h5 style="padding-top: 10px">Estudiantes Seleccionados</h5>
+        <div id="selectedStudentsContainer" hidden></div>
+        <table id="selectedStudents">
+            <tbody>
+                <!-- Aquí se agregarán las filas de estudiantes seleccionados -->
+            </tbody>
+        </table>
+      </div>
+    
+    </div>
   </div>
-</div>
-<h3>Datos telefono/celular</h3>
-<div class="alert alert-warning" role="alert">
-  <span>Recuerde para estos dos casos usar los siguientes codigos en la parte de numero de celular, para personas sin numero celular asignar el codigo "1010" y para menores de edad o estudiantes sin celular  usar el codigo "1000"</span>
-</div> 
 
-<div class="table-responsive">
-  <table class="table table-striped table-hover"  id="table2">
-    <thead class="thead">
-      <tr>
-        <th>Numero</th>
-        <th>Descripción</th>
-      </tr>
-    </thead>  
-      <tbody >
-        <tr>
-          <td>
-            <input class="form-control" type="number" name="numberCell[]" placeholder="Celular" required>
-          </td>
-          <td>
-            <input class="form-control" type="text" name="description[]" placeholder="Puede dejalo en blanco, tambien puede indicar Numero principal, observaciones">
-          </td>
-        </tr>
-      </tbody>
-  </table>
+   
 
-  <div class="form-group">
-    <button type="button" class="btn btn-primary mb-2" onclick="agregarFilaT()" style="height: 35px;width: 35px;">+</button>
-    <button type="button" class="btn btn-primary mb-2" onclick="eliminarFilaT(this)" style="height: 35px;width: 35px;">-</button>
-  </div>
-</div>
-       
         <div class="form-group row d-flex justify-content-center " style="padding-top: 20px;padding-bottom: 10px;">
           <div class="col-md-10 d-flex justify-content-center">
             <button type="submit" class="btn btn-primary" id="botonSubir"  >
@@ -697,6 +568,7 @@ body {
         </div>
       </div>
     </div>
+  </div>
   </form>
 </div>
 @else
@@ -716,39 +588,97 @@ body {
 <script src="http://momentjs.com/downloads/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script>
+    $(document).ready(function() 
+    {  
+        $('#myTable tfoot th').each( function () {
+            if($(this).attr("class")!="#N/A")
+            {
+              var title = $(this).text();
+              $(this).html( '<input type="text" placeholder="'+title+'" />' );
+            }
+        } );
+        var table = $('#myTable').DataTable( 
+        {
+        
+            "language":             
+            {
+                "emptyTable":     "Tabla Vacia",
+                "info":           "Se muestran del _START_ al _END_ de _TOTAL_ registros",
+                "infoEmpty":      "Se muestran del 0 al 0 de 0 Registros",
+                "infoFiltered":   "(Filtrado de un total de _MAX_ registros)",
+                "lengthMenu":     "Se muestran _MENU_ registros",
+                "loadingRecords": "Cargando...",
+                "processing":     "Procesando...",
+                "search":         "Buscar:",
+                "zeroRecords":    "No se encontro ningun registro",
+                "paginate": {
+                    "first":      "Primero",
+                    "last":       "Ultimo",
+                    "next":       "Siguiente",
+                    "previous":   "Anterior"
+                }
+            },
+            "columnDefs": [
+                { width:"10%", "targets": 2 }
+            ],
+          
+            "paging": false,
+                
+                "scrollX":true,
+                "scrollY": "150px",
+                "scrollCollapse": true, 
+                "FixedHeader":true,
+          
+        } );
+    } );
+    
+    </script>
+    <script>
+        $(document).ready(function() 
+        {  
+            $('#myTable2 tfoot th').each( function () {
+                if($(this).attr("class")!="#N/A")
+                {
+                  var title = $(this).text();
+                  $(this).html( '<input type="text" placeholder="'+title+'" />' );
+                }
+            } );
+            var table = $('#myTable2').DataTable( 
+            {
+            
+                "language":             
+                {
+                    "emptyTable":     "Tabla Vacia",
+                    "info":           "Se muestran del _START_ al _END_ de _TOTAL_ registros",
+                    "infoEmpty":      "Se muestran del 0 al 0 de 0 Registros",
+                    "infoFiltered":   "(Filtrado de un total de _MAX_ registros)",
+                    "lengthMenu":     "Se muestran _MENU_ registros",
+                    "loadingRecords": "Cargando...",
+                    "processing":     "Procesando...",
+                    "search":         "Buscar:",
+                    "zeroRecords":    "No se encontro ningun registro",
+                    "paginate": {
+                        "first":      "Primero",
+                        "last":       "Ultimo",
+                        "next":       "Siguiente",
+                        "previous":   "Anterior"
+                    }
+                },
+                "columnDefs": [
+                    { width:"10%", "targets": 2 }
+                ],
+                "paging": false,
+                
+                "scrollX":true,
+                "scrollY": "150px",
+                "scrollCollapse": true, 
+                "FixedHeader":true,
+              
+            } );
+        } );
+        
+        </script>
 
-  var loadFile = function(event) {
-    var image = document.getElementById('output');
-    image.src = URL.createObjectURL(event.target.files[0]);
-    var foto = $("#foto").val();
-    if (foto !== "") {
-      $("#elim_image").show();
-    }
-  };
-  $("#elim_image").click(function() {
-    $("#foto").val("");
-    var image = document.getElementById('output');
-    image.src = "{{asset('imagenes/log.png')}}";
-    $("#elim_image").hide();
-  });
-
-  
-</script>
-<script>
-  function calcularEdad() {
-      const fechaNacimientoInput = document.getElementById('fecha_nac');
-      const fechaNacimiento = new Date(fechaNacimientoInput.value);
-      const ahora = new Date();
-      const diferenciaMilisegundos = ahora - fechaNacimiento;
-      const edad = new Date(diferenciaMilisegundos);
-      const milisegundosEnAnio = 1000 * 60 * 60 * 24 * 365.25; // Consideramos años bisiestos
-      const diferenciaAnios = diferenciaMilisegundos / milisegundosEnAnio;
-      const añosEnteros = Math.floor(diferenciaAnios);
-  
-    document.getElementById('age').value = añosEnteros;
-  }
-
-</script>
 <script>
   
 
@@ -901,6 +831,10 @@ this.then = function (callback) {
 
     function accept() {
 
+
+
+
+
         if (input == true) {
 
 
@@ -924,6 +858,9 @@ this.then = function (callback) {
         callback(e = false);
     }
 
+
+
+
 }
 
 
@@ -938,7 +875,7 @@ this.then = function (callback) {
 function alertaAceptar(){
   new novaAlert({
     icon: 'success',
-    title: 'Registro de estudiante correcto',
+    title: 'Registro de correcto',
     text: 'Precione el boton para continuar',
 dismissButton: true,
 
@@ -950,8 +887,8 @@ ConfirmButtonText: 'Aceptar',
 function alertaFallo(){
   new novaAlert({
     icon: 'danger',
-    title: 'Registro denegado',
-    text: 'Precione el boton para continuar',
+    title: 'Registro no realizado ',
+    text: 'Contactese al administrador error de base de datos 1000, precione para continuar',
     dismissButton: false,
 
 CancelButtonText: 'Aceptar',
@@ -959,7 +896,76 @@ CancelButtonText: 'Aceptar',
 });
 }
 
+function alertaFallo1(){
+  new novaAlert({
+    icon: 'danger',
+    title: 'El ingreso de menos o mas tutores',
+    text: 'Como maximo y minimo tiene que ser 3 aprete el boton para continuar.',
+    dismissButton: false,
 
+CancelButtonText: 'Aceptar',
+
+});
+}
+function alertaFallo2(){
+  new novaAlert({
+    icon: 'danger',
+    title: 'No ingreso tutores',
+    text: 'Debe ingresar como maximo 3 grupos.',
+    dismissButton: false,
+
+CancelButtonText: 'Aceptar',
+
+});
+}
+
+function alertaFallo3(){
+  new novaAlert({
+    icon: 'danger',
+    title: 'No ingreso estudiantes',
+    text: 'Debe ingresar por lo menos uno.',
+    dismissButton: false,
+
+CancelButtonText: 'Aceptar',
+
+});
+}
+
+function alertaFallo4(){
+  new novaAlert({
+    icon: 'danger',
+    title: 'No escogio al tutor principal',
+    text: 'Debe estar en mismog grupo.',
+    dismissButton: false,
+
+CancelButtonText: 'Aceptar',
+
+});
+}
+
+function alertaFallo5(){
+  new novaAlert({
+    icon: 'danger',
+    title: 'El tutor no esta en grupo',
+    text: 'Debe escoger el tutor del mismo grupo',
+    dismissButton: false,
+
+CancelButtonText: 'Aceptar',
+
+});
+}
+
+function alertaFallo6(){
+  new novaAlert({
+    icon: 'danger',
+    title: 'Codigo repetido',
+    text: 'Vuelva a ingresa todo de nuevo.',
+    dismissButton: false,
+
+CancelButtonText: 'Aceptar',
+
+});
+}
 </script>
 <script>
   var miDiv = document.getElementById('miDiv');
@@ -967,49 +973,102 @@ CancelButtonText: 'Aceptar',
       var status = "{{ session('status') }}";
       if (status === 'success') {
         alertaAceptar();
-      } else if (status === 'error') {
+      } 
+      if (status === 'error') {
         alertaFallo();
       }
- 
+      if (status === 'error1') {
+        alertaFallo1();
+      }
+      if (status === 'error2') {
+        alertaFallo2();
+      }
+      if (status === 'error3') {
+        alertaFallo3();
+      }
+      if (status === 'error4') {
+        alertaFallo4();
+      }
+      if (status === 'error5') {
+        alertaFallo5();
+      }
+      if (status === 'error6') {
+        alertaFallo6();
+      }
 </script>
-<script>
-  function agregarFila() {
-    document.getElementById("table").insertRow(-1).innerHTML = ` <td>
-            <input class="form-control"  type="text" name="zone[]" placeholder="Zona donde vive" required>
-          </td>
-          <td>
-            <input class="form-control" type="text" name="street[]" placeholder="Calle donde vive" required>
-          </td>
-          <td>
-            <input class="form-control" type="text" name="number[]" placeholder="Numero de la casa" required>
-          </td>
-          <td>
-            <input class="form-control" type="text" name="decriptionAddress[]" placeholder="Puede dejar en blanco esta parte tambien puede llenar datos como ser edificio, etc" >
-        </td>`;
-  }
-  function eliminarFila() {
-    var table = document.getElementById("table").deleteRow(2);
-  
-  }
 
-  
-</script>
 <script>
-  function agregarFilaT() {
-    document.getElementById("table2").insertRow(-1).innerHTML = `
-    <td>
-            <input class="form-control" type="number" name="numberCell[]" placeholder="Celular" required>
-          </td>
-          <td>
-            <input class="form-control" type="text" name="description[]" placeholder="Puede dejalo en blanco, tambien puede indicar Numero principal, observaciones">
-         </td>`;
-  }
-  function eliminarFilaT() {
-    var table = document.getElementById("table2").deleteRow(2);
-  
-  }
+    const tutorCheckboxes = document.querySelectorAll('.tutor-check-input');
+const studentCheckboxes = document.querySelectorAll('.student-check-input');
 
-  
+const selectedTutorsContainer = document.getElementById('selectedTutorsContainer');
+const selectedStudentsContainer = document.getElementById('selectedStudentsContainer');
+
+const selectedTutorsTable = document.getElementById('selectedTutors').getElementsByTagName('tbody')[0];
+const selectedStudentsTable = document.getElementById('selectedStudents').getElementsByTagName('tbody')[0];
+
+let selectedTutors = 0;
+let selectedStudents = 0;
+
+tutorCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        if (this.checked) {
+            if (selectedTutors < 3) {
+                selectedTutors++;
+                const row = this.parentNode.parentNode.parentNode;
+                const cells = row.cells;
+                const tutorName = cells[1].textContent.trim();
+              
+                const selectedInfo = `Tutor: ${tutorName}`;
+                selectedTutorsContainer.textContent = selectedInfo;
+
+                const newRow = selectedTutorsTable.insertRow();
+                const cell1 = newRow.insertCell(0);
+                cell1.textContent = tutorName;
+            } else {
+                this.checked = false;
+            }
+        } else {
+            selectedTutors--;
+            selectedTutorsContainer.textContent = '';
+
+            selectedTutorsTable.deleteRow(selectedTutorsTable.rows.length - 1);
+        }
+    });
+});
+
+studentCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        if (this.checked) {
+            if (selectedStudents < 10) {
+                selectedStudents++;
+                const row = this.parentNode.parentNode.parentNode;
+                const cells = row.cells;
+                const studentName = cells[1].textContent.trim();
+              
+                const selectedInfo = `Estudiante: ${studentName}`;
+                selectedStudentsContainer.textContent = selectedInfo;
+
+                const newRow = selectedStudentsTable.insertRow();
+                const cell1 = newRow.insertCell(0);
+                cell1.textContent = studentName;
+            } else {
+                this.checked = false;
+            }
+        } else {
+            selectedStudents--;
+            selectedStudentsContainer.textContent = '';
+
+            selectedStudentsTable.deleteRow(selectedStudentsTable.rows.length - 1);
+        }
+    });
+});
 </script>
+
+
+
+
+
+
 @endsection
 

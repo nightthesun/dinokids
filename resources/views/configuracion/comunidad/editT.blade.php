@@ -641,10 +641,10 @@ body {
     <option value="">Seleccione un tipo</option>
  
     @foreach ($parentescoArray as $key=>  $para)
-      @if ($reg_parentesco[0]->parentesco==$key)
-      <option value="{{$key}}" selected>{{$para}} </option>
+      @if ($reg_parentesco[0]->parentesco==$para)
+      <option value="{{$para}}" selected>{{$para}} </option>
       @else
-      <option value="{{$key}}">{{$para}}</option>
+      <option value="{{$para}}">{{$para}}</option>
       @endif
     
     

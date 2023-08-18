@@ -163,8 +163,6 @@ class SucursalController extends Controller
      */
     public function show($id)
     {
-        
-        
         if (Auth::user()->authorizePermisos(['Sucursal', 'Ver informacion'])) {
         
             $query_reg_branch = " SELECT a.id, a.name as nameDres, a.description as descripS, u.name as creaU,uu.name as modiU,uuu.name as eliU, a.created_date as creaF, a.modified_date as modiF,a.deleted_date as eliF

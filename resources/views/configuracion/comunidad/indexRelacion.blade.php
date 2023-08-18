@@ -93,7 +93,7 @@
     color: #413b49bb;
 }
 .small-cell {
-            width: 8%; /* Tamaño en píxeles o porcentaje */
+            width: 12%; /* Tamaño en píxeles o porcentaje */
         }
 </style> 
 @endsection
@@ -118,6 +118,93 @@
             
       @endif </div>  
      
+      <table class="cell-border compact hover" id="myTable" style="width:100%;" >
+        <thead>
+          @if (count($reg_tutor_principals))
+          <tr>
+            <th>Nombre</th>
+            <th>Codigó</th>
+             <th>Opcines</th>
+                    
+          </tr>
+        </thead>
+        <tbody>
+          @foreach ($reg_tutor_principals as $tr)
+          <tr>
+            <td>{{$tr->first_name}}</td>
+            <td>{{$tr->relationship}}</td>
+            <td class="small-cell" >
+              @if(Auth::user()->authorizepermisos(['Relacion', 'Ver informacion']) ) 
+          <a class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Ver" href="{{ route('relacion.show',$tr->idRe) }}" >
+            <i class="far fa-eye"></i>
+           </a>  
+          @endif 
+              @if(Auth::user()->authorizepermisos(['Relacion', 'Editar']) ) 
+          
+             <a class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Editar" href="{{ route('relacion.edit',$tr->idRe) }}" >
+              <i class="fas fa-user-edit"></i>  
+             </a>   
+             @endif
+              <!-- Button trigger modal delete-->
+      @if(Auth::user()->authorizepermisos(['Relacion', 'Eliminar']) ) 
+      <form method="POST" enctype="multipart/form-data" action="{{ route('relacion.destroy', $tr->idRe) }}" class="d-inline">
+        @csrf 
+       @if ($tr->del_relacion==0)
+       <button type="button" class="btn btn-danger btn-sm text-white" title="Eliminar" data-bs-toggle="modal" data-bs-target="#Delete{{$tr->idRe}}" data-toggle="tooltip" data-placement="top">
+               <i class="fas fa-folder-minus"></i>
+      </button>
+        @else
+            @if ($tr->del_relacion==1)
+            <button type="button" class="btn btn-secondary btn-sm text-white" title="Activar" data-bs-toggle="modal" data-bs-target="#Delete{{$tr->idRe}}" data-toggle="tooltip" data-placement="top">
+       
+              <i class="fas fa-folder-plus"></i>
+          </button>
+            @endif
+        @endif
+       
+     
+      
+      <!-- Modal -->
+      <div class="modal fade" id="Delete{{$tr->idRe}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+      <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">¿Desea Eliminar?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Realmente decea cambiar de estado.
+      
+      
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+      
+              <button type="submit"  class="btn btn-danger   text-white">Cambiar <i class="far fa-trash-alt"></i></button>
+      
+       
+       
+      </div>
+      </div>
+      </div>
+      </div>
+      </form>
+
+          
+      @endif
+            </td>
+          </tr>
+          @endforeach   
+        </tbody>
+        
+            
+        @else
+        <tr>
+          <td>No hay registro !!</td>
+        </tr>     
+        @endif
+      </table>
      
   </div>  
     
@@ -166,7 +253,7 @@
               }
           },
           "columnDefs": [
-              { width:"10%", "targets": 3 }
+              { width:"10%", "targets": 0 }
           ],
         
           "pageLength": 50,

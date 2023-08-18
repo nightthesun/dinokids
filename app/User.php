@@ -7,7 +7,7 @@ use App\Form;
 use App\Permiso;
 use App\SubModulo;
 use App\Modulo;
-use App\User;
+
 use App\Acceso;
 use Auth;
 
