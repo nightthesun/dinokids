@@ -199,8 +199,7 @@ class SucursalController extends Controller
      */
     public function edit($id)
     {
-       
-        if (Auth::user()->authorizePermisos(['Sucursal', 'Editar'])) {
+         if (Auth::user()->authorizePermisos(['Sucursal', 'Editar'])) {
         
             $query_reg_branch = "SELECT a.id, a.name as nameDres, a.description as descripS
             FROM `reg_branch` a
@@ -350,7 +349,6 @@ class SucursalController extends Controller
      */
     public function destroy($id)
     {
-      
         try {
             $querry_sucursal= "SELECT id,deleted FROM reg_branch WHERE id = $id LIMIT 1
                 ";
@@ -396,17 +394,11 @@ class SucursalController extends Controller
                'deleted' => $del,
              
              ]);
-            
-        
-    
              if ($sucursalX[0]->deleted==0) {
               return redirect()->back()->with('status', 'activate');
              } else {
               return redirect()->back()->with('status', 'delete');
              }
-             
-           
-            
          } catch (\Throwable $th) {
             dd ($th);
             return redirect()->back()->with('status', 'error');

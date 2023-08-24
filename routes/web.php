@@ -34,7 +34,9 @@ Route::prefix('usuario')->group(function()
 Route::get('/errors/banned', function () {
     return view('errors.banned'); // Asegúrate de tener una vista llamada "errors/banned.blade.php"
 })->name('errors.banned');
-
+Route::get('/errors/eliminacion', function () {
+    return view('errors.eliminacion'); // Asegúrate de tener una vista llamada "errors/banned.blade.php"
+})->name('errors.eliminacion');
 Route::get('/errors/deleted', function () {
     return view('errors.deleted'); // Asegúrate de tener una vista llamada "errors/banned.blade.php"
 })->name('errors.deleted');
@@ -52,8 +54,10 @@ Route::get('notificaciones/{url}/{id}','NotificationsController@redirect')->name
 Route::resource('perfil','Configuracion\PerfilController');
 Route::resource('/perfilEstudiante','Comunidad\EstudianteController');
 Route::resource('/perfilTutor','Comunidad\TutorController');
-//tutor principal----------------------
+//tutor relacion----------------------
 Route::resource('relacion','Configuracion\TutorprincipalController');
+Route::post('/relacion/{id}','Configuracion\TutorprincipalController@update')->name('relacion.update');
+Route::post('/relacionE/{id}','Configuracion\TutorprincipalController@destroy')->name('relacion.destroy');
 //sucursales--------------------------
 Route::resource('/sucursal','Configuracion\SucursalController');
 Route::post('/sucursal/{id}','Configuracion\SucursalController@update')->name('sucursal.update');
@@ -64,7 +68,20 @@ Route::resource('/aula','Configuracion\AulaController');
 Route::resource('/programa','Configuracion\ProgramaController');
 Route::post('/programa/{id}','Configuracion\ProgramaController@update')->name('programa.update');
 Route::post('/programaE/{id}','Configuracion\ProgramaController@destroy')->name('programa.destroy');
+// cargo---------------------------------------
+Route::resource('/cargo','Configuracion\CargoController');
+Route::post('/cargo/{id}','Configuracion\CargoController@update')->name('cargo.update');
+Route::post('/cargoE/{id}','Configuracion\CargoController@destroy')->name('cargo.destroy');
+// departamento--------------------------------
+Route::resource('/departamento','Configuracion\DepartamentoController');
+Route::post('/departamento/{id}','Configuracion\DepartamentoController@update')->name('departamento.update');
+Route::post('/departamentoE/{id}','Configuracion\DepartamentoController@destroy')->name('departamento.destroy');
+// Empleado-----------------------------------
+Route::resource('/empleado','Configuracion\EmployeeController');
+Route::post('/empleado/{id}','Configuracion\EmployeeController@update')->name('empleado.update');
+Route::post('/empleadoE/{id}','Configuracion\EmployeeController@destroy')->name('empleado.destroy');
 
+//---------------------------------------------------------------------------
 Route::prefix('dev')->group(function(){
     Route::resource('modulo', 'Dev\ModuloController');
     Route::resource('submodulo', 'Dev\SubModuloController');
