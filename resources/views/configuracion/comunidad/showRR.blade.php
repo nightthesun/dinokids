@@ -447,8 +447,6 @@ body {
 <div class="row">
     <h3 class="mt-3">Datos de estudiante</h3>
    @foreach ($estudiante as $key => $item)
-          
-   
         <div class="col">
             <div class="card text-dark bg-light mb-3" style="max-width: 18rem;">
                 <div class="card-header">Estudiante</div>
