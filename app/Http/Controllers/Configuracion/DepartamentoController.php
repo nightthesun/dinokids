@@ -201,7 +201,7 @@ class DepartamentoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
            try {
                 $query_valido1="SELECT * from `reg_department` d
@@ -224,10 +224,11 @@ class DepartamentoController extends Controller
                     
                     return redirect()->route('errors.eliminacion');
                   } else {
+                    $obs=$request->input("motivo");
                     $query_valido3="SELECT * from `reg_department` d
                     where d.id=$id";
                      $valido3 = DB::select($query_valido3);
-                     $cadena="Nombre:".$valido3[0]->name." Descripción:".$valido3[0]->description;
+                     $cadena="Nombre:".$valido3[0]->name." Descripción:".$valido3[0]->description ." Motivo: ".$obs;
                   
                      $user = Auth::user()->id;
                     $fecha_actual = new DateTime();

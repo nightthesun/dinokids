@@ -724,7 +724,7 @@ this.then = function (callback) {
 function alertaAceptar(){
   new novaAlert({
     icon: 'success',
-    title: 'Se actualizo cone exito',
+    title: 'Actulización realizada.',
     text: 'Precione el boton para continuar',
 dismissButton: true,
 

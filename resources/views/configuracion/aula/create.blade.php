@@ -9,13 +9,6 @@
   border-radius: 10px;
   
 }
-.borde2 {
-  border-width: 1px;
-  border-style: solid;
-  border-color: #8092a1;
-  border-radius: 0px;
-  
-}
 .titulo1{
   color: #B40F7F;
   font-weight: bold;
@@ -402,138 +395,87 @@ body {
 
 @section('content')
 @include('layouts.sidebar', ['hide'=>'0'])
-@if(Auth::user()->authorizepermisos(['Administrar', 'Ver']) && Auth::user()->authorizepermisos(['Administrar', 'Crear']) )
+@if(Auth::user()->authorizepermisos(['Aula', 'Ver']) && Auth::user()->authorizepermisos(['Aula', 'Crear']) )
     <!-- Mostrar mensaje de éxito -->
 <div id="miDiv"></div>
 <div style="padding: 6rem; padding-top:0.5rem;">
   <div class="row d-flex justify-content-center mb-3">
     <div class="col-lg-6 col-sm-12 d-flex align-items-center justify-content-center">
-      <h3 class="text-center titulo1">Edición de empleado</h3>
+      <h3 class="text-center titulo1">Registro de aula</h3>
       <a href="{{ url('/') }}">
         <button type="button" class="btn btn-primary align-self-end" id="botonSalir"  data-bs-toggle="tooltip" data-bs-placement="right" title="Regresar al inicio" >
             <i class="fas fa-house-user"></i>
           </button> 
       </a>
-      <a href="{{ route('empleado.index') }}">
+      <a href="{{ route('aula.index') }}">
         <button type="button" class="btn btn-primary align-self-end" id="botonSalir"  data-bs-toggle="tooltip" data-bs-placement="right" title="volver a lista" >
           <i class="far fa-address-book"></i>
           </button> 
       </a>
     </div>
   </div>
-  <form method="POST" enctype="multipart/form-data" action="{{ route('empleado.update',$id) }}">
+  <form method="POST" enctype="multipart/form-data" action="{{ route('aula.store') }}">
     @csrf
     <div class="row">
       <div class="col-12 borde1">
-        <h3 class="mt-3">Datos de empleado</h3>
+        <h3 class="mt-3">Datos de aula</h3>
         <div class="form-group row d-flex">
-            <div class="alert alert-info" role="alert">
-              <h5><i class="fas fa-exclamation-triangle"></i> En la tabla que se observa los datos de  color verde es el registro a editar, siempre estar en la primera fila. Los datos en amarillo son los datos ya usados no se pueden elejir.</h5>   
-              </div>
-<div class="row">
-  <div class="col-8 borde2">
-    <h4 style="padding-top: 10px"></h4>
-    <table class="cell-border compact hover" id="myTable" style="width:100%;" >
-        <thead>
-          <tr>
-            
-            <th>Nombre</th>
-            <th>CI</th>
-            <th>Sucursal</th>
-            <th>S</th>
-             
-                    
-          </tr>
-        </thead>
-        <tbody>
-         @if (count($pleople))
-         @foreach ($pleople as $p)
-         
-        <tr>
-            @if ($p->idPER==$id)
-            <td class="studentCheckbox" style="color: #74AB36">{{$p->first_name." ".$p->last_name1." ".$p->last_name2}}</td>
-            <td class="studentCheckbox" style="color: #74AB36">{{$p->ci}}</td> 
-            <td class="studentCheckbox" style="color: #74AB36" >{{$p->nameB}}</td>
-            <td>
-             <div class="form-check">
-                 <input class="form-check-input" type="radio" value="{{$p->id}}" name="principal" id="principal" checked required>
-                 
-               </div>
-            </td>     
-            @else
-                @if ($p->idPER!=null)
-                <td class="studentCheckbox" style="color: #eff308">{{$p->first_name." ".$p->last_name1." ".$p->last_name2}}</td>
-                <td class="studentCheckbox" style="color: #eff308" >{{$p->ci}}</td> 
-                <td class="studentCheckbox" style="color: #eff308">{{$p->nameB}}</td>
-                <td>
-                 <div class="form-check">
-                     
-                   </div>
-                </td> 
-                @else
-                <td class="studentCheckbox">{{$p->first_name." ".$p->last_name1." ".$p->last_name2}}</td>
-                <td class="studentCheckbox">{{$p->ci}}</td> 
-                <td class="studentCheckbox">{{$p->nameB}}</td>
-                <td>
-                 <div class="form-check">
-                     <input class="form-check-input" type="radio" value="{{$p->id}}" name="principal" id="principal"required >
-                     
-                   </div>
-                </td> 
-                @endif
-             
-            @endif
-           
-        </tr>
-      @endforeach
-         @else
-         <tr>
-          <td>No hay registro !!</td>
-        </tr> 
-         @endif
-        </tbody>  
-      </table>
-    </div>
-  
-  
-    <div class="col-4 borde2">
-        <h4 style="padding-top: 10px"></h4>
-        <label for="cargo" class="col col-form-label">
-            {{ __('Cargo:') }}
-          </label>
-        <select class="form-select" aria-label="Default select example" name="cargo" id="cargo" required>
-            
-          <option value="">Seleccione cargo</option>
-            
-           @foreach ($cargo as $item)
-                @if ($item->id==$employees_existente[0]->id_reg_cargos)
-                <option value="{{$item->id}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{$item->description}}" selected> {{$item->name}}</option>
-                
-                @else
-                <option value="{{$item->id}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{$item->description}}"> {{$item->name}}</option>
-                    
-                @endif
-                
-            @endforeach
-          </select>
 
-          <label for="grado" class="col col-form-label">
-            {{ __('Grado academico:') }}
+<div class="row">
+    <div class="col">
+        <label for="classroom_name" class="col col-form-label">
+            {{ __('Nombre:') }}
           </label>
-        <select class="form-select" aria-label="Default select example" name="grado" id="grado" required>
+        <select class="form-select" aria-label="Default select example" name="classroom_name" id="classroom_name" required>
+            <option value="" selected>Seleccione nombre</option>
+           
+            @foreach ($areas as $area)
+
+                <option value="{{$area->id}}">{{$area->interventionarea_description}}</option>
             
-          <option value="" >Seleccione grado academico</option>
-            
-            @foreach ($academic_degree as $item)
-           @if ($item->id==$employees_existente[0]->id_academic_degree)
-           <option value="{{$item->id}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{$item->description}}" selected>{{$item->name}}</option>
-           @else
-           <option value="{{$item->id}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{$item->description}}">{{$item->name}}</option>
-           @endif
-                
             @endforeach
           </select>
-</div>
+    </div>
+    <div class="col">
+        <label for="classroom_name" class="col col-form-label">
+            {{ __('Numero:') }}
+          </label>
+        <select class="form-select" aria-label="Default select example" name="classroom_name" id="classroom_name" required>
+            <option value="" selected>Seleccione nombre</option>
+           
+            @foreach ($array_numbers as $number)
+
+                <option value="{{$number}}">{{$number}}</option>
+            
+            @endforeach
+          </select>
+    </div>
+  <div class="col">
+          <label for="nombre" class="col-md-2 col-form-label">
+            {{ __('Alias:') }}
+          </label>
+          <input id="alias" type="text" class="form-control @error('alias') is-invalid @enderror" name="alias" value="{{ old('alias') }}" required autocomplete="alias" autofocus>
+            @error('alias')
+            <span class="invalid-feedback" role="alert">
+              <strong>{{ $message }}</strong>
+            </span>
+            @enderror
+    </div>
+    <div class="col">
+        <label for="branch" class="col col-form-label">
+            {{ __('Nombre:') }}
+          </label>
+        <select class="form-select" aria-label="Default select example" name="branch" id="branch" required>
+            <option value="" selected>Seleccione sucursal</option>
+           
+            @foreach ($branchs as $branch)
+
+                <option value="{{$branch->id}}">{{$branch->nameDres}}</option>
+            
+            @endforeach
+          </select>
+    </div>
+
 
 </div>
 
@@ -573,63 +515,7 @@ body {
 @section('mis_scripts')
 <script src="http://momentjs.com/downloads/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<script>
-    $(document).ready(function() 
-    {  
-        $('#myTable tfoot th').each( function () {
-            if($(this).attr("class")!="#N/A")
-            {
-              var title = $(this).text();
-              $(this).html( '<input type="text" placeholder="'+title+'" />' );
-            }
-        } );
-        var table = $('#myTable').DataTable( 
-        {
-        
-            "language":             
-            {
-                "emptyTable":     "Tabla Vacia",
-                "info":           "Se muestran del _START_ al _END_ de _TOTAL_ registros",
-                "infoEmpty":      "Se muestran del 0 al 0 de 0 Registros",
-                "infoFiltered":   "(Filtrado de un total de _MAX_ registros)",
-                "lengthMenu":     "Se muestran _MENU_ registros",
-                "loadingRecords": "Cargando...",
-                "processing":     "Procesando...",
-                "search":         "Buscar:",
-                "zeroRecords":    "No se encontro ningun registro",
-                "paginate": {
-                    "first":      "Primero",
-                    "last":       "Ultimo",
-                    "next":       "Siguiente",
-                    "previous":   "Anterior"
-                }
-            },
-            "columnDefs": [
-                { width:"10%", "targets": 3 }
-            ],
-            "paging": false,
-            "order": [[3, 'asc']],
-            "aoColumnDefs": [
-      { "bSortable": false, "aTargets": [3] } // Deshabilitar la ordenación en la columna de checks
-    ],
-    "orderMulti": false, // Evitar la ordenación múltiple
-    "fnDrawCallback": function() {
-      $('#myTable tbody tr').sort(function(a, b) {
-        var checkA = $('input[type="radio"]', a).prop('checked');
-        var checkB = $('input[type="radio"]', b).prop('checked');
-        return checkA === checkB ? 0 : (checkA ? -1 : 1);
-      }).appendTo('#myTable tbody');
-    },  
 
-                "scrollX":true,
-                "scrollY": "350px",
-                "scrollCollapse": true, 
-                "FixedHeader":true,
-          
-        } );
-    } );
-    
-    </script>
 
 <script>
   
@@ -827,7 +713,7 @@ this.then = function (callback) {
 function alertaAceptar(){
   new novaAlert({
     icon: 'success',
-    title: 'Actulización realizada.',
+    title: 'Registro creado.',
     text: 'Precione el boton para continuar',
 dismissButton: true,
 

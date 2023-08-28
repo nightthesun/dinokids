@@ -684,7 +684,7 @@ this.then = function (callback) {
 function alertaAceptar(){
   new novaAlert({
     icon: 'success',
-    title: 'Registro se realizo con exito',
+    title: 'Registro creado.',
     text: 'Precione el boton para continuar',
 dismissButton: true,
 

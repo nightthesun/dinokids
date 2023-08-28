@@ -213,8 +213,47 @@ class CargoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
-        dd("encontrucción..");
+      try {
+        if (Auth::user()->authorizePermisos(['Cargo', 'Eliminar'])) {
+          $query_cargo="SELECT c.id ,e.id_reg_cargos
+          from `reg_cargos` c
+          left join `reg_employees` e on c.id=e.id_reg_cargos
+          where c.deleted=0 and e.id_reg_cargos='$id';
+          ";
+          $cargo = DB::select($query_cargo);        
+          $tamaño=count($cargo);
+          if ($tamaño>0) {
+            return redirect()->route('errors.eliminacion');
+            
+          } else {
+            $obs=$request->input("motivo");
+            $query_valido3="SELECT * from `reg_cargos` d
+                      where d.id=$id";
+                       $valido3 = DB::select($query_valido3);
+                       $cadena="Nombre:".$valido3[0]->name." Descripción:".$valido3[0]->description ." Motivo: ".$obs;
+                    
+                       $user = Auth::user()->id;
+                      $fecha_actual = new DateTime();
+                      $fecha_actual=$fecha_actual->Format('Y-m-d H:m:s');
+                      DB::table('sis_log_deleted')->insert([
+                        'description' => $cadena,
+                        'modulo' => "cargos",
+                        'user_id' => $user,
+                        'datetime' => $fecha_actual,
+                        ]);
+                      DB::table('reg_cargos')->where('id', $id)->delete();
+                      return redirect()->back()->with('status', 'delete');
+          }
+        }else{
+          return redirect()->route('errors.permisos');
+        }
+      } catch (\Throwable $th) {
+        dd($th);
+      }
+      
+        
+        
     }
 }

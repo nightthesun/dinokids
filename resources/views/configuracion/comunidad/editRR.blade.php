@@ -777,7 +777,7 @@ body {
         return checkA === checkB ? 0 : (checkA ? -1 : 1);
       }).appendTo('#myTable2 tbody');
     },
-                "paging": false,
+               
                    
                 "scrollX":true,
                 "scrollY": "150px",

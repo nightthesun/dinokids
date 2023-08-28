@@ -99,22 +99,22 @@
 @endsection
 
 
-  @if(Auth::user()->authorizepermisos(['Sucursal', 'Ver']) ) 
+  @if(Auth::user()->authorizepermisos(['Aula', 'Ver']) ) 
   <div id="miDiv"></div>
   <div class="contenedor">
-    <h3 class="titulo1 h11">Lista de sucursales</h3>
-      <a href="{{ route('sucursal.create') }}">
+    <h3 class="titulo1 h11">Lista de aulas</h3>
+      <a href="{{ route('aula.create') }}">
        <button type="button" class="btn btn-primary" id="botonSubir2"  >
-        <i class="fas fa-child"></i>{{ __('Añadir Sucursal') }}
+        <i class="fas fa-chalkboard-teacher"></i>{{ __('Añadir Aula') }}
        </button>
       </a>
   </div>
   <div class="container"> 
     <div class="alert alert-info" role="alert" >
-      El boton <i class="fas fa-user-edit"></i> es para editar la información.
+      El boton <i class="fas fa-pencil-alt"></i> es para editar la información.
       @if (Auth::user()->authorizepermisos(['Sucursal', 'Editar']))
             
-      Si desea eliminar usuarios <i class="fas fa-user-times"></i>      
+      Si desea eliminar aulas <i class="fas fa-trash-alt"></i></i>      
             
       @endif </div>  
      
@@ -147,9 +147,9 @@
       @endif
       
        <td class="small-cell" >
-        @if(Auth::user()->authorizepermisos(['sucursal', 'Editar']) ) 
+        @if(Auth::user()->authorizepermisos(['Aula', 'Editar']) ) 
           
-          <a class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Editar" href="{{ route('sucursal.edit',$su->id) }}" >
+          <a class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Editar" href="{{ route('aula.create') }}" >
             <i class="fas fa-user-edit"></i>  
            </a>   
            
@@ -158,7 +158,7 @@
         @else
         <button type="button" class="btn btn-warning"><i class="fas fa-exclamation-triangle"></i></button>
        @endif
-       @if(Auth::user()->authorizepermisos(['sucursal', 'Ver informacion']) ) 
+       @if(Auth::user()->authorizepermisos(['Aula', 'Ver informacion']) ) 
           <a class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Ver" href="{{ route('sucursal.show',$su->id) }}" >
             <i class="far fa-eye"></i>
            </a>  

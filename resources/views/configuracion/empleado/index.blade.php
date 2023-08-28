@@ -120,8 +120,107 @@
      
      
   </div>  
-    <!--table-->
- 
+  <table class="cell-border compact hover" id="myTable" style="width:100%;" >
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Sucursal</th>
+        <th>Grado academico</th>
+        <th>Cargo</th>
+        <th>Departamento</th>
+      
+        @if(Auth::user()->authorizepermisos(['Administrar', 'Ver informacion']) ) 
+        
+        <th>Opcines</th>   
+        @endif
+                
+      </tr>
+    </thead>
+    <tbody>
+     @if (count($employees))
+     @foreach ($employees as $emp)
+     
+     <tr>
+      <td>{{$emp->first_name." ".$emp->last_name1." ".$emp->last_name2}}</td>
+      <td>{{$emp->name}}</td>
+      <td>{{$emp->nameAD}}</td>
+      <td>{{$emp->nameC}}</td>
+      <td>{{$emp->nameD}}</td>
+      @if(Auth::user()->authorizepermisos(['Administrar', 'Ver informacion']) ) 
+    
+      <td class="small-cell">
+        @if(Auth::user()->authorizepermisos(['Administrar', 'Editar']) ) 
+           <a class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Editar" href="{{ route('empleado.edit',$emp->id) }}" >
+            <i class="fas fa-user-edit"></i>  
+           </a>   
+         @else
+        <button type="button" class="btn btn-warning"><i class="fas fa-exclamation-triangle"></i></button>
+       @endif
+         
+      <!-- Button trigger modal delete-->
+      @if(Auth::user()->authorizepermisos(['Administrar', 'Eliminar']) ) 
+      <form method="POST" enctype="multipart/form-data" action="{{ route('empleado.destroy', $emp->id) }}" class="d-inline">
+        @csrf 
+      
+            <button type="button" class="btn btn-danger btn-sm text-white" title="Activar" data-bs-toggle="modal" data-bs-target="#Delete{{$emp->id}}" data-toggle="tooltip" data-placement="top">
+       
+                <i class="far fa-trash-alt"></i>
+          </button>
+        
+     
+      
+      <!-- Modal -->
+      <div class="modal fade" id="Delete{{$emp->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+      <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">¿Desea Eliminar?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Realmente decea eliminar el empleado de
+        {{$emp->first_name}}.
+        <div class="mb-3">
+          <label for="exampleFormControlInput1" class="form-label">Motivo:</label>
+          <input type="text" class="form-control" id="exampleFormControlInput1" value="" name="motivo" placeholder="describa el motivo de la eliminación" required>
+        </div>
+      
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+      
+              <button type="submit"  class="btn btn-danger   text-white">Eliminar <i class="far fa-trash-alt"></i></button>
+      
+       
+       
+      </div>
+      </div>
+      </div>
+      </div>
+      </form>
+
+          
+      @endif
+   
+     
+      </td>
+          
+      @endif
+       
+      </tr>
+  
+  
+  
+      
+  @endforeach
+     @else
+     <tr>
+      <td>No hay registro !!</td>
+    </tr> 
+     @endif
+    </tbody>  
+  </table>
   
   @endsection
   

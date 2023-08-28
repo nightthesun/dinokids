@@ -177,7 +177,10 @@
       <div class="modal-body">
         Realmente decea eliminar el cargo de
         {{$car->name}}.
-      
+        <div class="mb-3">
+          <label for="exampleFormControlInput1" class="form-label">Motivo:</label>
+          <input type="text" class="form-control" id="exampleFormControlInput1" value="" name="motivo" placeholder="describa el motivo de la eliminación" required>
+        </div>
       
       
       </div>

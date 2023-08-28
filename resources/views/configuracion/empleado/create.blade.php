@@ -424,8 +424,6 @@ body {
   <form method="POST" enctype="multipart/form-data" action="{{ route('empleado.store') }}">
     @csrf
     <div class="row">
-      
-
       <div class="col-12 borde1">
         <h3 class="mt-3">Datos de empleado</h3>
         <div class="form-group row d-flex">
@@ -450,7 +448,6 @@ body {
          @foreach ($pleople as $p)
          
         <tr>
-           
            <td class="studentCheckbox">{{$p->first_name." ".$p->last_name1." ".$p->last_name2}}</td>
            <td class="studentCheckbox">{{$p->ci}}</td> 
            <td class="studentCheckbox">{{$p->nameB}}</td>
@@ -482,7 +479,7 @@ body {
           <option value="" selected>Seleccione cargo</option>
             
             @foreach ($cargo as $item)
-           
+
                 <option value="{{$item->id}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{$item->description}}"> {{$item->name}}</option>
             
             @endforeach
@@ -498,7 +495,7 @@ body {
             @foreach ($academic_degree as $item)
            
                 <option value="{{$item->id}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{$item->description}}">{{$item->name}}</option>
-            
+               
             @endforeach
           </select>
 </div>
@@ -573,9 +570,11 @@ body {
                 }
             },
             "columnDefs": [
-                { width:"10%", "targets": 1 }
+                { 
+                  width:"10%", "targets": 3 , "orderable": false
+              }
             ],
-          
+            "order": [[3, 'desc']], // Ordena la tabla en función de la columna de casillas de verificación
             "paging": false,
                 
                 "scrollX":true,
@@ -784,7 +783,7 @@ this.then = function (callback) {
 function alertaAceptar(){
   new novaAlert({
     icon: 'success',
-    title: 'Registro de sucursal correcto',
+    title: 'Registro creado.',
     text: 'Precione el boton para continuar',
 dismissButton: true,
 

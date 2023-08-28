@@ -34,7 +34,7 @@ class AulaController extends Controller
      }
      public function index()
     {
-        if (Auth::user()->authorizePermisos(['Sucursal', 'Ver'])) {
+        if (Auth::user()->authorizePermisos(['Aula', 'Ver'])) {
         
             $query_reg_branch = 'SELECT a.id, a.name as nameDres, a.description as descripS, a.deleted as elim
            FROM `reg_branch` a
@@ -60,7 +60,26 @@ class AulaController extends Controller
      */
     public function create()
     {
-        //
+        try {
+            if (Auth::user()->authorizePermisos(['Cargo', 'Crear'])) {
+                $query_reg_branch = 'SELECT a.id, a.name as nameDres, a.description as descripS, a.deleted as elim
+           FROM `reg_branch` a
+           ORDER BY a.id ';
+              $branchs = DB::select($query_reg_branch);
+            $query_reg_area = 'SELECT a.id, a.interventionarea_name,a.interventionarea_description 
+           FROM `reg_interventionareas` a
+           ORDER BY a.id ';
+              $areas = DB::select($query_reg_area);
+            $array_numbers=array("1"=>1,"2"=>2,"3"=>3,"4"=>4,"5"=>5,"6"=>6,"7"=>7,"8"=>8,"9"=>9,"10"=>10);  
+              
+                   return view('configuracion.aula.create', compact('branchs','array_numbers','areas')); 
+              } else {
+            return redirect()->route('errors.permisos');
+         }   
+                      
+        } catch (\Throwable $th) {
+            dd($th);
+        }
     }
 
     /**
