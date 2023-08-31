@@ -114,6 +114,7 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
+    
        try {
             if (Auth::user()->authorizePermisos(['Administrar', 'Crear'])) {
         
@@ -130,8 +131,8 @@ class EmployeeController extends Controller
                 'created_date' => $fecha_actual,
                 'deleted' => 0,
                 'id_people' => $id_people,
-                'id_academic_degree' => $id_cargo,
-                'id_reg_cargos' => $id_grado,
+                'id_academic_degree' =>$id_grado,
+                'id_reg_cargos' =>$id_cargo ,
               ]);
 
               $query_reg_cargo="SELECT c.id,c.name,c.description,c.salary,c.unidad 
@@ -258,8 +259,8 @@ class EmployeeController extends Controller
                 'modified_date' => $fecha_actual,
              
                 'id_people' => $id_people,
-                'id_academic_degree' => $id_cargo,
-                'id_reg_cargos' => $id_grado,
+                'id_academic_degree' =>$id_grado,
+                'id_reg_cargos' =>$id_cargo ,
               ]);
 
               $query_reg_cargo="SELECT c.id,c.name,c.description,c.salary,c.unidad 

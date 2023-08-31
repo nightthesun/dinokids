@@ -9,6 +9,13 @@
   border-radius: 10px;
   
 }
+.borde2 {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #8092a1;
+  border-radius: 0px;
+  
+}
 .titulo1{
   color: #B40F7F;
   font-weight: bold;
@@ -395,93 +402,159 @@ body {
 
 @section('content')
 @include('layouts.sidebar', ['hide'=>'0'])
-@if(Auth::user()->authorizepermisos(['Aula', 'Ver']) && Auth::user()->authorizepermisos(['Aula', 'Crear']) )
+@if(Auth::user()->authorizepermisos(['Clase', 'Ver']) && Auth::user()->authorizepermisos(['Clase', 'Crear']) )
     <!-- Mostrar mensaje de éxito -->
 <div id="miDiv"></div>
 <div style="padding: 6rem; padding-top:0.5rem;">
   <div class="row d-flex justify-content-center mb-3">
     <div class="col-lg-6 col-sm-12 d-flex align-items-center justify-content-center">
-      <h3 class="text-center titulo1">Registro de aula</h3>
+      <h3 class="text-center titulo1">Edición de clase</h3>
       <a href="{{ url('/') }}">
         <button type="button" class="btn btn-primary align-self-end" id="botonSalir"  data-bs-toggle="tooltip" data-bs-placement="right" title="Regresar al inicio" >
             <i class="fas fa-house-user"></i>
           </button> 
       </a>
-      <a href="{{ route('aula.index') }}">
+      <a href="{{ route('clase.index') }}">
         <button type="button" class="btn btn-primary align-self-end" id="botonSalir"  data-bs-toggle="tooltip" data-bs-placement="right" title="volver a lista" >
           <i class="far fa-address-book"></i>
           </button> 
       </a>
     </div>
   </div>
-  <form method="POST" enctype="multipart/form-data" action="{{ route('aula.store') }}">
+  <form method="POST" enctype="multipart/form-data" action="{{ route('clase.update',$id) }}">
     @csrf
     <div class="row">
       <div class="col-12 borde1">
-        <h3 class="mt-3">Datos de aula</h3>
+        <h3 class="mt-3">Datos de clase</h3>
         <div class="form-group row d-flex">
-
-<div class="row">
-    <div class="col-3">
-        <label for="classroom_name" class="col col-form-label">
-            {{ __('Nombre:') }}
-          </label>
-        <select class="form-select" aria-label="Default select example" name="classroom_name" id="classroom_name" required>
-            <option value="" selected>Seleccione nombre</option>
-           
-            @foreach ($areas as $area)
-
-                <option value="{{$area->id}}">{{$area->interventionarea_name}}</option>
+          <div class="row">
+            <div class="col-8 borde2">
+              <h4 style="padding-top: 10px"></h4>
+              <table class="cell-border compact hover" id="myTable" style="width:100%;" >
+                  <thead>
+                    <tr>
+                      
+                      <th>Nombre</th>
+                      <th>Apellidos</th>
+                      <th>Genero</th>
+                      <th>S</th>
+                       
+                              
+                    </tr>
+                  </thead>
+                  <tbody>
+                  
+                   @if (count($employees))
+                  
+                   @foreach ($employees as $employee)
+     <tr>
+                     <td class="studentCheckbox">{{$employee->first_name}}</td>
+                     <td class="studentCheckbox">{{$employee->last_name1." ".$employee->last_name2}}</td> 
+                     <td class="studentCheckbox">{{$employee->gender}}</td>
+                     <td>
+                      <div class="form-check">
+                      
+                        @if ($employee->id_people==$class[0]->id_empleado)
+                        <input class="form-check-input" type="radio" value="{{$employee->id_people}}" name="principal" id="principal"checked required>
+                        @else
+                        <input class="form-check-input" type="radio" value="{{$employee->id_people}}" name="principal" id="principal"required >
+                         @endif
+                         
+                        </div>
+                     </td> 
+                  </tr>
+                @endforeach
+                   @else
+                   <tr>
+                    <td>No hay registro !!</td>
+                  </tr> 
+                   @endif
+                  </tbody>  
+                </table>
+              </div>
             
-            @endforeach
-          </select>
-    </div>
- 
-  <div class="col-3">
-          <label for="nombre" class="col-md-2 col-form-label">
-            {{ __('Alias:') }}
-          </label>
-          <input id="alias" type="text" class="form-control @error('alias') is-invalid @enderror" name="alias" value="{{ old('alias') }}" required autocomplete="alias" autofocus>
-            @error('alias')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-    </div>
-    <div class="col-3">
-        <label for="branch" class="col col-form-label">
-            {{ __('Nombre:') }}
-          </label>
-        <select class="form-select" aria-label="Default select example" name="branch" id="branch" required>
-            <option value="" selected>Seleccione sucursal</option>
-           
-            @foreach ($branchs as $branch)
-
-                <option value="{{$branch->id}}">{{$branch->name}}</option>
             
-            @endforeach
-          </select>
-    </div>
+              <div class="col-4 borde2">
+                  <h4 style="padding-top: 10px"></h4>
+                  <div class="row">
+                    <div class="col-6">
+                      <label for="fecha_inicio" class="col-form-label">
+                        {{ __('Hora de inicio:') }}
+                      </label>
+                      <input id="fecha_ini" type="time" value="{{$class[0]->time_ini}}" class="form-control @error('fecha_ini') is-invalid @enderror" name="fecha_ini" value="{{ old('fecha_ini') }}" required autocomplete="fecha_ini" autofocus>
+                        @error('fecha_ini')
+                        <span class="invalid-feedback" role="alert">
+                          <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                    <div class="col-6">
+                      <label for="fecha_final" class="col-form-label">
+                        {{ __('Hora de final:') }}
+                      </label>
+                      <input id="fecha_fini" type="time" value="{{$class[0]->time_fini}}" class="form-control @error('fecha_fini') is-invalid @enderror" name="fecha_fini" value="{{ old('fecha_fini') }}" required autocomplete="fecha_fini" autofocus>
+                        @error('fecha_fini')
+                        <span class="invalid-feedback" role="alert">
+                          <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                  </div>
+                  
+          
+                   
+                      <label for="area" class="col col-form-label">
+                        {{ __('Programa:') }}
+                      </label>
+                    <select class="form-select" aria-label="Default select example" name="id_programa" id="id_programa" required>
+                        <option value="" selected>Seleccione area</option>
+                       
+                        @foreach ($areas as $area)
+            
+                            @if ($class[0]->id_interventionare==$area->id)
+                            <option value="{{$area->id}}" selected>{{$area->interventionarea_name }}</option>
+                            @else
+                            <option value="{{$area->id}}">{{$area->interventionarea_name }}</option>
+                            @endif
+                            
 
-    <div class="col-3">
-      <label for="branch" class="col col-form-label">
-          {{ __('Capacidad:') }}
-        </label>
-        <input type="range" class="form-range" value="cantidad" id="cantidad" name="cantidad" min="1" max="20">
-        <p>Valor seleccionado: <span id="valorSeleccionado">10</span></p>
-
-  </div>
-</div>
-
-
-
-
-
+                        @endforeach
+                      </select>  
+                     
+                        <label for="aula" class="col col-form-label">
+                            {{ __('Aula:') }}
+                          </label>
+                        <select class="form-select" aria-label="Default select example" name="id_classroom" id="id_classroom" required>
+                            <option value="" selected>Seleccione educador</option>
+                           
+                            @foreach ($classroom as $aula)
+                                @if ($class[0]->id_classroom==$aula->id)
+                                <option value="{{$aula->id}}" value="{{$aula->id}}" vdata-mas="{{'Alias:'.$aula->alias.' Sucursal:'.$aula->name}}" selected>{{$aula->interventionarea_name ." ".$aula->number}}</option>
+                               @else
+                                <option value="{{$aula->id}}" data-mas="{{'Alias:'.$aula->alias.' Sucursal:'.$aula->name}}">{{$aula->interventionarea_name ." ".$aula->number}}</option>
+                               @endif
+                                
+                            @endforeach
+                          </select>
+                          <div class="card border-light mb-3" style="max-width: 18rem;">
+                            <div class="card-header">Datos</div>
+                            <div class="card-body">
+                              <h5 class="card-title">Descripción</h5>
+                              <p class="card-text"><div id="info-container">
+                                <!-- Aquí se mostrará la información faltante -->
+                            </div> </p>
+                            </div>
+                          </div>
+                    
+          </div>
+          
+          </div>
+          
 
         <div class="form-group row d-flex justify-content-center " style="padding-top: 20px;padding-bottom: 10px;">
           <div class="col-md-10 d-flex justify-content-center">
             <button type="submit" class="btn btn-primary" id="botonSubir"  >
-              {{ __('Crear') }}
+              {{ __('Actualizar') }}
             </button>
          
            
@@ -509,15 +582,63 @@ body {
 @section('mis_scripts')
 <script src="http://momentjs.com/downloads/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 <script>
-  const rangeInput = document.getElementById('cantidad');
-  const valorSeleccionado = document.getElementById('valorSeleccionado');
-
-  rangeInput.addEventListener('input', () => {
-      valorSeleccionado.textContent = rangeInput.value;
-  });
-</script>
-
+  $(document).ready(function() 
+  {  
+      $('#myTable tfoot th').each( function () {
+          if($(this).attr("class")!="#N/A")
+          {
+            var title = $(this).text();
+            $(this).html( '<input type="text" placeholder="'+title+'" />' );
+          }
+      } );
+      var table = $('#myTable').DataTable( 
+      {
+      
+          "language":             
+          {
+              "emptyTable":     "Tabla Vacia",
+              "info":           "Se muestran del _START_ al _END_ de _TOTAL_ registros",
+              "infoEmpty":      "Se muestran del 0 al 0 de 0 Registros",
+              "infoFiltered":   "(Filtrado de un total de _MAX_ registros)",
+              "lengthMenu":     "Se muestran _MENU_ registros",
+              "loadingRecords": "Cargando...",
+              "processing":     "Procesando...",
+              "search":         "Buscar:",
+              "zeroRecords":    "No se encontro ningun registro",
+              "paginate": {
+                  "first":      "Primero",
+                  "last":       "Ultimo",
+                  "next":       "Siguiente",
+                  "previous":   "Anterior"
+              }
+          },
+          "columnDefs": [
+                { width:"10%", "targets": 3 }
+            ],
+            "paging": false,
+            "order": [[3, 'asc']],
+            "aoColumnDefs": [
+      { "bSortable": false, "aTargets": [3] } // Deshabilitar la ordenación en la columna de checks
+    ],
+    "orderMulti": false, // Evitar la ordenación múltiple
+    "fnDrawCallback": function() {
+      $('#myTable tbody tr').sort(function(a, b) {
+        var checkA = $('input[type="radio"]', a).prop('checked');
+        var checkB = $('input[type="radio"]', b).prop('checked');
+        return checkA === checkB ? 0 : (checkA ? -1 : 1);
+      }).appendTo('#myTable tbody');
+    },     
+              "scrollX":true,
+              "scrollY": "350px",
+              "scrollCollapse": true, 
+              "FixedHeader":true,
+        
+      } );
+  } );
+  
+  </script>
 <script>
   
 
@@ -734,7 +855,28 @@ CancelButtonText: 'Aceptar',
 
 });
 }
+function alertaTime(){
+  new novaAlert({
+    icon: 'danger',
+    title: 'La hora inical no puede ser mayor a la hora final',
+    text: 'Precione el boton para continuar',
+    dismissButton: false,
 
+CancelButtonText: 'Aceptar',
+
+});
+}
+function alertaEdit(){
+  new novaAlert({
+    icon: 'danger',
+    title: 'Alcanzo el maximo de actualizaciones',
+    text: 'Precione el boton para continuar.',
+    dismissButton: false,
+
+CancelButtonText: 'Aceptar',
+
+});
+}
 
 </script>
 <script>
@@ -743,12 +885,34 @@ CancelButtonText: 'Aceptar',
       var status = "{{ session('status') }}";
       if (status === 'success') {
         alertaAceptar();
-      } else if (status === 'error') {
+      } 
+      if (status === 'error') {
         alertaFallo();
       }
- 
+      if (status === 'time') {
+        alertaTime();
+      }
+      if (status === 'edit') {
+        alertaEdit();
+      } 
 </script>
 
-
+<script>
+    // Obtén referencia al select y al contenedor de información
+    const select = document.getElementById('id_classroom');
+    const infoContainer = document.getElementById('info-container');
+    
+    // Agrega un evento de cambio al select
+    select.addEventListener('change', function() {
+        // Obtén la opción seleccionada
+        const selectedOption = select.options[select.selectedIndex];
+        
+        // Obtén el valor del atributo 'data-cargo'
+        const cargo = selectedOption.getAttribute('data-mas');
+        
+        // Actualiza el contenido del contenedor de información
+        infoContainer.textContent = `${cargo}`;
+    });
+</script>
 @endsection
 

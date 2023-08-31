@@ -102,19 +102,19 @@
   @if(Auth::user()->authorizepermisos(['Aula', 'Ver']) ) 
   <div id="miDiv"></div>
   <div class="contenedor">
-    <h3 class="titulo1 h11">Lista de aulas</h3>
-      <a href="{{ route('aula.create') }}">
+    <h3 class="titulo1 h11">Lista de clases</h3>
+      <a href="{{ route('clase.create') }}">
        <button type="button" class="btn btn-primary" id="botonSubir2"  >
-        <i class="fas fa-chalkboard-teacher"></i>{{ __('Añadir Aula') }}
+        <i class="fas fa-chalkboard"></i>{{ __('Añadir Clase') }}
        </button>
       </a>
   </div>
   <div class="container"> 
     <div class="alert alert-info" role="alert" >
       El boton <i class="fas fa-pencil-alt"></i> es para editar la información.
-      @if (Auth::user()->authorizepermisos(['Aula', 'Editar']))
+      @if (Auth::user()->authorizepermisos(['Clase', 'Editar']))
             
-      Si desea eliminar aulas <i class="fas fa-trash-alt"></i>    
+      Si desea eliminar <i class="fas fa-trash-alt"></i>    
             
       @endif </div>  
      
@@ -124,35 +124,42 @@
   <table class="cell-border compact hover" id="myTable" style="width:100%;" >
     <thead>
       <tr>
-        <th>Nombre</th>
+        <th>Hora</th>
+        <th>Aula</th>
         <th>Alias</th>
-        <th>Capacidad</th>
-         <th>Sucursal</th>
-         @if(Auth::user()->authorizepermisos(['Aula', 'Ver informacion']) ) 
-        
+        <th>Nombre</th>
+        <th>Cargo</th>
+        <th>Sucursal</th>
+         @if(Auth::user()->authorizepermisos(['Clase', 'Ver informacion']) ) 
          <th>Opcines</th>   
          @endif      
       </tr>
     </thead>
     <tbody>
-     @if (count($classroom))
-     @foreach ($classroom as $su)
+     @if (count($class))
+     @foreach ($class as $su)
      
      <tr>
+      <td>{{$su->time_ini." - ".$su->time_fini}}</td>
       <td>{{$su->interventionarea_name." ".$su->number}}</td>
       <td>{{$su->alias}}</td>
-      @if ($su->capacidad==1)
-      <td style="text-align: end; width: 20px">{{$su->capacidad." Estudiante"}}</td>  
+      <td>{{$su->first_name." ".$su->last_name1." ".$su->last_name2}}</td>
+      
+      @if ($su->gender=="Mujer")
+      <td>Educadora</td>
       @else
-      <td style="text-align: end; width: 20px">{{$su->capacidad." Estudiantes"}}</td>  
+        @if ($su->gender=="Hombre")
+        <td>Educador</td> 
+        @else
+          <td>Cosmico</td>
+        @endif          
       @endif
-     
-      <td>{{$su->name}}</td>
-      @if(Auth::user()->authorizepermisos(['Aula', 'Ver informacion']) ) 
+      <td>{{$su->nameSucu}}</td>
+      @if(Auth::user()->authorizepermisos(['Clase', 'Ver informacion']) ) 
       <td class="small-cell" >
-        @if(Auth::user()->authorizepermisos(['Aula', 'Editar']) ) 
+        @if(Auth::user()->authorizepermisos(['Clase', 'Editar']) ) 
           
-          <a class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Editar" href="{{ route('aula.edit',$su->id) }}" >
+          <a class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Editar" href="{{ route('clase.edit',$su->id) }}" >
             <i class="fas fa-pencil-alt"></i> 
            </a>   
         @else
@@ -161,7 +168,7 @@
          
       <!-- Button trigger modal delete-->
       @if(Auth::user()->authorizepermisos(['Aula', 'Eliminar']) ) 
-      <form method="POST" enctype="multipart/form-data" action="{{ route('aula.destroy', $su->id) }}" class="d-inline">
+      <form method="POST" enctype="multipart/form-data" action="{{ route('clase.destroy', $su->id) }}" class="d-inline">
         @csrf 
        
             <button type="button" class="btn btn-danger btn-sm text-white" title="Activar" data-bs-toggle="modal" data-bs-target="#Delete{{$su->id}}" data-toggle="tooltip" data-placement="top">
@@ -180,7 +187,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Realmente decea eliminar la aula 
+        Realmente decea eliminar la clase 
         {{$su->alias}}.
        </div>
       <div class="modal-footer">
@@ -188,8 +195,6 @@
       
               <button type="submit"  class="btn btn-danger   text-white">Eliminar <i class="far fa-trash-alt"></i></button>
       
-       
-       
       </div>
       </div>
       </div>

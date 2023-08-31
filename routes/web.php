@@ -64,6 +64,8 @@ Route::post('/sucursal/{id}','Configuracion\SucursalController@update')->name('s
 Route::post('/sucursalE/{id}','Configuracion\SucursalController@destroy')->name('sucursal.destroy');
 //aulas-------------------
 Route::resource('/aula','Configuracion\AulaController');
+Route::post('/aula/{id}','Configuracion\AulaController@update')->name('aula.update');
+Route::post('/aulaE/{id}','Configuracion\AulaController@destroy')->name('aula.destroy');
 //programa area de intervencion 
 Route::resource('/programa','Configuracion\ProgramaController');
 Route::post('/programa/{id}','Configuracion\ProgramaController@update')->name('programa.update');
@@ -80,6 +82,14 @@ Route::post('/departamentoE/{id}','Configuracion\DepartamentoController@destroy'
 Route::resource('/empleado','Configuracion\EmployeeController');
 Route::post('/empleado/{id}','Configuracion\EmployeeController@update')->name('empleado.update');
 Route::post('/empleadoE/{id}','Configuracion\EmployeeController@destroy')->name('empleado.destroy');
+// Clasess------------------------------------------------------------------
+Route::resource('/clase','Configuracion\ClaseController');
+Route::post('/clase/{id}','Configuracion\ClaseController@update')->name('clase.update');
+Route::post('/claseE/{id}','Configuracion\ClaseController@destroy')->name('clase.destroy');
+// horario----------------------------------------------------------------
+Route::resource('/horario','Configuracion\HorarioController');
+Route::post('/horario/{id}','Configuracion\HorarioController@update')->name('horario.update');
+Route::post('/horarioE/{id}','Configuracion\HorarioController@destroy')->name('horario.destroy');
 
 //---------------------------------------------------------------------------
 Route::prefix('dev')->group(function(){

@@ -395,13 +395,13 @@ body {
 
 @section('content')
 @include('layouts.sidebar', ['hide'=>'0'])
-@if(Auth::user()->authorizepermisos(['Aula', 'Ver']) && Auth::user()->authorizepermisos(['Aula', 'Crear']) )
+@if(Auth::user()->authorizepermisos(['Aula', 'Ver']) && Auth::user()->authorizepermisos(['Aula', 'Editar']) )
     <!-- Mostrar mensaje de éxito -->
 <div id="miDiv"></div>
 <div style="padding: 6rem; padding-top:0.5rem;">
   <div class="row d-flex justify-content-center mb-3">
     <div class="col-lg-6 col-sm-12 d-flex align-items-center justify-content-center">
-      <h3 class="text-center titulo1">Registro de aula</h3>
+      <h3 class="text-center titulo1">Edición de aula</h3>
       <a href="{{ url('/') }}">
         <button type="button" class="btn btn-primary align-self-end" id="botonSalir"  data-bs-toggle="tooltip" data-bs-placement="right" title="Regresar al inicio" >
             <i class="fas fa-house-user"></i>
@@ -414,7 +414,7 @@ body {
       </a>
     </div>
   </div>
-  <form method="POST" enctype="multipart/form-data" action="{{ route('aula.store') }}">
+  <form method="POST" enctype="multipart/form-data" action="{{ route('aula.update',$id) }}">
     @csrf
     <div class="row">
       <div class="col-12 borde1">
@@ -422,26 +422,41 @@ body {
         <div class="form-group row d-flex">
 
 <div class="row">
-    <div class="col-3">
+    <div class="col-2">
         <label for="classroom_name" class="col col-form-label">
             {{ __('Nombre:') }}
           </label>
         <select class="form-select" aria-label="Default select example" name="classroom_name" id="classroom_name" required>
-            <option value="" selected>Seleccione nombre</option>
+            <option value="">Seleccione nombre</option>
            
             @foreach ($areas as $area)
-
+                @if ($area->interventionarea_name==$classroom[0]->interventionarea_name)
+                <option value="{{$area->id}}" selected>{{$area->interventionarea_name}}</option>
+                   @else
                 <option value="{{$area->id}}">{{$area->interventionarea_name}}</option>
-            
+                    
+                @endif
+                
             @endforeach
           </select>
+    </div>
+    <div class="col-2">
+        <label for="number" class="col-md-2 col-form-label">
+            {{ __('Numero:') }}
+          </label>
+          <input id="number" type="text" value="{{$classroom[0]->number}}" class="form-control @error('number') is-invalid @enderror" name="number" value="{{ old('number') }}" required autocomplete="number" autofocus>
+            @error('number')
+            <span class="invalid-feedback" role="alert">
+              <strong>{{ $message }}</strong>
+            </span>
+            @enderror
     </div>
  
   <div class="col-3">
           <label for="nombre" class="col-md-2 col-form-label">
             {{ __('Alias:') }}
           </label>
-          <input id="alias" type="text" class="form-control @error('alias') is-invalid @enderror" name="alias" value="{{ old('alias') }}" required autocomplete="alias" autofocus>
+          <input id="alias" type="text" value="{{$classroom[0]->alias}}"  class="form-control @error('alias') is-invalid @enderror" name="alias" value="{{ old('alias') }}" required autocomplete="alias" autofocus>
             @error('alias')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>
@@ -453,41 +468,35 @@ body {
             {{ __('Nombre:') }}
           </label>
         <select class="form-select" aria-label="Default select example" name="branch" id="branch" required>
-            <option value="" selected>Seleccione sucursal</option>
+            <option value="">Seleccione sucursal</option>
            
             @foreach ($branchs as $branch)
-
-                <option value="{{$branch->id}}">{{$branch->name}}</option>
-            
+               @if ($branch->name==$classroom[0]->name)
+               <option value="{{$branch->id}}" selected>{{$branch->name}}</option>
+               @else
+               <option value="{{$branch->id}}">{{$branch->name}}</option>
+               @endif 
+                
             @endforeach
           </select>
     </div>
-
-    <div class="col-3">
+    <div class="col-2">
       <label for="branch" class="col col-form-label">
           {{ __('Capacidad:') }}
         </label>
-        <input type="range" class="form-range" value="cantidad" id="cantidad" name="cantidad" min="1" max="20">
-        <p>Valor seleccionado: <span id="valorSeleccionado">10</span></p>
+        <input type="range" class="form-range" value="{{$classroom[0]->capacidad}}" id="cantidad" name="cantidad" min="1" max="20">
+        <p>Valor seleccionado: <span id="valorSeleccionado">{{$classroom[0]->capacidad}}</span></p>
 
   </div>
+
 </div>
-
-
-
-
-
 
         <div class="form-group row d-flex justify-content-center " style="padding-top: 20px;padding-bottom: 10px;">
           <div class="col-md-10 d-flex justify-content-center">
             <button type="submit" class="btn btn-primary" id="botonSubir"  >
-              {{ __('Crear') }}
+              {{ __('Actualizar') }}
             </button>
-         
-           
-
-
-          </div>
+           </div>
         </div>
       </div>
     </div>
@@ -517,6 +526,8 @@ body {
       valorSeleccionado.textContent = rangeInput.value;
   });
 </script>
+
+<script>
 
 <script>
   
@@ -714,7 +725,7 @@ this.then = function (callback) {
 function alertaAceptar(){
   new novaAlert({
     icon: 'success',
-    title: 'Registro creado.',
+    title: 'Registro actualizado.',
     text: 'Precione el boton para continuar',
 dismissButton: true,
 
@@ -734,7 +745,17 @@ CancelButtonText: 'Aceptar',
 
 });
 }
+function alertaEdit(){
+  new novaAlert({
+    icon: 'danger',
+    title: 'Alcanzo el maximo de actualizaciones',
+    text: 'Precione el boton para continuar.',
+    dismissButton: false,
 
+CancelButtonText: 'Aceptar',
+
+});
+}
 
 </script>
 <script>
@@ -743,8 +764,12 @@ CancelButtonText: 'Aceptar',
       var status = "{{ session('status') }}";
       if (status === 'success') {
         alertaAceptar();
-      } else if (status === 'error') {
+      } 
+      if (status === 'error') {
         alertaFallo();
+      }
+      if (status === 'edit') {
+        alertaEdit();
       }
  
 </script>
