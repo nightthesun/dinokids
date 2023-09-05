@@ -450,7 +450,7 @@ body {
     </div>
     <div class="col-3">
         <label for="branch" class="col col-form-label">
-            {{ __('Nombre:') }}
+            {{ __('Sucursal:') }}
           </label>
         <select class="form-select" aria-label="Default select example" name="branch" id="branch" required>
             <option value="" selected>Seleccione sucursal</option>
